@@ -529,43 +529,160 @@ double AnalyzePatternSequence(int bars) {
 }
 
 //+------------------------------------------------------------------+
+//| Detect Market Structure (Trending vs Ranging)                   |
+//+------------------------------------------------------------------+
+bool IsMarketTrending(double adx, double &trendStrength) {
+    // ADX > 25 = Strong trend
+    // ADX 20-25 = Moderate trend
+    // ADX < 20 = Ranging/weak trend
+
+    if(adx >= 25) {
+        trendStrength = (adx - 25) / 50.0;  // Normalize 0-1
+        return true;
+    } else if(adx >= 20) {
+        trendStrength = 0.5;
+        return true;
+    }
+
+    trendStrength = 0;
+    return false;
+}
+
+//+------------------------------------------------------------------+
 //| Predict Next Move based on momentum/velocity/acceleration       |
 //+------------------------------------------------------------------+
 int PredictNextMove(double momentum, double velocity, double acceleration, double patternScore) {
+    // Get market structure
+    double adx = GetADX(0);
+    double trendStrength = 0;
+    bool isTrending = IsMarketTrending(adx, trendStrength);
+
+    // Get oscillators for extreme confirmation
+    double rsi = GetRSI(0);
+    double stoch = GetStochastic(0);
+    double cci = GetCCI(0);
+
+    // Get Bollinger Bands
+    double bb_upper, bb_middle, bb_lower;
+    GetBollingerBands(0, bb_upper, bb_middle, bb_lower);
+    double currentPrice = close[0];
+
+    // Get multi-timeframe alignment
+    double ma50 = GetMA(0);
+    double ma_H1 = GetMA_MTF(PERIOD_H1);
+    double close_H1 = iClose(_Symbol, PERIOD_H1, 0);
+    double ma_H4 = GetMA_MTF(PERIOD_H4);
+    double close_H4 = iClose(_Symbol, PERIOD_H4, 0);
+
+    bool currentTFBullish = (currentPrice > ma50);
+    bool h1Bullish = (close_H1 > ma_H1);
+    bool h4Bullish = (close_H4 > ma_H4);
+
+    // Count timeframe alignment
+    int bullishTFs = 0;
+    int bearishTFs = 0;
+
+    if(currentTFBullish) bullishTFs++; else bearishTFs++;
+    if(h1Bullish) bullishTFs++; else bearishTFs++;
+    if(h4Bullish) bullishTFs++; else bearishTFs++;
+
+    // Check for EXTREME conditions (critical for 98% accuracy)
+    bool extremeOversold = (rsi < 30 || stoch < 20 || cci < -100 || currentPrice < bb_lower);
+    bool extremeOverbought = (rsi > 70 || stoch > 80 || cci > 100 || currentPrice > bb_upper);
+
     // Score bullish vs bearish based on all factors
     double bullishScore = 0;
     double bearishScore = 0;
 
-    // Factor 1: Momentum direction (weight: 3)
-    if(momentum > 0) bullishScore += 3;
-    else if(momentum < 0) bearishScore += 3;
+    if(isTrending) {
+        // TRENDING MARKET: Follow momentum ONLY with ALL confirmations
+        Print("  Market Mode: TRENDING (ADX: ", NormalizeDouble(adx, 2), ")");
 
-    // Factor 2: Velocity direction (weight: 3)
-    if(velocity > 0) bullishScore += 3;
-    else if(velocity < 0) bearishScore += 3;
+        // CRITICAL: ALL timeframes MUST align for trending trades
+        if(bullishTFs == 3) {
+            bullishScore += 8;  // All 3 TFs bullish
+        } else if(bearishTFs == 3) {
+            bearishScore += 8;  // All 3 TFs bearish
+        } else {
+            Print("  ✗ Timeframe conflict detected - No prediction");
+            return 0;  // No mixed signals allowed
+        }
 
-    // Factor 3: Acceleration (weight: 2)
-    if(acceleration > 0) {
-        // Momentum is building
-        if(momentum > 0) bullishScore += 2;  // Building upward momentum
-        else bearishScore += 2;               // Building downward momentum
-    } else if(acceleration < 0) {
-        // Momentum is slowing - potential reversal
-        if(momentum > 0) bearishScore += 1;  // Upward momentum slowing = bearish
-        else bullishScore += 1;               // Downward momentum slowing = bullish
+        // Factor 2: Momentum + Velocity aligned (weight: 4)
+        if(momentum > 0 && velocity > 0) {
+            bullishScore += 4;
+        } else if(momentum < 0 && velocity < 0) {
+            bearishScore += 4;
+        }
+
+        // Bonus for acceleration alignment (weight: 2)
+        if(acceleration > 0 && momentum > 0) bullishScore += 2;
+        else if(acceleration > 0 && momentum < 0) bearishScore += 2;
+
+        // Factor 3: Pattern consistency (weight: 2)
+        if(patternScore >= 0.65) {
+            if(momentum > 0) bullishScore += 2;
+            else bearishScore += 2;
+        }
+
+        // Minimum score for trending trades
+        if(bullishScore < 12 && bearishScore < 12) {
+            Print("  ✗ Insufficient score for trending trade");
+            return 0;
+        }
+
+    } else {
+        // RANGING MARKET: ONLY trade EXTREME reversals for 98% accuracy
+        Print("  Market Mode: RANGING (ADX: ", NormalizeDouble(adx, 2), ")");
+
+        // CRITICAL: Must be at EXTREME levels
+        if(!extremeOversold && !extremeOverbought) {
+            Print("  ✗ Not at extreme levels - No ranging trade");
+            return 0;
+        }
+
+        // Factor 1: Extreme oversold + deceleration = BUY (weight: 6)
+        if(extremeOversold && acceleration < 0) {
+            bullishScore += 6;
+            Print("  ✓ EXTREME oversold reversal setup detected");
+        }
+        // Factor 2: Extreme overbought + deceleration = SELL (weight: 6)
+        else if(extremeOverbought && acceleration < 0) {
+            bearishScore += 6;
+            Print("  ✓ EXTREME overbought reversal setup detected");
+        } else {
+            Print("  ✗ Not at extreme + deceleration");
+            return 0;
+        }
+
+        // Factor 3: Multi-TF support/resistance (weight: 3)
+        if(bullishTFs >= 2 && extremeOversold) bullishScore += 3;
+        else if(bearishTFs >= 2 && extremeOverbought) bearishScore += 3;
+
+        // Factor 4: Pattern consistency (weight: 2)
+        if(patternScore >= 0.60) {
+            if(extremeOversold) bullishScore += 2;
+            else bearishScore += 2;
+        }
+
+        // Minimum score for ranging reversal trades
+        if(bullishScore < 8 && bearishScore < 8) {
+            Print("  ✗ Insufficient score for reversal trade");
+            return 0;
+        }
     }
 
-    // Factor 4: Pattern consistency (weight: 2)
-    if(patternScore > 0.6) {
-        // Strong pattern consistency - follow the dominant direction
-        if(momentum > 0) bullishScore += 2;
-        else bearishScore += 2;
+    // Determine prediction with strict threshold
+    if(bullishScore > bearishScore + 3) {
+        Print("  ✓✓✓ PREDICTION: BULLISH (Score: ", bullishScore, " vs ", bearishScore, ")");
+        return 1;
+    } else if(bearishScore > bullishScore + 3) {
+        Print("  ✓✓✓ PREDICTION: BEARISH (Score: ", bearishScore, " vs ", bullishScore, ")");
+        return -1;
+    } else {
+        Print("  ✗ Scores not decisive enough (", bullishScore, " vs ", bearishScore, ")");
+        return 0;
     }
-
-    // Determine prediction
-    if(bullishScore > bearishScore + 2) return 1;   // Bullish prediction
-    else if(bearishScore > bullishScore + 2) return -1;  // Bearish prediction
-    else return 0;  // No clear prediction
 }
 
 //+------------------------------------------------------------------+

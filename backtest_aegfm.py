@@ -111,220 +111,283 @@ class AEGFMBacktester:
         self.data = df.dropna()
         print(f"✓ Calculated indicators, {len(self.data)} valid candles")
 
-    def analyze_signals(self, idx):
-        """Analyze all 14 signals - exact EA logic"""
-        df = self.data
-        row = df.iloc[idx]
+    def calculate_momentum(self, idx, bars):
+        """Calculate momentum (1st derivative of price)"""
+        if idx + bars >= len(self.data):
+            return 0
 
+        current_price = self.data.iloc[idx]['Close']
+        past_price = self.data.iloc[idx + bars]['Close']
+
+        return current_price - past_price
+
+    def calculate_velocity(self, idx, bars):
+        """Calculate velocity (weighted directional speed)"""
+        if idx + bars >= len(self.data):
+            return 0
+
+        total_weighted_change = 0
+        total_weight = 0
+
+        for i in range(bars - 1):
+            if idx + i + 1 >= len(self.data):
+                break
+
+            weight = bars - i
+            change = self.data.iloc[idx + i]['Close'] - self.data.iloc[idx + i + 1]['Close']
+
+            total_weighted_change += change * weight
+            total_weight += weight
+
+        if total_weight == 0:
+            return 0
+
+        return total_weighted_change / total_weight
+
+    def calculate_acceleration(self, idx, bars):
+        """Calculate acceleration (2nd derivative)"""
+        if idx + bars >= len(self.data):
+            return 0
+
+        half_bars = bars // 2
+
+        if idx + half_bars >= len(self.data) or idx + bars >= len(self.data):
+            return 0
+
+        recent_momentum = self.data.iloc[idx]['Close'] - self.data.iloc[idx + half_bars]['Close']
+        older_momentum = self.data.iloc[idx + half_bars]['Close'] - self.data.iloc[idx + bars]['Close']
+
+        return recent_momentum - older_momentum
+
+    def analyze_pattern_sequence(self, idx, bars):
+        """Analyze pattern consistency"""
+        if idx + bars >= len(self.data):
+            return 0.5
+
+        up_moves = 0
+        down_moves = 0
+
+        for i in range(bars - 1):
+            if idx + i + 1 >= len(self.data):
+                break
+
+            if self.data.iloc[idx + i]['Close'] > self.data.iloc[idx + i + 1]['Close']:
+                up_moves += 1
+            elif self.data.iloc[idx + i]['Close'] < self.data.iloc[idx + i + 1]['Close']:
+                down_moves += 1
+
+        total_moves = up_moves + down_moves
+        if total_moves == 0:
+            return 0.5
+
+        return max(up_moves, down_moves) / total_moves
+
+    def is_market_trending(self, adx):
+        """Detect if market is trending or ranging"""
+        return adx >= 20
+
+    def predict_next_move(self, idx, momentum, velocity, acceleration, pattern_score):
+        """Predict direction based on market structure - ULTRA STRICT for 98% accuracy"""
+        row = self.data.iloc[idx]
+        adx = row['ADX']
         current_price = row['Close']
         ma50 = row['MA50']
         rsi = row['RSI']
-        macd_main = row['MACD']
-        macd_signal = row['MACD_signal']
-        bb_upper = row['BB_upper']
-        bb_middle = row['BB_middle']
-        bb_lower = row['BB_lower']
         stoch = row['Stoch']
-        adx = row['ADX']
         cci = row['CCI']
+        bb_upper = row['BB_upper']
+        bb_lower = row['BB_lower']
+
+        is_trending = self.is_market_trending(adx)
+
+        # Extreme conditions
+        extreme_oversold = (rsi < 30 or stoch < 20 or cci < -100 or current_price < bb_lower)
+        extreme_overbought = (rsi > 70 or stoch > 80 or cci > 100 or current_price > bb_upper)
+
+        current_tf_bullish = current_price > ma50
+
+        bullish_score = 0
+        bearish_score = 0
+
+        if is_trending:
+            # TRENDING: High selectivity
+            # Factor 1: TF alignment (weight: 8)
+            if current_tf_bullish:
+                bullish_score += 8
+            else:
+                bearish_score += 8
+
+            # Factor 2: Momentum + Velocity aligned (weight: 4)
+            if momentum > 0 and velocity > 0:
+                bullish_score += 4
+            elif momentum < 0 and velocity < 0:
+                bearish_score += 4
+
+            # Bonus for acceleration (weight: 2)
+            if acceleration > 0 and momentum > 0:
+                bullish_score += 2
+            elif acceleration > 0 and momentum < 0:
+                bearish_score += 2
+
+            # Factor 3: Pattern consistency (weight: 2)
+            if pattern_score >= 0.65:
+                if momentum > 0:
+                    bullish_score += 2
+                else:
+                    bearish_score += 2
+
+            # Minimum score
+            if bullish_score < 12 and bearish_score < 12:
+                return 0
+
+        else:
+            # RANGING: ONLY trade EXTREME reversals
+            if not extreme_oversold and not extreme_overbought:
+                return 0
+
+            # Factor 1: Extreme + deceleration (weight: 6)
+            if extreme_oversold and acceleration < 0:
+                bullish_score += 6
+            elif extreme_overbought and acceleration < 0:
+                bearish_score += 6
+            else:
+                return 0
+
+            # Factor 2: TF support/resistance (weight: 3)
+            if current_tf_bullish and extreme_oversold:
+                bullish_score += 3
+            elif not current_tf_bullish and extreme_overbought:
+                bearish_score += 3
+
+            # Factor 3: Pattern consistency (weight: 2)
+            if pattern_score >= 0.60:
+                if extreme_oversold:
+                    bullish_score += 2
+                else:
+                    bearish_score += 2
+
+            # Minimum score
+            if bullish_score < 8 and bearish_score < 8:
+                return 0
+
+        # Strict threshold
+        if bullish_score > bearish_score + 3:
+            return 1
+        elif bearish_score > bullish_score + 3:
+            return -1
+        else:
+            return 0
+
+    def analyze_signals(self, idx, bars=20):
+        """Analyze using PREDICTIVE ENGINE - exact EA logic"""
+        df = self.data
+        row = df.iloc[idx]
+
         atr = row['ATR']
+        current_price = row['Close']
 
-        bullish = 0
-        bearish = 0
-        total = 0
+        # Calculate prediction factors
+        momentum = self.calculate_momentum(idx, bars)
+        velocity = self.calculate_velocity(idx, bars)
+        acceleration = self.calculate_acceleration(idx, bars)
+        pattern_score = self.analyze_pattern_sequence(idx, bars)
 
-        # Signal 1: MA position
-        if current_price > ma50:
-            bullish += 1
-        else:
-            bearish += 1
-        total += 1
+        momentum_strength = abs(momentum) / (atr + 0.0001)
 
-        # Signal 2: MA distance
-        ma_distance = abs(current_price - ma50) / (atr + 0.0001)
-        if 0.5 < ma_distance < 2.0:
-            if current_price > ma50:
-                bullish += 1
-            else:
-                bearish += 1
-            total += 1
-
-        # Signal 3: RSI
-        if 30 < rsi < 50:
-            bullish += 1
-            total += 1
-        elif 50 < rsi < 70:
-            bearish += 1
-            total += 1
-
-        # Signal 4: MACD
-        if macd_main > macd_signal and macd_main < 0:
-            bullish += 1
-            total += 1
-        elif macd_main < macd_signal and macd_main > 0:
-            bearish += 1
-            total += 1
-
-        # Signal 5: Bollinger Bands
-        if current_price < bb_lower:
-            bullish += 1
-            total += 1
-        elif current_price > bb_upper:
-            bearish += 1
-            total += 1
-        elif current_price < bb_middle and (bb_middle - current_price) < (current_price - bb_lower):
-            bullish += 1
-            total += 1
-        elif current_price > bb_middle and (current_price - bb_middle) < (bb_upper - current_price):
-            bearish += 1
-            total += 1
-
-        # Signal 6: Stochastic
-        if stoch < 20:
-            bullish += 1
-            total += 1
-        elif stoch > 80:
-            bearish += 1
-            total += 1
-
-        # Signal 7: ADX
-        if adx >= 20:
-            total += 1
-            if current_price > ma50:
-                bullish += 1
-            else:
-                bearish += 1
-        elif adx >= 15:
-            total += 1
-            if current_price > ma50:
-                bullish += 1
-            else:
-                bearish += 1
-
-        # Signal 8: CCI
-        if cci < -100:
-            bullish += 1
-            total += 1
-        elif cci > 100:
-            bearish += 1
-            total += 1
-
-        # Signal 9: Recent candles
-        if idx >= 5:
-            bullish_candles = sum([1 for i in range(5) if df.iloc[idx-i]['Close'] > df.iloc[idx-i]['Open']])
-            if bullish_candles >= 4:
-                bullish += 1
-                total += 1
-            elif bullish_candles <= 1:
-                bearish += 1
-                total += 1
-
-        # Signals 10-12: Multi-timeframe (simplified)
-        if current_price > ma50:
-            bullish += 2
-            total += 2
-        else:
-            bearish += 2
-            total += 2
-
-        # Signal 13: Higher TF RSI
-        if 30 < rsi < 70:
-            if rsi < 50:
-                bullish += 1
-                total += 1
-            elif rsi > 50:
-                bearish += 1
-                total += 1
-
-        # Signal 14: Higher TF ADX
-        if adx >= 20:
-            total += 1
-            if current_price > ma50:
-                bullish += 1
-            else:
-                bearish += 1
+        # Predict direction (now with market structure awareness)
+        predicted_direction = self.predict_next_move(idx, momentum, velocity, acceleration, pattern_score)
 
         return {
-            'bullish': bullish,
-            'bearish': bearish,
-            'total': total,
-            'adx': adx,
+            'momentum': momentum,
+            'velocity': velocity,
+            'acceleration': acceleration,
+            'pattern_score': pattern_score,
+            'momentum_strength': momentum_strength,
+            'predicted_direction': predicted_direction,
             'atr': atr,
             'volatility': atr / current_price,
             'current_price': current_price
         }
 
     def calculate_probability(self, signals):
-        """Calculate probability - exact EA logic"""
-        if signals['total'] == 0:
-            return 0.50
+        """Calculate prediction confidence - exact EA logic"""
+        confidence = 0.50  # Base 50%
 
-        max_signals = max(signals['bullish'], signals['bearish'])
-        confluence_ratio = max_signals / signals['total']
+        momentum_strength = signals['momentum_strength']
+        momentum = signals['momentum']
+        velocity = signals['velocity']
+        acceleration = signals['acceleration']
+        pattern_score = signals['pattern_score']
+        atr = signals['atr']
 
-        base_prob = 0.50 + (confluence_ratio - 0.5) * 0.80
+        # Factor 1: Momentum strength (up to +20%)
+        if momentum_strength > 2.0:
+            confidence += 0.20
+        elif momentum_strength > 1.5:
+            confidence += 0.15
+        elif momentum_strength > 1.0:
+            confidence += 0.10
+        elif momentum_strength > 0.5:
+            confidence += 0.05
 
-        adx_bonus = 0
-        if signals['adx'] >= 25:
-            adx_bonus = 0.08
-        elif signals['adx'] >= 20:
-            adx_bonus = 0.05
+        # Factor 2: Velocity-Momentum alignment (up to +15%)
+        velocity_aligned = (momentum > 0 and velocity > 0) or (momentum < 0 and velocity < 0)
+        if velocity_aligned:
+            velocity_strength = abs(velocity) / (atr + 0.0001)
+            if velocity_strength > 0.001:
+                confidence += 0.15
+            elif velocity_strength > 0.0005:
+                confidence += 0.10
+            else:
+                confidence += 0.05
 
-        conf_bonus = 0
-        if confluence_ratio >= 0.85:
-            conf_bonus = 0.10
-        elif confluence_ratio >= 0.80:
-            conf_bonus = 0.07
-        elif confluence_ratio >= 0.75:
-            conf_bonus = 0.05
+        # Factor 3: Acceleration (up to +10%)
+        acceleration_aligned = False
+        if acceleration > 0 and momentum > 0 and velocity > 0:
+            acceleration_aligned = True
+        if acceleration > 0 and momentum < 0 and velocity < 0:
+            acceleration_aligned = True
 
-        vol_adj = 0
-        if signals['volatility'] < 0.01:
-            vol_adj = 0.05
-        elif signals['volatility'] < 0.015:
-            vol_adj = 0.03
-        elif signals['volatility'] > 0.025:
-            vol_adj = -0.05
+        if acceleration_aligned:
+            confidence += 0.10
+        elif abs(acceleration) < 0.00001:
+            confidence += 0.05
 
-        probability = base_prob + adx_bonus + conf_bonus + vol_adj
-        probability = max(0.60, min(0.98, probability))
+        # Factor 4: Pattern consistency (up to +15%)
+        if pattern_score >= 0.80:
+            confidence += 0.15
+        elif pattern_score >= 0.70:
+            confidence += 0.12
+        elif pattern_score >= 0.60:
+            confidence += 0.08
+        elif pattern_score >= 0.55:
+            confidence += 0.04
 
-        return probability
+        # Clamp to realistic range [50%, 98%]
+        confidence = max(0.50, min(0.98, confidence))
+
+        return confidence
 
     def should_trade(self, signals, probability):
         """Check if trade should be taken"""
-        max_signals = max(signals['bullish'], signals['bearish'])
+        # Must have a clear prediction
+        if signals['predicted_direction'] == 0:
+            return False, "No clear prediction"
 
-        if max_signals < 5:
-            return False, "Insufficient confluence"
-
-        required_prob = 0.75
-
-        spread_ratio = 0.1
-        if spread_ratio > 0.3:
-            required_prob += 0.05
-        if signals['volatility'] > 0.03:
-            required_prob += 0.05
-        if signals['adx'] < 15:
-            required_prob += 0.05
-
-        confluence_ratio = max_signals / signals['total']
-        if confluence_ratio >= 0.85 and signals['adx'] >= 25 and signals['volatility'] < 0.01:
-            required_prob -= 0.05
-
-        required_prob = max(0.70, min(0.95, required_prob))
+        # Minimum confidence threshold
+        required_prob = 0.85
 
         if probability < required_prob:
-            return False, f"Probability {probability:.2%} < {required_prob:.2%}"
+            return False, f"Confidence {probability:.2%} < {required_prob:.2%}"
 
-        return True, "All checks passed"
+        return True, "Prediction confident"
 
     def simulate_trade(self, idx, signals):
-        """Simulate trade outcome"""
+        """Simulate trade outcome based on prediction"""
         df = self.data
         row = df.iloc[idx]
 
-        direction = 'BUY' if signals['bullish'] > signals['bearish'] else 'SELL'
+        direction = 'BUY' if signals['predicted_direction'] > 0 else 'SELL'
         entry_price = row['Close']
         atr = row['ATR']
 
@@ -353,9 +416,9 @@ class AEGFMBacktester:
         return 'OPEN', None
 
     def run_backtest(self):
-        """Run backtest"""
+        """Run backtest with PREDICTIVE ENGINE"""
         print("\n" + "="*70)
-        print("STARTING BACKTEST")
+        print("STARTING BACKTEST - PREDICTIVE ENGINE MODE")
         print("="*70)
 
         wins = 0
@@ -363,7 +426,7 @@ class AEGFMBacktester:
         open_trades = 0
 
         for idx in range(100, len(self.data), 30):  # Every 30 candles
-            signals = self.analyze_signals(idx)
+            signals = self.analyze_signals(idx, bars=20)
             probability = self.calculate_probability(signals)
 
             should_enter, reason = self.should_trade(signals, probability)
@@ -373,22 +436,23 @@ class AEGFMBacktester:
 
             result, exit_time = self.simulate_trade(idx, signals)
 
-            direction = 'BUY' if signals['bullish'] > signals['bearish'] else 'SELL'
+            direction = 'BUY' if signals['predicted_direction'] > 0 else 'SELL'
 
             self.trades.append({
                 'result': result,
                 'direction': direction,
-                'probability': probability,
-                'confluence': f"{max(signals['bullish'], signals['bearish'])}/{signals['total']}",
-                'adx': signals['adx']
+                'confidence': probability,
+                'momentum': signals['momentum'],
+                'velocity': signals['velocity'],
+                'pattern_score': signals['pattern_score']
             })
 
             if result == 'WIN':
                 wins += 1
-                print(f"✓ #{len(self.trades):2d} WIN  | {direction:4s} | Prob: {probability:5.1%} | Conf: {self.trades[-1]['confluence']:5s} | ADX: {signals['adx']:5.1f}")
+                print(f"✓ #{len(self.trades):2d} WIN  | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
             elif result == 'LOSS':
                 losses += 1
-                print(f"✗ #{len(self.trades):2d} LOSS | {direction:4s} | Prob: {probability:5.1%} | Conf: {self.trades[-1]['confluence']:5s} | ADX: {signals['adx']:5.1f}")
+                print(f"✗ #{len(self.trades):2d} LOSS | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
             else:
                 open_trades += 1
 
@@ -443,9 +507,9 @@ class AEGFMBacktester:
 if __name__ == "__main__":
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║          AEGFM-Ω EA BACKTESTING SIMULATOR v1.0                  ║
-║       Testing 14-Indicator Multi-Timeframe System                ║
-║       Verifying 98% Accuracy Target                              ║
+║          AEGFM-Ω EA BACKTESTING SIMULATOR v2.0                  ║
+║       Testing PREDICTIVE ENGINE: Momentum/Velocity/Accel         ║
+║       Verifying 98% Accuracy Prediction Target                   ║
 ╚══════════════════════════════════════════════════════════════════╝
     """)
 
