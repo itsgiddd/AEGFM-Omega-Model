@@ -54,21 +54,31 @@ def create_visualizations(backtester, wins, losses, open_trades):
     wins_data = trades_df[trades_df['result'] == 'WIN']
     losses_data = trades_df[trades_df['result'] == 'LOSS']
 
-    # FIXED: Make wins MORE visible, losses less overwhelming
-    ax1.scatter(wins_data['trade_num'], [1]*len(wins_data),
-               color='#00ff00', alpha=0.9, s=30, label='WIN', marker='o', edgecolors='none')
-    ax1.scatter(losses_data['trade_num'], [1]*len(losses_data),
-               color='#ff0000', alpha=0.7, s=20, marker='x', linewidths=1.5, label='LOSS')
+    # CLEAR VISUAL SEPARATION: Wins at top, losses at bottom
+    # This makes the 90/10 ratio immediately obvious
+    ax1.scatter(wins_data['trade_num'], [1.0]*len(wins_data),
+               color='#00ff00', alpha=0.8, s=40, label=f'WIN ({len(wins_data)})',
+               marker='o', edgecolors='none')
+    ax1.scatter(losses_data['trade_num'], [0.3]*len(losses_data),
+               color='#ff0000', alpha=0.9, s=50, marker='x', linewidths=2,
+               label=f'LOSS ({len(losses_data)})')
+
+    # Add reference lines to show the separation
+    ax1.axhline(y=1.0, color='#00ff00', alpha=0.3, linestyle='--', linewidth=1)
+    ax1.axhline(y=0.3, color='#ff0000', alpha=0.3, linestyle='--', linewidth=1)
+
+    # Calculate and display win rate
+    win_rate = len(wins_data) / (len(wins_data) + len(losses_data)) * 100
 
     ax1.set_xlabel('Trade Number', fontsize=10, color='#00ff00')
     ax1.set_ylabel('Outcome', fontsize=10, color='#00ff00')
-    ax1.set_title(f'Win/Loss Timeline\n{len(wins_data)}W / {len(losses_data)}L',
+    ax1.set_title(f'Win/Loss Timeline - {win_rate:.2f}% Win Rate\n{len(wins_data)} Wins / {len(losses_data)} Losses',
                  fontsize=12, color='#00ff00', fontweight='bold')
-    ax1.set_ylim(0.5, 1.5)
-    ax1.set_yticks([1])
-    ax1.set_yticklabels(['Trade'])
-    ax1.legend(loc='upper right')
-    ax1.grid(True, alpha=0.3)
+    ax1.set_ylim(0, 1.5)
+    ax1.set_yticks([0.3, 1.0])
+    ax1.set_yticklabels(['LOSS', 'WIN'])
+    ax1.legend(loc='upper right', fontsize=9)
+    ax1.grid(True, alpha=0.2, axis='x')
 
     # =================================================================
     # PLOT 2: Cumulative Win Rate
