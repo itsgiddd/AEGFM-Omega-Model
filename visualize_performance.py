@@ -54,31 +54,28 @@ def create_visualizations(backtester, wins, losses, open_trades):
     wins_data = trades_df[trades_df['result'] == 'WIN']
     losses_data = trades_df[trades_df['result'] == 'LOSS']
 
-    # CLEAR VISUAL SEPARATION: Wins at top, losses at bottom
-    # This makes the 90/10 ratio immediately obvious
-    ax1.scatter(wins_data['trade_num'], [1.0]*len(wins_data),
-               color='#00ff00', alpha=0.8, s=40, label=f'WIN ({len(wins_data)})',
-               marker='o', edgecolors='none')
-    ax1.scatter(losses_data['trade_num'], [0.3]*len(losses_data),
-               color='#ff0000', alpha=0.9, s=50, marker='x', linewidths=2,
-               label=f'LOSS ({len(losses_data)})')
+    # SIMPLE BAR CHART: Shows actual COUNT difference
+    # This makes the 9:1 ratio IMMEDIATELY and HONESTLY obvious
+    win_count = len(wins_data)
+    loss_count = len(losses_data)
+    win_rate = win_count / (win_count + loss_count) * 100
 
-    # Add reference lines to show the separation
-    ax1.axhline(y=1.0, color='#00ff00', alpha=0.3, linestyle='--', linewidth=1)
-    ax1.axhline(y=0.3, color='#ff0000', alpha=0.3, linestyle='--', linewidth=1)
+    bars = ax1.bar(['WINS', 'LOSSES'], [win_count, loss_count],
+                   color=['#00ff00', '#ff0000'], alpha=0.8, width=0.6)
 
-    # Calculate and display win rate
-    win_rate = len(wins_data) / (len(wins_data) + len(losses_data)) * 100
+    # Add count labels on top of bars
+    ax1.text(0, win_count + (win_count * 0.02), f'{win_count:,}', ha='center', va='bottom',
+            color='#00ff00', fontsize=14, fontweight='bold')
+    ax1.text(1, loss_count + (win_count * 0.02), f'{loss_count:,}', ha='center', va='bottom',
+            color='#ff0000', fontsize=14, fontweight='bold')
 
-    ax1.set_xlabel('Trade Number', fontsize=10, color='#00ff00')
-    ax1.set_ylabel('Outcome', fontsize=10, color='#00ff00')
-    ax1.set_title(f'Win/Loss Timeline - {win_rate:.2f}% Win Rate\n{len(wins_data)} Wins / {len(losses_data)} Losses',
+    ax1.set_ylabel('Trade Count', fontsize=10, color='#00ff00')
+    ax1.set_title(f'Win/Loss Count - {win_rate:.2f}% Win Rate\n{win_count:,} Wins vs {loss_count:,} Losses',
                  fontsize=12, color='#00ff00', fontweight='bold')
-    ax1.set_ylim(0, 1.5)
-    ax1.set_yticks([0.3, 1.0])
-    ax1.set_yticklabels(['LOSS', 'WIN'])
-    ax1.legend(loc='upper right', fontsize=9)
-    ax1.grid(True, alpha=0.2, axis='x')
+    ax1.grid(True, alpha=0.2, axis='y')
+
+    # Set y-axis to show the full scale so the difference is clear
+    ax1.set_ylim(0, win_count * 1.15)
 
     # =================================================================
     # PLOT 2: Cumulative Win Rate
