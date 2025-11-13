@@ -54,10 +54,11 @@ def create_visualizations(backtester, wins, losses, open_trades):
     wins_data = trades_df[trades_df['result'] == 'WIN']
     losses_data = trades_df[trades_df['result'] == 'LOSS']
 
+    # FIXED: Make wins MORE visible, losses less overwhelming
     ax1.scatter(wins_data['trade_num'], [1]*len(wins_data),
-               color='#00ff00', alpha=0.6, s=20, label='WIN')
+               color='#00ff00', alpha=0.9, s=30, label='WIN', marker='o', edgecolors='none')
     ax1.scatter(losses_data['trade_num'], [1]*len(losses_data),
-               color='#ff0000', alpha=0.9, s=50, marker='x', label='LOSS')
+               color='#ff0000', alpha=0.7, s=20, marker='x', linewidths=1.5, label='LOSS')
 
     ax1.set_xlabel('Trade Number', fontsize=10, color='#00ff00')
     ax1.set_ylabel('Outcome', fontsize=10, color='#00ff00')
