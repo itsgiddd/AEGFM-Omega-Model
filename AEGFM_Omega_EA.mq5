@@ -342,15 +342,30 @@ void ExecuteImmediateTrade() {
     double patternScore = AnalyzePatternSequence(InpPredictionBars);
     Print("  Pattern Consistency Score: ", NormalizeDouble(patternScore * 100, 2), "%");
 
-    // === STEP 5: RAPID SCENARIO ANALYSIS (Thousands of Simulations) ===
+    // === STEP 5A: PREDICTION ENGINE (Market Structure Analysis) ===
     Print("");
     Print("════════════════════════════════════════════════════════════");
-    Print("  RAPID SCENARIO ANALYSIS - Simulating Future Outcomes");
+    Print("  STEP 5A: PREDICTION ENGINE - Market Structure Analysis");
+    Print("════════════════════════════════════════════════════════════");
+
+    int enginePrediction = PredictNextMove(momentum, velocity, acceleration, patternScore);
+
+    if(enginePrediction != 0) {
+        string engineDir = (enginePrediction > 0 ? "BULLISH" : "BEARISH");
+        Print("  ✓ Engine Prediction: ", engineDir);
+    } else {
+        Print("  → Engine Prediction: NEUTRAL (no clear signal)");
+    }
+
+    // === STEP 5B: RAPID SCENARIO ANALYSIS (Thousands of Simulations) ===
+    Print("");
+    Print("════════════════════════════════════════════════════════════");
+    Print("  STEP 5B: SCENARIO ANALYSIS - Simulating ", 5000, " Futures");
     Print("════════════════════════════════════════════════════════════");
 
     // Run Monte Carlo scenario analysis
     int numScenarios = 5000;  // Analyze 5000 possible futures
-    Print("  ⚡ Analyzing ", numScenarios, " scenarios in real-time...");
+    Print("  ⚡ Running ", numScenarios, " probabilistic simulations...");
 
     int bullishScenarios = 0;
     int bearishScenarios = 0;
@@ -416,27 +431,54 @@ void ExecuteImmediateTrade() {
     Print("    → Bearish Scenarios: ", bearishScenarios, " (", NormalizeDouble((double)bearishScenarios/numScenarios*100, 1), "%)");
     Print("    → Consensus Strength: ", NormalizeDouble(scenarioConfidence, 1), "%");
 
-    // Determine prediction based on scenario majority
-    int predictedDirection = 0;
+    // Determine scenario-based prediction
+    int scenarioPrediction = 0;
     if(bullishScenarios > bearishScenarios) {
-        predictedDirection = 1;  // BUY
-        Print("  ✓✓✓ PREDICTION: BULLISH (", bullishScenarios, " scenarios favor upside)");
+        scenarioPrediction = 1;  // BUY
     } else {
-        predictedDirection = -1;  // SELL
-        Print("  ✓✓✓ PREDICTION: BEARISH (", bearishScenarios, " scenarios favor downside)");
+        scenarioPrediction = -1;  // SELL
+    }
+
+    // === STEP 5C: COMBINE ENGINE + SCENARIOS ===
+    Print("");
+    Print("════════════════════════════════════════════════════════════");
+    Print("  STEP 5C: COMBINED PREDICTION (Engine + Scenarios)");
+    Print("════════════════════════════════════════════════════════════");
+
+    int predictedDirection = scenarioPrediction;  // Default to scenarios
+    double confidence = scenarioConsensus;
+
+    // Check agreement between engine and scenarios
+    if(enginePrediction != 0 && enginePrediction == scenarioPrediction) {
+        // BOTH AGREE - Maximum confidence!
+        confidence = MathMin(0.98, scenarioConsensus * 1.15);  // Boost confidence up to 98%
+        Print("  ✓✓✓ AGREEMENT: Engine and ", numScenarios, " scenarios AGREE");
+        Print("  → Direction: ", (predictedDirection > 0 ? "BULLISH" : "BEARISH"));
+        Print("  → Confidence BOOSTED to ", NormalizeDouble(confidence * 100, 1), "% (both systems agree)");
+    }
+    else if(enginePrediction != 0 && enginePrediction != scenarioPrediction) {
+        // DISAGREE - Use scenarios (more data points) but reduce confidence
+        confidence = scenarioConsensus * 0.90;  // Slight confidence reduction
+        Print("  ⚠ CONFLICT: Engine says ", (enginePrediction > 0 ? "BULLISH" : "BEARISH"),
+              ", but scenarios say ", (scenarioPrediction > 0 ? "BULLISH" : "BEARISH"));
+        Print("  → Using SCENARIO prediction (", numScenarios, " simulations > 1 engine call)");
+        Print("  → Confidence adjusted to ", NormalizeDouble(confidence * 100, 1), "% (conflict penalty)");
+    }
+    else {
+        // Engine neutral - scenarios decide
+        Print("  → Engine NEUTRAL, using ", numScenarios, " scenarios alone");
+        Print("  → Direction: ", (predictedDirection > 0 ? "BULLISH" : "BEARISH"));
+        Print("  → Confidence: ", NormalizeDouble(confidence * 100, 1), "% (scenario consensus)");
     }
 
     string directionStr = (predictedDirection > 0 ? "BULLISH (BUY)" : "BEARISH (SELL)");
-    Print("  Predicted Direction: ", directionStr);
-
-    // === STEP 6: Use Scenario Consensus as Confidence ===
-    // Scenario consensus IS the confidence level
-    // 50% = coin flip (weak), 70% = good, 90%+ = very strong
-    double confidence = scenarioConsensus;  // Already 0-1 scale
-
     Print("");
-    Print("  Prediction Confidence (from scenarios): ", NormalizeDouble(confidence * 100, 1), "%");
-    Print("  ⚡ IMMEDIATE TRADE: Trading based on ", numScenarios, " scenario analysis");
+    Print("  ✓✓✓ FINAL PREDICTION: ", directionStr);
+    Print("  ✓✓✓ FINAL CONFIDENCE: ", NormalizeDouble(confidence * 100, 1), "%");
+
+    // === STEP 6: Execute Immediately ===
+    Print("");
+    Print("  ⚡ IMMEDIATE TRADE MODE: Executing based on combined analysis");
 
     // === STEP 7: Execute Predicted Trade ===
     bool goLong = (predictedDirection > 0);
