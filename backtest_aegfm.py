@@ -278,8 +278,70 @@ class AEGFMBacktester:
         else:
             return 0
 
+    def run_scenario_analysis(self, momentum, velocity, acceleration, pattern_score, atr, num_scenarios=5000):
+        """Run Monte Carlo scenario analysis - matches MQ5 logic exactly"""
+        bullish_scenarios = 0
+        bearish_scenarios = 0
+
+        for i in range(num_scenarios):
+            # Generate random factor (-0.5 to +0.5)
+            random_factor = np.random.rand() - 0.5
+
+            # Weight by current momentum
+            scenario_momentum = momentum + (random_factor * atr * 0.5)
+            scenario_velocity = velocity + (random_factor * atr * 0.3)
+
+            # Score this scenario
+            scenario_score = 0
+
+            # Factor 1: Mean reversion tendency
+            if momentum > atr * 0.5:
+                # Strong bullish = likely bearish reversal
+                scenario_score -= (abs(scenario_momentum) / (atr + 0.0001)) * 2.0
+            elif momentum < -atr * 0.5:
+                # Strong bearish = likely bullish reversal
+                scenario_score += (abs(scenario_momentum) / (atr + 0.0001)) * 2.0
+
+            # Factor 2: Velocity alignment
+            if velocity > 0 and momentum > 0:
+                scenario_score -= 1.0  # Strong upward = predict down
+            elif velocity < 0 and momentum < 0:
+                scenario_score += 1.0  # Strong downward = predict up
+
+            # Factor 3: Acceleration
+            if acceleration < 0:
+                # Deceleration = reversal more likely
+                scenario_score += (0.5 if scenario_score > 0 else -0.5)
+
+            # Factor 4: Pattern consistency
+            if pattern_score > 0.65:
+                if momentum > 0:
+                    scenario_score -= 0.5
+                else:
+                    scenario_score += 0.5
+
+            # Factor 5: Random noise
+            scenario_score += random_factor * 0.3
+
+            # Vote
+            if scenario_score > 0:
+                bullish_scenarios += 1
+            else:
+                bearish_scenarios += 1
+
+        # Calculate consensus
+        scenario_consensus = max(bullish_scenarios, bearish_scenarios) / num_scenarios
+
+        # Determine prediction
+        if bullish_scenarios > bearish_scenarios:
+            scenario_prediction = 1  # BUY
+        else:
+            scenario_prediction = -1  # SELL
+
+        return scenario_prediction, scenario_consensus, bullish_scenarios, bearish_scenarios
+
     def analyze_signals(self, idx, bars=20):
-        """Analyze using PREDICTIVE ENGINE - exact EA logic"""
+        """Analyze using DUAL SYSTEM - Prediction Engine + Scenario Analysis"""
         df = self.data
         row = df.iloc[idx]
 
@@ -294,8 +356,26 @@ class AEGFMBacktester:
 
         momentum_strength = abs(momentum) / (atr + 0.0001)
 
-        # Predict direction (now with market structure awareness)
-        predicted_direction = self.predict_next_move(idx, momentum, velocity, acceleration, pattern_score)
+        # STEP 1: Prediction Engine
+        engine_prediction = self.predict_next_move(idx, momentum, velocity, acceleration, pattern_score)
+
+        # STEP 2: Scenario Analysis (5000 simulations)
+        scenario_prediction, scenario_consensus, bullish_count, bearish_count = \
+            self.run_scenario_analysis(momentum, velocity, acceleration, pattern_score, atr, num_scenarios=5000)
+
+        # STEP 3: Combine predictions
+        predicted_direction = scenario_prediction  # Default to scenarios
+        confidence = scenario_consensus
+
+        if engine_prediction != 0 and engine_prediction == scenario_prediction:
+            # BOTH AGREE - boost confidence
+            confidence = min(0.98, scenario_consensus * 1.15)
+        elif engine_prediction != 0 and engine_prediction != scenario_prediction:
+            # DISAGREE - use scenarios but reduce confidence
+            confidence = scenario_consensus * 0.90
+        else:
+            # Engine neutral - use scenarios alone
+            confidence = scenario_consensus
 
         return {
             'momentum': momentum,
@@ -304,9 +384,15 @@ class AEGFMBacktester:
             'pattern_score': pattern_score,
             'momentum_strength': momentum_strength,
             'predicted_direction': predicted_direction,
+            'engine_prediction': engine_prediction,
+            'scenario_prediction': scenario_prediction,
+            'scenario_consensus': scenario_consensus,
+            'bullish_scenarios': bullish_count,
+            'bearish_scenarios': bearish_count,
             'atr': atr,
             'volatility': atr / current_price,
-            'current_price': current_price
+            'current_price': current_price,
+            'confidence': confidence
         }
 
     def calculate_probability(self, signals):
@@ -369,18 +455,14 @@ class AEGFMBacktester:
         return confidence
 
     def should_trade(self, signals, probability):
-        """Check if trade should be taken"""
-        # Must have a clear prediction
+        """Check if trade should be taken - ALWAYS TRUE for immediate mode"""
+        # Must have a clear prediction (scenarios always provide one)
         if signals['predicted_direction'] == 0:
             return False, "No clear prediction"
 
-        # Minimum confidence threshold
-        required_prob = 0.90
-
-        if probability < required_prob:
-            return False, f"Confidence {probability:.2%} < {required_prob:.2%}"
-
-        return True, "Prediction confident"
+        # IMMEDIATE MODE: No confidence threshold
+        # Trade based on scenario analysis consensus
+        return True, f"Scenarios: {signals['scenario_consensus']:.1%} consensus"
 
     def simulate_trade(self, idx, signals):
         """Simulate trade outcome based on prediction"""
@@ -416,9 +498,9 @@ class AEGFMBacktester:
         return 'OPEN', None
 
     def run_backtest(self):
-        """Run backtest with PREDICTIVE ENGINE"""
+        """Run backtest with DUAL SYSTEM (Engine + Scenarios)"""
         print("\n" + "="*70)
-        print("STARTING BACKTEST - PREDICTIVE ENGINE MODE (1000+ Trades)")
+        print("DUAL SYSTEM BACKTEST - Engine + 5000 Scenario Simulations")
         print("="*70)
 
         wins = 0
@@ -448,22 +530,30 @@ class AEGFMBacktester:
             self.trades.append({
                 'result': result,
                 'direction': direction,
-                'confidence': probability,
+                'confidence': signals['confidence'],
                 'momentum': signals['momentum'],
                 'velocity': signals['velocity'],
-                'pattern_score': signals['pattern_score']
+                'pattern_score': signals['pattern_score'],
+                'engine_prediction': signals['engine_prediction'],
+                'scenario_prediction': signals['scenario_prediction'],
+                'scenario_consensus': signals['scenario_consensus']
             })
+
+            # Determine if engine and scenarios agreed
+            engine_dir = "BUY" if signals['engine_prediction'] > 0 else "SELL" if signals['engine_prediction'] < 0 else "NEU"
+            scenario_dir = "BUY" if signals['scenario_prediction'] > 0 else "SELL"
+            agreement = "✓AGREE" if signals['engine_prediction'] == signals['scenario_prediction'] else "⚠CONF" if signals['engine_prediction'] != 0 else "○NEU"
 
             if result == 'WIN':
                 wins += 1
                 # Only print first 50 and last 50 trades to avoid spam
                 if len(self.trades) <= 50 or len(self.trades) > len(self.trades) - 50:
-                    print(f"✓ #{len(self.trades):4d} WIN  | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
+                    print(f"✓ #{len(self.trades):4d} WIN  | {direction:4s} | Conf: {signals['confidence']:5.1%} | Scenarios: {signals['scenario_consensus']:4.1%} | Engine: {engine_dir} | {agreement}")
             elif result == 'LOSS':
                 losses += 1
                 # Only print first 50 and last 50 trades to avoid spam
                 if len(self.trades) <= 50 or len(self.trades) > len(self.trades) - 50:
-                    print(f"✗ #{len(self.trades):4d} LOSS | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
+                    print(f"✗ #{len(self.trades):4d} LOSS | {direction:4s} | Conf: {signals['confidence']:5.1%} | Scenarios: {signals['scenario_consensus']:4.1%} | Engine: {engine_dir} | {agreement}")
             else:
                 open_trades += 1
 
@@ -475,7 +565,7 @@ class AEGFMBacktester:
         closed_trades = wins + losses
 
         print("\n" + "="*70)
-        print("BACKTEST RESULTS - 1000+ TRADE ANALYSIS")
+        print("DUAL SYSTEM BACKTEST RESULTS")
         print("="*70)
         print(f"Candles Generated: {self.num_candles}")
         print(f"Total Signals: {total}")
@@ -483,6 +573,34 @@ class AEGFMBacktester:
         print(f"Open Trades: {open_trades}")
         print(f"Wins: {wins}")
         print(f"Losses: {losses}")
+
+        # Analyze engine vs scenario agreement
+        if len(self.trades) > 0:
+            trades_df = pd.DataFrame(self.trades)
+            agreed = sum(1 for t in self.trades if t.get('engine_prediction') == t.get('scenario_prediction'))
+            engine_neutral = sum(1 for t in self.trades if t.get('engine_prediction') == 0)
+            conflict = len(self.trades) - agreed - engine_neutral
+
+            print(f"\nDUAL SYSTEM ANALYSIS:")
+            print(f"  Engine + Scenarios AGREED: {agreed} trades ({agreed/len(self.trades)*100:.1f}%)")
+            print(f"  Engine NEUTRAL (scenarios only): {engine_neutral} trades ({engine_neutral/len(self.trades)*100:.1f}%)")
+            print(f"  Engine + Scenarios CONFLICT: {conflict} trades ({conflict/len(self.trades)*100:.1f}%)")
+
+            # Win rate by agreement type
+            if agreed > 0:
+                agreed_trades = [t for t in self.trades if t.get('engine_prediction') == t.get('scenario_prediction')]
+                agreed_wins = sum(1 for t in agreed_trades if t['result'] == 'WIN')
+                print(f"  → AGREED trades win rate: {agreed_wins/agreed*100:.1f}%")
+
+            if engine_neutral > 0:
+                neutral_trades = [t for t in self.trades if t.get('engine_prediction') == 0]
+                neutral_wins = sum(1 for t in neutral_trades if t['result'] == 'WIN')
+                print(f"  → NEUTRAL trades win rate: {neutral_wins/engine_neutral*100:.1f}%")
+
+            if conflict > 0:
+                conflict_trades = [t for t in self.trades if t.get('engine_prediction') != 0 and t.get('engine_prediction') != t.get('scenario_prediction')]
+                conflict_wins = sum(1 for t in conflict_trades if t['result'] == 'WIN')
+                print(f"  → CONFLICT trades win rate: {conflict_wins/conflict*100:.1f}%")
 
         if closed_trades > 0:
             win_rate = (wins / closed_trades) * 100
@@ -518,9 +636,9 @@ class AEGFMBacktester:
 if __name__ == "__main__":
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║          AEGFM-Ω EA BACKTESTING SIMULATOR v2.0                  ║
-║       Testing PREDICTIVE ENGINE: Momentum/Velocity/Accel         ║
-║       Verifying 98% Accuracy Prediction Target                   ║
+║          AEGFM-Ω DUAL SYSTEM BACKTESTING v3.0                   ║
+║       Prediction Engine + 5000 Scenario Monte Carlo             ║
+║       Testing Immediate Trade with 95%+ Accuracy                ║
 ╚══════════════════════════════════════════════════════════════════╝
     """)
 
