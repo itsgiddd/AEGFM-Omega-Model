@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "AEGFM-Ω Trading System - Gideon Liciaga"
 #property link      ""
-#property version   "3.01"
+#property version   "3.02"
 #property strict
 
 #include <Trade\Trade.mqh>
@@ -103,7 +103,7 @@ double currentEquity = 0;
 //+------------------------------------------------------------------+
 int OnInit() {
     Print("═══════════════════════════════════════════════════");
-    Print("  AEGFM-Ω Expert Advisor v3.01 Initialized");
+    Print("  AEGFM-Ω Expert Advisor v3.02 Initialized");
     Print("  TRIPLE-LAYER PREDICTIVE ENGINE: ", (InpPredictiveMode ? "ON" : "OFF"));
     Print("  Layer 1: Market Structure Prediction Engine");
     Print("  Layer 2: Bayesian Market Regime Classifier");
