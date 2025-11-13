@@ -31,6 +31,7 @@ input double InpTargetATRMultiplier = 0.75;     // Take Profit (ATR multiplier)
 input int InpMinBarsForPattern = 30;            // Minimum Bars for Pattern
 
 input group "=== Pattern Detection ==="
+input double InpMinProbability = 0.75;          // Min Pattern Probability (75%)
 input double InpPatternTolerance = 0.02;        // Pattern Level Tolerance (ATR fraction)
 input double InpNecklineTolerance = 0.03;       // Neckline Tolerance (ATR fraction)
 input int InpSwingLookback = 5;                 // Swing Point Lookback
