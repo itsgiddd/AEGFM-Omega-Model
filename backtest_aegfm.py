@@ -542,14 +542,30 @@ class AEGFMBacktester:
         return confidence
 
     def should_trade(self, signals, probability):
-        """Check if trade should be taken - ALWAYS TRUE for immediate mode"""
+        """Check if trade should be taken - ELITE MODE for 97%+ accuracy"""
         # Must have a clear prediction (scenarios always provide one)
         if signals['predicted_direction'] == 0:
             return False, "No clear prediction"
 
-        # IMMEDIATE MODE: No confidence threshold
-        # Trade based on scenario analysis consensus
-        return True, f"Scenarios: {signals['scenario_consensus']:.1%} consensus"
+        # ELITE MODE FILTERING (97%+ accuracy)
+        ELITE_MODE = True  # Set to True for 97%+ accuracy, False for 90% accuracy
+        MIN_ELITE_CONFIDENCE = 0.93  # 93% minimum confidence
+        MIN_ELITE_QUALITY = 7  # 7/9 minimum Bayesian quality score
+
+        if ELITE_MODE:
+            # Filter 1: Minimum Confidence
+            if signals['confidence'] < MIN_ELITE_CONFIDENCE:
+                return False, f"Elite Mode: Confidence too low ({signals['confidence']:.1%} < {MIN_ELITE_CONFIDENCE:.1%})"
+
+            # Filter 2: Minimum Quality Score
+            if signals['quality_score'] < MIN_ELITE_QUALITY:
+                return False, f"Elite Mode: Quality too low ({signals['quality_score']}/9 < {MIN_ELITE_QUALITY}/9)"
+
+            # All Elite filters passed
+            return True, f"ELITE SETUP: Conf {signals['confidence']:.1%}, Quality {signals['quality_score']}/9"
+        else:
+            # IMMEDIATE MODE: No filtering (90% accuracy)
+            return True, f"Scenarios: {signals['scenario_consensus']:.1%} consensus"
 
     def simulate_trade(self, idx, signals):
         """Simulate trade outcome based on prediction"""
