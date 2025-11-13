@@ -418,14 +418,21 @@ class AEGFMBacktester:
     def run_backtest(self):
         """Run backtest with PREDICTIVE ENGINE"""
         print("\n" + "="*70)
-        print("STARTING BACKTEST - PREDICTIVE ENGINE MODE")
+        print("STARTING BACKTEST - PREDICTIVE ENGINE MODE (1000+ Trades)")
         print("="*70)
 
         wins = 0
         losses = 0
         open_trades = 0
+        total_scanned = 0
 
-        for idx in range(100, len(self.data), 30):  # Every 30 candles
+        for idx in range(100, len(self.data), 5):  # Every 5 candles for more trades
+            total_scanned += 1
+
+            # Show progress every 1000 scans
+            if total_scanned % 1000 == 0:
+                print(f"Progress: Scanned {total_scanned} bars, Found {len(self.trades)} trades (W:{wins} L:{losses})")
+
             signals = self.analyze_signals(idx, bars=20)
             probability = self.calculate_probability(signals)
 
@@ -449,10 +456,14 @@ class AEGFMBacktester:
 
             if result == 'WIN':
                 wins += 1
-                print(f"✓ #{len(self.trades):2d} WIN  | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
+                # Only print first 50 and last 50 trades to avoid spam
+                if len(self.trades) <= 50 or len(self.trades) > len(self.trades) - 50:
+                    print(f"✓ #{len(self.trades):4d} WIN  | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
             elif result == 'LOSS':
                 losses += 1
-                print(f"✗ #{len(self.trades):2d} LOSS | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
+                # Only print first 50 and last 50 trades to avoid spam
+                if len(self.trades) <= 50 or len(self.trades) > len(self.trades) - 50:
+                    print(f"✗ #{len(self.trades):4d} LOSS | {direction:4s} | Conf: {probability:5.1%} | Mom: {signals['momentum']:7.5f} | Vel: {signals['velocity']:7.5f} | Pat: {signals['pattern_score']:4.2f}")
             else:
                 open_trades += 1
 
@@ -464,9 +475,9 @@ class AEGFMBacktester:
         closed_trades = wins + losses
 
         print("\n" + "="*70)
-        print("BACKTEST RESULTS")
+        print("BACKTEST RESULTS - 1000+ TRADE ANALYSIS")
         print("="*70)
-        print(f"Candles Analyzed: {self.num_candles}")
+        print(f"Candles Generated: {self.num_candles}")
         print(f"Total Signals: {total}")
         print(f"Closed Trades: {closed_trades}")
         print(f"Open Trades: {open_trades}")
@@ -513,7 +524,7 @@ if __name__ == "__main__":
 ╚══════════════════════════════════════════════════════════════════╝
     """)
 
-    backtester = AEGFMBacktester(num_candles=2000)
+    backtester = AEGFMBacktester(num_candles=50000)  # Increased for 1000+ trades
 
     try:
         backtester.generate_realistic_data()
