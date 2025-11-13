@@ -349,32 +349,39 @@ void ExecuteImmediateTrade() {
     Print("════════════════════════════════════════════════════════════");
 
     int predictedDirection = PredictNextMove(momentum, velocity, acceleration, patternScore);
-    string directionStr = (predictedDirection > 0 ? "BULLISH (BUY)" : predictedDirection < 0 ? "BEARISH (SELL)" : "NEUTRAL");
 
-    Print("  Predicted Direction: ", directionStr);
-
+    // IMMEDIATE TRADE MODE: If no clear prediction, use simple momentum
     if(predictedDirection == 0) {
-        Print("✗ PREDICTION FAILED: No clear direction detected");
-        Print("  Cannot trade without confident prediction");
-        return;
+        Print("  ⚡ No strict prediction - Using simple momentum direction");
+        // Simple fallback: if momentum is positive, predict bearish (mean reversion)
+        // if momentum is negative, predict bullish (mean reversion)
+        if(momentum > 0) {
+            predictedDirection = -1;  // Bearish (fade the bullish momentum)
+            Print("  → Momentum positive, predicting BEARISH (mean reversion)");
+        } else if(momentum < 0) {
+            predictedDirection = 1;   // Bullish (fade the bearish momentum)
+            Print("  → Momentum negative, predicting BULLISH (mean reversion)");
+        } else {
+            // No momentum at all - use velocity
+            if(velocity > 0) {
+                predictedDirection = -1;
+                Print("  → Velocity positive, predicting BEARISH (mean reversion)");
+            } else {
+                predictedDirection = 1;
+                Print("  → Velocity negative, predicting BULLISH (mean reversion)");
+            }
+        }
     }
+
+    string directionStr = (predictedDirection > 0 ? "BULLISH (BUY)" : predictedDirection < 0 ? "BEARISH (SELL)" : "NEUTRAL");
+    Print("  Predicted Direction: ", directionStr);
 
     // === STEP 6: Calculate Prediction Confidence ===
     double confidence = CalculatePredictionConfidence(momentum, velocity, acceleration,
                                                       patternScore, momentumStrength, atr);
 
     Print("  Prediction Confidence: ", NormalizeDouble(confidence * 100, 2), "%");
-    Print("  Required Confidence: ", NormalizeDouble(InpMinPredictionConfidence * 100, 2), "%");
-
-    if(confidence < InpMinPredictionConfidence) {
-        Print("✗ REJECTED: Prediction confidence too low");
-        Print("  Need ", NormalizeDouble(InpMinPredictionConfidence * 100, 2), "% confidence for 98% accuracy target");
-        Print("  Got only ", NormalizeDouble(confidence * 100, 2), "%");
-        return;
-    }
-
-    Print("");
-    Print("  ✓ Prediction confidence PASSED minimum threshold!");
+    Print("  ⚡ IMMEDIATE TRADE MODE: Executing regardless of confidence level");
 
     // === STEP 7: Execute Predicted Trade ===
     bool goLong = (predictedDirection > 0);
