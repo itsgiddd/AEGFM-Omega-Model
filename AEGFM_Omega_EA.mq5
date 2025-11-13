@@ -1,11 +1,11 @@
 //+------------------------------------------------------------------+
 //|                                              AEGFM_Omega_EA.mq5 |
 //|                        Advanced Trading System with 75% Target |
-//|                                   Pattern + Probability Based   |
+//|                          IMMEDIATE TRADING MODE ENABLED         |
 //+------------------------------------------------------------------+
 #property copyright "AEGFM-Ω Trading System"
 #property link      ""
-#property version   "1.00"
+#property version   "1.10"
 #property strict
 
 #include <Trade\Trade.mqh>
@@ -13,11 +13,15 @@
 #include <Trade\AccountInfo.mqh>
 
 //--- Input Parameters
+input group "=== IMMEDIATE TRADING ==="
+input bool InpImmediateTrade = true;            // ✓ Trade Immediately on Load
+input bool InpAggressiveMode = true;            // ✓ Aggressive Entry (No Pattern Required)
+
 input group "=== Risk Management ==="
 input double InpRiskPercent = 4.0;              // Risk Per Trade (%)
 input double InpMaxLossPercent = 0.25;          // Max Loss Per Trade (% of equity)
 input double InpKellyFraction = 0.4;            // Fractional Kelly
-input double InpMinProbability = 0.75;          // Minimum Probability (75% target)
+input double InpMinProbability = 0.60;          // Minimum Probability (60% for immediate mode)
 
 input group "=== Entry Settings ==="
 input int InpATRPeriod = 14;                    // ATR Period
@@ -52,6 +56,11 @@ datetime time[];
 
 // Indicator handles
 int atrHandle;
+int maHandle;  // Moving average for trend
+
+// Immediate trading flag
+bool initialTradeExecuted = false;
+bool isFirstTick = true;
 
 // Structure for detected patterns
 struct PatternInfo {
@@ -77,6 +86,8 @@ double currentEquity = 0;
 int OnInit() {
     Print("═══════════════════════════════════════════════════");
     Print("  AEGFM-Ω Expert Advisor Initialized");
+    Print("  IMMEDIATE TRADING MODE: ", (InpImmediateTrade ? "ON" : "OFF"));
+    Print("  AGGRESSIVE MODE: ", (InpAggressiveMode ? "ON" : "OFF"));
     Print("  Target Accuracy: ", InpMinProbability * 100, "%");
     Print("  Risk Per Trade: ", InpRiskPercent, "%");
     Print("═══════════════════════════════════════════════════");
@@ -94,6 +105,13 @@ int OnInit() {
         return(INIT_FAILED);
     }
 
+    // Initialize MA for trend detection
+    maHandle = iMA(_Symbol, _Period, 50, 0, MODE_SMA, PRICE_CLOSE);
+    if(maHandle == INVALID_HANDLE) {
+        Print("Error creating MA indicator!");
+        return(INIT_FAILED);
+    }
+
     // Initialize pattern structure
     ResetPattern();
 
@@ -105,6 +123,12 @@ int OnInit() {
     ArraySetAsSeries(time, true);
 
     currentEquity = accountInfo.Balance();
+    initialTradeExecuted = false;
+    isFirstTick = true;
+
+    if(InpImmediateTrade) {
+        Print("⚡ IMMEDIATE TRADING ENABLED - Will analyze and trade on first tick!");
+    }
 
     return(INIT_SUCCEEDED);
 }
@@ -123,19 +147,35 @@ void OnDeinit(const int reason) {
     Print("═══════════════════════════════════════════════════");
 
     IndicatorRelease(atrHandle);
+    IndicatorRelease(maHandle);
 }
 
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
 //+------------------------------------------------------------------+
 void OnTick() {
-    // Check if new bar
-    static datetime lastBar = 0;
-    if(time[0] == lastBar) return;
-    lastBar = time[0];
-
     // Update market data
     if(!UpdateMarketData()) return;
+
+    // IMMEDIATE TRADING MODE - Execute on first tick
+    if(InpImmediateTrade && isFirstTick && !initialTradeExecuted) {
+        Print("⚡⚡⚡ IMMEDIATE TRADING MODE ACTIVATED ⚡⚡⚡");
+        Print("Analyzing current market conditions...");
+
+        isFirstTick = false;
+
+        if(!HasOpenPosition()) {
+            ExecuteImmediateTrade();
+            initialTradeExecuted = true;
+        }
+
+        return;
+    }
+
+    // Check if new bar (for regular pattern detection)
+    static datetime lastBar = 0;
+    if(time[0] == lastBar && !InpImmediateTrade) return;
+    lastBar = time[0];
 
     // Check time filter
     if(InpUseTimeFilter && !IsTimeToTrade()) return;
@@ -143,10 +183,219 @@ void OnTick() {
     // Manage existing positions
     ManageOpenPositions();
 
-    // If no position, look for entry
-    if(!HasOpenPosition()) {
+    // If no position, look for entry (regular mode)
+    if(!HasOpenPosition() && !InpImmediateTrade) {
         AnalyzeMarket();
     }
+}
+
+//+------------------------------------------------------------------+
+//| Execute immediate trade based on current market conditions       |
+//+------------------------------------------------------------------+
+void ExecuteImmediateTrade() {
+    Print("════════════════════════════════════════════════════════════");
+    Print("  IMMEDIATE MARKET ANALYSIS");
+    Print("════════════════════════════════════════════════════════════");
+
+    double atr = GetATR(0);
+    if(atr <= 0) {
+        Print("✗ Cannot calculate ATR, aborting immediate trade");
+        return;
+    }
+
+    double currentPrice = close[0];
+    double ma50 = GetMA(0);
+
+    // Calculate market conditions
+    double momentum = CalculateMomentum();
+    double volatility = atr / currentPrice;
+    double trendStrength = CalculateTrendStrength();
+
+    // Determine direction from multiple signals
+    int bullishSignals = 0;
+    int bearishSignals = 0;
+
+    // Signal 1: Price vs MA
+    if(currentPrice > ma50) bullishSignals++;
+    else bearishSignals++;
+
+    // Signal 2: Momentum
+    if(momentum > 0) bullishSignals++;
+    else bearishSignals++;
+
+    // Signal 3: Recent candles
+    int recentBullish = 0;
+    for(int i = 0; i < 5; i++) {
+        if(close[i] > open[i]) recentBullish++;
+    }
+    if(recentBullish >= 3) bullishSignals++;
+    else if(recentBullish <= 2) bearishSignals++;
+
+    // Signal 4: Trend strength
+    if(trendStrength > 0.5) {
+        if(currentPrice > ma50) bullishSignals++;
+        else bearishSignals++;
+    }
+
+    // Calculate immediate probability
+    double probability = CalculateImmediateProbability(momentum, volatility, trendStrength,
+                                                       bullishSignals, bearishSignals);
+
+    Print("─────────────────────────────────────────────────────────────");
+    Print("  Market Analysis:");
+    Print("  Current Price: ", currentPrice);
+    Print("  MA(50): ", ma50);
+    Print("  Momentum: ", NormalizeDouble(momentum, 5));
+    Print("  Volatility: ", NormalizeDouble(volatility * 100, 3), "%");
+    Print("  Trend Strength: ", NormalizeDouble(trendStrength, 3));
+    Print("  Bullish Signals: ", bullishSignals);
+    Print("  Bearish Signals: ", bearishSignals);
+    Print("  Calculated Probability: ", NormalizeDouble(probability * 100, 2), "%");
+    Print("─────────────────────────────────────────────────────────────");
+
+    // Determine trade direction
+    bool goLong = bullishSignals > bearishSignals;
+    string direction = goLong ? "LONG" : "SHORT";
+
+    // In aggressive mode, trade even with low probability
+    if(InpAggressiveMode || probability >= InpMinProbability) {
+
+        double entry = currentPrice;
+        double stop, target;
+
+        if(goLong) {
+            stop = entry - (InpStopATRMultiplier * atr);
+            target = entry + (InpTargetATRMultiplier * atr);
+        } else {
+            stop = entry + (InpStopATRMultiplier * atr);
+            target = entry - (InpTargetATRMultiplier * atr);
+        }
+
+        double riskReward = MathAbs(target - entry) / MathAbs(entry - stop);
+        double lotSize = CalculatePositionSize(probability, riskReward, MathAbs(entry - stop));
+
+        if(lotSize < SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN)) {
+            Print("✗ Position size too small, cannot trade");
+            return;
+        }
+
+        Print("════════════════════════════════════════════════════════════");
+        Print("  ⚡ IMMEDIATE TRADE EXECUTION ⚡");
+        Print("  Direction: ", direction);
+        Print("  Entry: ", entry);
+        Print("  Stop: ", stop);
+        Print("  Target: ", target);
+        Print("  Probability: ", NormalizeDouble(probability * 100, 2), "%");
+        Print("  R:R: 1:", NormalizeDouble(riskReward, 2));
+        Print("  Lot Size: ", lotSize);
+        Print("════════════════════════════════════════════════════════════");
+
+        // Normalize prices
+        stop = NormalizeDouble(stop, _Digits);
+        target = NormalizeDouble(target, _Digits);
+
+        // Execute trade
+        bool success = false;
+        if(goLong) {
+            success = trade.Buy(lotSize, _Symbol, 0, stop, target, InpTradeComment + " [IMMEDIATE]");
+        } else {
+            success = trade.Sell(lotSize, _Symbol, 0, stop, target, InpTradeComment + " [IMMEDIATE]");
+        }
+
+        if(success) {
+            totalTrades++;
+            Print("✓✓✓ IMMEDIATE TRADE PLACED SUCCESSFULLY ✓✓✓");
+            Print("  Ticket: ", trade.ResultOrder());
+            Print("  Filled at: ", trade.ResultPrice());
+        } else {
+            Print("✗✗✗ IMMEDIATE TRADE FAILED ✗✗✗");
+            Print("  Error: ", GetLastError());
+        }
+
+    } else {
+        Print("✗ Probability (", NormalizeDouble(probability * 100, 2), "%) below minimum (",
+              NormalizeDouble(InpMinProbability * 100, 2), "%)");
+        Print("  Enable Aggressive Mode to trade anyway");
+    }
+}
+
+//+------------------------------------------------------------------+
+//| Calculate momentum from recent price action                      |
+//+------------------------------------------------------------------+
+double CalculateMomentum() {
+    int periods = 20;
+    if(ArraySize(close) < periods) return 0;
+
+    double priceChange = close[0] - close[periods-1];
+    double percentChange = priceChange / close[periods-1];
+
+    return percentChange;
+}
+
+//+------------------------------------------------------------------+
+//| Calculate trend strength (0 to 1)                                |
+//+------------------------------------------------------------------+
+double CalculateTrendStrength() {
+    int periods = 20;
+    if(ArraySize(close) < periods) return 0.5;
+
+    // Count how many closes are above/below MA
+    double ma = GetMA(0);
+    int aboveMA = 0;
+
+    for(int i = 0; i < periods; i++) {
+        if(close[i] > ma) aboveMA++;
+    }
+
+    // Strength is how consistently price stays on one side of MA
+    double consistency = MathAbs((double)aboveMA / periods - 0.5) * 2;
+
+    return consistency;
+}
+
+//+------------------------------------------------------------------+
+//| Calculate immediate probability                                  |
+//+------------------------------------------------------------------+
+double CalculateImmediateProbability(double momentum, double volatility,
+                                     double trendStrength, int bullSignals, int bearSignals) {
+    // Base probability from signal ratio
+    int totalSignals = bullSignals + bearSignals;
+    if(totalSignals == 0) return 0.50;
+
+    double winningSignals = MathMax(bullSignals, bearSignals);
+    double baseProbability = winningSignals / totalSignals;
+
+    // Adjust for momentum (strong momentum increases probability)
+    double momentumBonus = MathAbs(momentum) * 100 * 0.05;  // Up to 5% bonus
+    momentumBonus = MathMin(momentumBonus, 0.05);
+
+    // Adjust for trend strength (strong trend increases probability)
+    double trendBonus = trendStrength * 0.10;  // Up to 10% bonus
+
+    // Penalty for high volatility (uncertainty)
+    double volPenalty = MathMin(volatility * 50, 0.05);  // Up to 5% penalty
+
+    // Calculate final probability
+    double probability = baseProbability + momentumBonus + trendBonus - volPenalty;
+
+    // Ensure in range [0.50, 0.95]
+    probability = MathMax(0.50, MathMin(0.95, probability));
+
+    return probability;
+}
+
+//+------------------------------------------------------------------+
+//| Get MA value                                                      |
+//+------------------------------------------------------------------+
+double GetMA(int shift) {
+    double maBuffer[];
+    ArraySetAsSeries(maBuffer, true);
+
+    if(CopyBuffer(maHandle, 0, shift, 1, maBuffer) <= 0) {
+        return close[shift];  // Fallback to price
+    }
+
+    return maBuffer[0];
 }
 
 //+------------------------------------------------------------------+
@@ -219,7 +468,7 @@ void MoveToBreakeven() {
         double triggerPrice = openPrice + InpBreakevenATR * atr;
 
         if(currentPrice >= triggerPrice && currentSL < openPrice) {
-            double newSL = openPrice + 10 * _Point; // Breakeven + spread
+            double newSL = openPrice + 10 * _Point;
             if(trade.PositionModify(positionInfo.Ticket(), newSL, positionInfo.TakeProfit())) {
                 Print("✓ Stop moved to breakeven for BUY at ", newSL);
             }
@@ -238,13 +487,12 @@ void MoveToBreakeven() {
 }
 
 //+------------------------------------------------------------------+
-//| Main market analysis function                                    |
+//| Main market analysis function (pattern-based)                    |
 //+------------------------------------------------------------------+
 void AnalyzeMarket() {
     // Reset pattern
     ResetPattern();
 
-    // Calculate ATR for reference
     double atr = GetATR(0);
     if(atr <= 0) return;
 
@@ -255,32 +503,26 @@ void AnalyzeMarket() {
     // Try to detect patterns
     bool patternFound = false;
 
-    // 1. Try Double Bottom
     if(!patternFound && ArraySize(swingLows) >= 2) {
         patternFound = DetectDoubleBottom(swingLows, atr);
     }
 
-    // 2. Try Double Top
     if(!patternFound && ArraySize(swingHighs) >= 2) {
         patternFound = DetectDoubleTop(swingHighs, atr);
     }
 
-    // 3. Try Head & Shoulders
     if(!patternFound && ArraySize(swingHighs) >= 3) {
         patternFound = DetectHeadAndShoulders(swingHighs, atr);
     }
 
-    // 4. Try Inverse Head & Shoulders
     if(!patternFound && ArraySize(swingLows) >= 3) {
         patternFound = DetectInverseHeadAndShoulders(swingLows, atr);
     }
 
-    // 5. Try Triangle
     if(!patternFound) {
         patternFound = DetectTriangle(atr);
     }
 
-    // If pattern found, calculate probability and execute if valid
     if(patternFound && currentPattern.isValid) {
         double probability = CalculateProbability();
 
@@ -310,7 +552,6 @@ void FindSwingPoints(int &swingHighs[], int &swingLows[]) {
     int bars = ArraySize(high);
 
     for(int i = lookback; i < bars - lookback; i++) {
-        // Check for swing high
         bool isSwingHigh = true;
         for(int j = i - lookback; j <= i + lookback; j++) {
             if(j != i && high[j] >= high[i]) {
@@ -323,7 +564,6 @@ void FindSwingPoints(int &swingHighs[], int &swingLows[]) {
             swingHighs[ArraySize(swingHighs) - 1] = i;
         }
 
-        // Check for swing low
         bool isSwingLow = true;
         for(int j = i - lookback; j <= i + lookback; j++) {
             if(j != i && low[j] <= low[i]) {
@@ -345,31 +585,25 @@ bool DetectDoubleBottom(int &swingLows[], double atr) {
     int size = ArraySize(swingLows);
     if(size < 2) return false;
 
-    // Check last two swing lows
     int idx1 = swingLows[size - 2];
     int idx2 = swingLows[size - 1];
 
     double low1 = low[idx1];
     double low2 = low[idx2];
 
-    // Check if levels are similar
     double tolerance = InpPatternTolerance * atr;
     if(MathAbs(low1 - low2) > tolerance) return false;
 
-    // Find neckline (highest high between the two lows)
     double neckline = 0;
     for(int i = idx2; i <= idx1; i++) {
         if(high[i] > neckline) neckline = high[i];
     }
 
-    // Validate neckline
     double neckTolerance = InpNecklineTolerance * atr;
     if(neckline - MathMax(low1, low2) < neckTolerance) return false;
 
-    // Current price should be near/above neckline
     if(close[0] < neckline - tolerance) return false;
 
-    // Set pattern details
     currentPattern.type = "Double Bottom";
     currentPattern.entry = neckline;
     currentPattern.stop = MathMin(low1, low2) - InpStopATRMultiplier * atr;
@@ -397,7 +631,6 @@ bool DetectDoubleTop(int &swingHighs[], double atr) {
     double tolerance = InpPatternTolerance * atr;
     if(MathAbs(high1 - high2) > tolerance) return false;
 
-    // Find neckline (lowest low between the two highs)
     double neckline = DBL_MAX;
     for(int i = idx2; i <= idx1; i++) {
         if(low[i] < neckline) neckline = low[i];
@@ -426,9 +659,9 @@ bool DetectHeadAndShoulders(int &swingHighs[], double atr) {
     int size = ArraySize(swingHighs);
     if(size < 3) return false;
 
-    int idxL = swingHighs[size - 3]; // Left shoulder
-    int idxH = swingHighs[size - 2]; // Head
-    int idxR = swingHighs[size - 1]; // Right shoulder
+    int idxL = swingHighs[size - 3];
+    int idxH = swingHighs[size - 2];
+    int idxR = swingHighs[size - 1];
 
     double highL = high[idxL];
     double highH = high[idxH];
@@ -436,13 +669,9 @@ bool DetectHeadAndShoulders(int &swingHighs[], double atr) {
 
     double tolerance = InpPatternTolerance * atr;
 
-    // Head should be highest
     if(highH - highL < tolerance || highH - highR < tolerance) return false;
-
-    // Shoulders should be similar
     if(MathAbs(highL - highR) > tolerance) return false;
 
-    // Find neckline
     double neckline = DBL_MAX;
     for(int i = idxR; i <= idxL; i++) {
         if(low[i] < neckline) neckline = low[i];
@@ -478,13 +707,9 @@ bool DetectInverseHeadAndShoulders(int &swingLows[], double atr) {
 
     double tolerance = InpPatternTolerance * atr;
 
-    // Head should be lowest
     if(lowL - lowH < tolerance || lowR - lowH < tolerance) return false;
-
-    // Shoulders should be similar
     if(MathAbs(lowL - lowR) > tolerance) return false;
 
-    // Find neckline
     double neckline = 0;
     for(int i = idxR; i <= idxL; i++) {
         if(high[i] > neckline) neckline = high[i];
@@ -510,35 +735,27 @@ bool DetectTriangle(double atr) {
     int window = InpMinBarsForPattern;
     if(ArraySize(high) < window) return false;
 
-    // Simple linear regression for upper and lower bounds
     double upperSlope, lowerSlope;
     double upperIntercept, lowerIntercept;
 
-    // Calculate upper trendline
     CalculateTrendline(high, window, upperSlope, upperIntercept);
-
-    // Calculate lower trendline
     CalculateTrendline(low, window, lowerSlope, lowerIntercept);
 
-    // Check for triangle (converging lines)
     if(upperSlope >= 0 || lowerSlope <= 0) return false;
 
-    // Calculate current bounds
     double upperBound = upperSlope * 0 + upperIntercept;
     double lowerBound = lowerSlope * 0 + lowerIntercept;
 
     double range = upperBound - lowerBound;
     if(range <= 0) return false;
 
-    // Calculate pole (height at start of triangle)
     double poleHeight = high[window] - low[window];
 
-    // Entry at upper bound (bullish breakout)
     currentPattern.type = "Symmetrical Triangle";
     currentPattern.entry = upperBound;
     currentPattern.stop = lowerBound - InpStopATRMultiplier * atr;
     currentPattern.target = upperBound + poleHeight;
-    currentPattern.quality = 0.7; // Default quality for triangles
+    currentPattern.quality = 0.7;
     currentPattern.detectTime = time[0];
     currentPattern.isValid = true;
 
@@ -567,38 +784,29 @@ void CalculateTrendline(double &prices[], int window, double &slope, double &int
 }
 
 //+------------------------------------------------------------------+
-//| Calculate probability of success                                 |
+//| Calculate probability of success (pattern-based)                 |
 //+------------------------------------------------------------------+
 double CalculateProbability() {
-    // Calculate multiple factors for probability
-
-    // 1. Pattern quality (0-1)
     double qualityScore = currentPattern.quality;
 
-    // 2. Momentum score
     double momentum = (close[0] - close[10]) / close[10];
     double momentumScore = (momentum > 0) ? MathMin(momentum * 100, 1.0) : 0.0;
 
-    // 3. Volatility score (lower volatility = higher confidence in patterns)
     double atr = GetATR(0);
     double atrRatio = atr / close[0];
     double volScore = 1.0 - MathMin(atrRatio * 50, 1.0);
 
-    // 4. Risk/Reward ratio score
     double rr = MathAbs(currentPattern.target - currentPattern.entry) /
                 MathAbs(currentPattern.entry - currentPattern.stop);
-    double rrScore = MathMin(rr / 3.0, 1.0); // Target R:R >= 2
+    double rrScore = MathMin(rr / 3.0, 1.0);
 
-    // Weighted combination
     double probability = (qualityScore * 0.4) +
                         (momentumScore * 0.2) +
                         (volScore * 0.2) +
                         (rrScore * 0.2);
 
-    // Ensure minimum base probability
     probability = MathMax(probability, 0.5);
 
-    // Add pattern-specific bonuses
     if(StringFind(currentPattern.type, "Double") >= 0) {
         probability += 0.05;
     }
@@ -617,12 +825,10 @@ void ExecuteTrade(double probability) {
     double atr = GetATR(0);
     double currentPrice = close[0];
 
-    // Determine direction
     bool isBullish = (currentPrice < currentPattern.entry &&
                      (StringFind(currentPattern.type, "Bottom") >= 0 ||
                       StringFind(currentPattern.type, "Inverse") >= 0));
 
-    // Calculate position size using Kelly
     double riskReward = MathAbs(currentPattern.target - currentPattern.entry) /
                        MathAbs(currentPattern.entry - currentPattern.stop);
 
@@ -634,30 +840,24 @@ void ExecuteTrade(double probability) {
         return;
     }
 
-    // Normalize prices
     double entryPrice = NormalizeDouble(currentPattern.entry, _Digits);
     double stopLoss = NormalizeDouble(currentPattern.stop, _Digits);
     double takeProfit = NormalizeDouble(currentPattern.target, _Digits);
 
-    // Place pending order
     bool success = false;
 
     if(isBullish) {
-        // Buy Stop
         if(entryPrice > currentPrice) {
             success = trade.BuyStop(lotSize, entryPrice, _Symbol, stopLoss, takeProfit,
                                    ORDER_TIME_GTC, 0, InpTradeComment);
         } else {
-            // Market buy
             success = trade.Buy(lotSize, _Symbol, 0, stopLoss, takeProfit, InpTradeComment);
         }
     } else {
-        // Sell Stop
         if(entryPrice < currentPrice) {
             success = trade.SellStop(lotSize, entryPrice, _Symbol, stopLoss, takeProfit,
                                     ORDER_TIME_GTC, 0, InpTradeComment);
         } else {
-            // Market sell
             success = trade.Sell(lotSize, _Symbol, 0, stopLoss, takeProfit, InpTradeComment);
         }
     }
@@ -678,26 +878,21 @@ void ExecuteTrade(double probability) {
 double CalculatePositionSize(double probability, double rewardRiskRatio, double stopDistance) {
     double equity = accountInfo.Balance();
 
-    // Kelly fraction
     double kellyF = probability - (1 - probability) / rewardRiskRatio;
     if(kellyF <= 0) return 0;
 
-    // Fractional Kelly
     double f = InpKellyFraction * kellyF;
 
-    // Risk amount
     double riskAmount = MathMin(
         equity * (InpRiskPercent / 100.0),
         equity * (InpMaxLossPercent / 100.0)
     );
 
-    // Calculate lot size
     double pointValue = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
     double stopPoints = stopDistance / _Point;
 
     double lotSize = riskAmount / (stopPoints * pointValue);
 
-    // Normalize to allowed lot sizes
     double minLot = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
     double maxLot = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MAX);
     double lotStep = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
@@ -739,7 +934,6 @@ void ResetPattern() {
 //| Trade event handler                                              |
 //+------------------------------------------------------------------+
 void OnTrade() {
-    // Track closed trades for statistics
     HistorySelect(0, TimeCurrent());
 
     int total = HistoryDealsTotal();
@@ -758,7 +952,7 @@ void OnTrade() {
                     winningTrades++;
                 }
 
-                break; // Only process latest
+                break;
             }
         }
     }
