@@ -19,9 +19,11 @@ input bool InpPredictiveMode = true;            // ✓ TRIPLE-LAYER ENGINE (90%+
 input int InpPredictionBars = 20;               // Analysis Bars for Prediction
 
 input group "=== Risk Management ==="
-input double InpRiskPercent = 4.0;              // Risk Per Trade (%)
-input double InpMaxLossPercent = 0.25;          // Max Loss Per Trade (% of equity)
-input double InpKellyFraction = 0.4;            // Fractional Kelly
+input bool InpUseFixedLotSize = false;          // Use Fixed Lot Size (instead of auto-calc)
+input double InpFixedLotSize = 0.01;            // Fixed Lot Size (0.01, 0.03, 0.04, etc.)
+input double InpRiskPercent = 4.0;              // Risk Per Trade (%) - if auto-calc
+input double InpMaxLossPercent = 0.25;          // Max Loss Per Trade (% of equity) - if auto-calc
+input double InpKellyFraction = 0.4;            // Fractional Kelly - if auto-calc
 input double InpMinPredictionConfidence = 0.90; // Min Prediction Confidence (90%)
 
 input group "=== Entry Settings ==="
@@ -109,7 +111,13 @@ int OnInit() {
     Print("  Target Accuracy: 90%+");
     Print("  Min Prediction Confidence: ", InpMinPredictionConfidence * 100, "%");
     Print("  Prediction Analysis Bars: ", InpPredictionBars);
-    Print("  Risk Per Trade: ", InpRiskPercent, "%");
+
+    if(InpUseFixedLotSize) {
+        Print("  LOT SIZE: FIXED (", InpFixedLotSize, " lots per trade)");
+    } else {
+        Print("  LOT SIZE: AUTO-CALC (", InpRiskPercent, "% risk per trade)");
+    }
+
     if(InpUseFixedPips) {
         Print("  PIP MODE: FIXED (", InpStopLossPips, " SL / ", InpTakeProfitPips, " TP pips)");
     } else {
@@ -1660,6 +1668,22 @@ void ExecuteTrade(double probability) {
 //| Calculate position size using fractional Kelly                   |
 //+------------------------------------------------------------------+
 double CalculatePositionSize(double probability, double rewardRiskRatio, double stopDistance) {
+    // FIXED LOT SIZE MODE - Use your custom lot size
+    if(InpUseFixedLotSize) {
+        double minLot = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
+        double maxLot = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MAX);
+        double lotStep = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
+
+        double lotSize = InpFixedLotSize;
+
+        // Ensure lot size is within broker limits
+        lotSize = MathFloor(lotSize / lotStep) * lotStep;
+        lotSize = MathMax(minLot, MathMin(maxLot, lotSize));
+
+        return lotSize;
+    }
+
+    // AUTO-CALC MODE - Calculate based on risk management
     double equity = accountInfo.Balance();
 
     double kellyF = probability - (1 - probability) / rewardRiskRatio;
