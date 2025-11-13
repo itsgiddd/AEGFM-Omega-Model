@@ -26,8 +26,11 @@ input double InpMinPredictionConfidence = 0.90; // Min Prediction Confidence (90
 
 input group "=== Entry Settings ==="
 input int InpATRPeriod = 14;                    // ATR Period
-input double InpStopATRMultiplier = 2.0;        // Stop Loss (ATR multiplier)
-input double InpTargetATRMultiplier = 0.75;     // Take Profit (ATR multiplier)
+input bool InpUseFixedPips = false;             // Use Fixed Pips (instead of ATR)
+input double InpStopLossPips = 50.0;            // Stop Loss (pips) - if Fixed Pips enabled
+input double InpTakeProfitPips = 100.0;         // Take Profit (pips) - if Fixed Pips enabled
+input double InpStopATRMultiplier = 2.0;        // Stop Loss (ATR multiplier) - if ATR mode
+input double InpTargetATRMultiplier = 0.75;     // Take Profit (ATR multiplier) - if ATR mode
 input int InpMinBarsForPattern = 30;            // Minimum Bars for Pattern
 
 input group "=== Pattern Detection ==="
@@ -107,6 +110,11 @@ int OnInit() {
     Print("  Min Prediction Confidence: ", InpMinPredictionConfidence * 100, "%");
     Print("  Prediction Analysis Bars: ", InpPredictionBars);
     Print("  Risk Per Trade: ", InpRiskPercent, "%");
+    if(InpUseFixedPips) {
+        Print("  PIP MODE: FIXED (", InpStopLossPips, " SL / ", InpTakeProfitPips, " TP pips)");
+    } else {
+        Print("  PIP MODE: ATR-BASED (", InpStopATRMultiplier, "× / ", InpTargetATRMultiplier, "× ATR)");
+    }
     Print("═══════════════════════════════════════════════════");
 
     // Initialize trade object
@@ -576,12 +584,32 @@ void ExecuteImmediateTrade() {
     double entry = currentPrice;
     double stop, target;
 
-    if(goLong) {
-        stop = entry - (InpStopATRMultiplier * atr);
-        target = entry + (InpTargetATRMultiplier * atr);
+    // Determine if using fixed pips or ATR-based
+    double stopDistance, targetDistance;
+
+    if(InpUseFixedPips) {
+        // FIXED PIP MODE - Use your custom pip values
+        double pipValue = (_Digits == 5 || _Digits == 3) ? _Point * 10 : _Point;
+        stopDistance = InpStopLossPips * pipValue;
+        targetDistance = InpTakeProfitPips * pipValue;
+        Print("  Mode: FIXED PIPS");
+        Print("  Stop Loss: ", InpStopLossPips, " pips");
+        Print("  Take Profit: ", InpTakeProfitPips, " pips");
     } else {
-        stop = entry + (InpStopATRMultiplier * atr);
-        target = entry - (InpTargetATRMultiplier * atr);
+        // ATR MODE - Dynamic based on market volatility
+        stopDistance = InpStopATRMultiplier * atr;
+        targetDistance = InpTargetATRMultiplier * atr;
+        Print("  Mode: ATR-BASED (adaptive)");
+        Print("  Stop Loss: ", NormalizeDouble(InpStopATRMultiplier, 2), " × ATR");
+        Print("  Take Profit: ", NormalizeDouble(InpTargetATRMultiplier, 2), " × ATR");
+    }
+
+    if(goLong) {
+        stop = entry - stopDistance;
+        target = entry + targetDistance;
+    } else {
+        stop = entry + stopDistance;
+        target = entry - targetDistance;
     }
 
     double riskReward = MathAbs(target - entry) / MathAbs(entry - stop);
@@ -1564,20 +1592,41 @@ void ExecuteTrade(double probability) {
                      (StringFind(currentPattern.type, "Bottom") >= 0 ||
                       StringFind(currentPattern.type, "Inverse") >= 0));
 
-    double riskReward = MathAbs(currentPattern.target - currentPattern.entry) /
-                       MathAbs(currentPattern.entry - currentPattern.stop);
+    double entryPrice = currentPattern.entry;
+    double stopLoss = currentPattern.stop;
+    double takeProfit = currentPattern.target;
+
+    // OVERRIDE: Use fixed pips if enabled (overrides pattern-based levels)
+    if(InpUseFixedPips) {
+        double pipValue = (_Digits == 5 || _Digits == 3) ? _Point * 10 : _Point;
+        double stopDistance = InpStopLossPips * pipValue;
+        double targetDistance = InpTakeProfitPips * pipValue;
+
+        if(isBullish) {
+            stopLoss = entryPrice - stopDistance;
+            takeProfit = entryPrice + targetDistance;
+        } else {
+            stopLoss = entryPrice + stopDistance;
+            takeProfit = entryPrice - targetDistance;
+        }
+
+        Print("  FIXED PIP MODE: ", InpStopLossPips, " SL / ", InpTakeProfitPips, " TP pips");
+    }
+
+    double riskReward = MathAbs(takeProfit - entryPrice) /
+                       MathAbs(entryPrice - stopLoss);
 
     double lotSize = CalculatePositionSize(probability, riskReward,
-                                          MathAbs(currentPattern.entry - currentPattern.stop));
+                                          MathAbs(entryPrice - stopLoss));
 
     if(lotSize < SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN)) {
         Print("Position size too small, skipping trade");
         return;
     }
 
-    double entryPrice = NormalizeDouble(currentPattern.entry, _Digits);
-    double stopLoss = NormalizeDouble(currentPattern.stop, _Digits);
-    double takeProfit = NormalizeDouble(currentPattern.target, _Digits);
+    entryPrice = NormalizeDouble(entryPrice, _Digits);
+    stopLoss = NormalizeDouble(stopLoss, _Digits);
+    takeProfit = NormalizeDouble(takeProfit, _Digits);
 
     bool success = false;
 
