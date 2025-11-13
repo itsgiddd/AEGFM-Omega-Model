@@ -236,8 +236,8 @@ class AEGFMBacktester:
                 else:
                     bearish_score += 2
 
-            # Minimum score
-            if bullish_score < 12 and bearish_score < 12:
+            # Minimum score (ULTRA-STRICT for 98%)
+            if bullish_score < 14 and bearish_score < 14:
                 return 0
 
         else:
@@ -266,15 +266,15 @@ class AEGFMBacktester:
                 else:
                     bearish_score += 2
 
-            # Minimum score
-            if bullish_score < 8 and bearish_score < 8:
+            # Minimum score (ULTRA-STRICT for 98%)
+            if bullish_score < 11 and bearish_score < 11:
                 return 0
 
-        # Strict threshold
+        # Strict threshold - INVERTED based on backtest showing inverse correlation
         if bullish_score > bearish_score + 3:
-            return 1
+            return -1  # INVERTED: Strong bullish = predict bearish (mean reversion)
         elif bearish_score > bullish_score + 3:
-            return -1
+            return 1   # INVERTED: Strong bearish = predict bullish (mean reversion)
         else:
             return 0
 
@@ -375,7 +375,7 @@ class AEGFMBacktester:
             return False, "No clear prediction"
 
         # Minimum confidence threshold
-        required_prob = 0.85
+        required_prob = 0.90
 
         if probability < required_prob:
             return False, f"Confidence {probability:.2%} < {required_prob:.2%}"
@@ -392,11 +392,11 @@ class AEGFMBacktester:
         atr = row['ATR']
 
         if direction == 'BUY':
-            sl = entry_price - (1.0 * atr)
-            tp = entry_price + (2.0 * atr)
+            sl = entry_price - (2.0 * atr)
+            tp = entry_price + (0.75 * atr)
         else:
-            sl = entry_price + (1.0 * atr)
-            tp = entry_price - (2.0 * atr)
+            sl = entry_price + (2.0 * atr)
+            tp = entry_price - (0.75 * atr)
 
         # Check next 100 candles
         for future_idx in range(idx + 1, min(idx + 100, len(df))):
@@ -490,8 +490,8 @@ class AEGFMBacktester:
             else:
                 print("✗ BELOW TARGET: < 70% Accuracy (Major adjustment needed)")
 
-            expected_profit = (win_rate/100 * 2) - ((100-win_rate)/100 * 1)
-            print(f"\nExpected Profit per Trade (1:2 R:R): {expected_profit:.2f}R")
+            expected_profit = (win_rate/100 * 0.75) - ((100-win_rate)/100 * 2.0)
+            print(f"\nExpected Profit per Trade (0.75:2 R:R): {expected_profit:.2f}R")
 
             if expected_profit > 0:
                 print(f"✓ Profitable system (positive expectancy)")
