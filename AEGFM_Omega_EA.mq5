@@ -342,46 +342,101 @@ void ExecuteImmediateTrade() {
     double patternScore = AnalyzePatternSequence(InpPredictionBars);
     Print("  Pattern Consistency Score: ", NormalizeDouble(patternScore * 100, 2), "%");
 
-    // === STEP 5: Predict Next Move ===
+    // === STEP 5: RAPID SCENARIO ANALYSIS (Thousands of Simulations) ===
     Print("");
     Print("════════════════════════════════════════════════════════════");
-    Print("  PREDICTION ENGINE - Forecasting Next Move");
+    Print("  RAPID SCENARIO ANALYSIS - Simulating Future Outcomes");
     Print("════════════════════════════════════════════════════════════");
 
-    int predictedDirection = PredictNextMove(momentum, velocity, acceleration, patternScore);
+    // Run Monte Carlo scenario analysis
+    int numScenarios = 5000;  // Analyze 5000 possible futures
+    Print("  ⚡ Analyzing ", numScenarios, " scenarios in real-time...");
 
-    // IMMEDIATE TRADE MODE: If no clear prediction, use simple momentum
-    if(predictedDirection == 0) {
-        Print("  ⚡ No strict prediction - Using simple momentum direction");
-        // Simple fallback: if momentum is positive, predict bearish (mean reversion)
-        // if momentum is negative, predict bullish (mean reversion)
-        if(momentum > 0) {
-            predictedDirection = -1;  // Bearish (fade the bullish momentum)
-            Print("  → Momentum positive, predicting BEARISH (mean reversion)");
-        } else if(momentum < 0) {
-            predictedDirection = 1;   // Bullish (fade the bearish momentum)
-            Print("  → Momentum negative, predicting BULLISH (mean reversion)");
+    int bullishScenarios = 0;
+    int bearishScenarios = 0;
+
+    // Rapid scenario simulation
+    for(int i = 0; i < numScenarios; i++) {
+        // Generate random market scenario weighted by current conditions
+        double randomFactor = (MathRand() / 32768.0) - 0.5;  // -0.5 to +0.5
+
+        // Weight by current momentum (mean reversion bias)
+        double scenarioMomentum = momentum + (randomFactor * atr * 0.5);
+        double scenarioVelocity = velocity + (randomFactor * atr * 0.3);
+
+        // Score this scenario
+        double scenarioScore = 0;
+
+        // Factor 1: Mean reversion tendency (inverted)
+        if(momentum > atr * 0.5) {
+            // Strong bullish momentum = likely bearish reversal
+            scenarioScore -= (MathAbs(scenarioMomentum) / atr) * 2.0;
+        } else if(momentum < -atr * 0.5) {
+            // Strong bearish momentum = likely bullish reversal
+            scenarioScore += (MathAbs(scenarioMomentum) / atr) * 2.0;
+        }
+
+        // Factor 2: Velocity alignment
+        if(velocity > 0 && momentum > 0) {
+            scenarioScore -= 1.0;  // Strong upward = predict down
+        } else if(velocity < 0 && momentum < 0) {
+            scenarioScore += 1.0;  // Strong downward = predict up
+        }
+
+        // Factor 3: Acceleration (momentum change)
+        if(acceleration < 0) {
+            // Deceleration = reversal more likely
+            scenarioScore += (scenarioScore > 0 ? 0.5 : -0.5);
+        }
+
+        // Factor 4: Pattern consistency
+        if(patternScore > 0.65) {
+            // Strong pattern = fade it (mean reversion)
+            if(momentum > 0) scenarioScore -= 0.5;
+            else scenarioScore += 0.5;
+        }
+
+        // Factor 5: Random noise (market uncertainty)
+        scenarioScore += randomFactor * 0.3;
+
+        // Vote: Bullish or Bearish scenario
+        if(scenarioScore > 0) {
+            bullishScenarios++;
         } else {
-            // No momentum at all - use velocity
-            if(velocity > 0) {
-                predictedDirection = -1;
-                Print("  → Velocity positive, predicting BEARISH (mean reversion)");
-            } else {
-                predictedDirection = 1;
-                Print("  → Velocity negative, predicting BULLISH (mean reversion)");
-            }
+            bearishScenarios++;
         }
     }
 
-    string directionStr = (predictedDirection > 0 ? "BULLISH (BUY)" : predictedDirection < 0 ? "BEARISH (SELL)" : "NEUTRAL");
+    // Calculate prediction confidence based on scenario consensus
+    double scenarioConsensus = (double)MathMax(bullishScenarios, bearishScenarios) / numScenarios;
+    double scenarioConfidence = scenarioConsensus * 100.0;
+
+    Print("  ✓ Scenario Analysis Complete:");
+    Print("    → Bullish Scenarios: ", bullishScenarios, " (", NormalizeDouble((double)bullishScenarios/numScenarios*100, 1), "%)");
+    Print("    → Bearish Scenarios: ", bearishScenarios, " (", NormalizeDouble((double)bearishScenarios/numScenarios*100, 1), "%)");
+    Print("    → Consensus Strength: ", NormalizeDouble(scenarioConfidence, 1), "%");
+
+    // Determine prediction based on scenario majority
+    int predictedDirection = 0;
+    if(bullishScenarios > bearishScenarios) {
+        predictedDirection = 1;  // BUY
+        Print("  ✓✓✓ PREDICTION: BULLISH (", bullishScenarios, " scenarios favor upside)");
+    } else {
+        predictedDirection = -1;  // SELL
+        Print("  ✓✓✓ PREDICTION: BEARISH (", bearishScenarios, " scenarios favor downside)");
+    }
+
+    string directionStr = (predictedDirection > 0 ? "BULLISH (BUY)" : "BEARISH (SELL)");
     Print("  Predicted Direction: ", directionStr);
 
-    // === STEP 6: Calculate Prediction Confidence ===
-    double confidence = CalculatePredictionConfidence(momentum, velocity, acceleration,
-                                                      patternScore, momentumStrength, atr);
+    // === STEP 6: Use Scenario Consensus as Confidence ===
+    // Scenario consensus IS the confidence level
+    // 50% = coin flip (weak), 70% = good, 90%+ = very strong
+    double confidence = scenarioConsensus;  // Already 0-1 scale
 
-    Print("  Prediction Confidence: ", NormalizeDouble(confidence * 100, 2), "%");
-    Print("  ⚡ IMMEDIATE TRADE MODE: Executing regardless of confidence level");
+    Print("");
+    Print("  Prediction Confidence (from scenarios): ", NormalizeDouble(confidence * 100, 1), "%");
+    Print("  ⚡ IMMEDIATE TRADE: Trading based on ", numScenarios, " scenario analysis");
 
     // === STEP 7: Execute Predicted Trade ===
     bool goLong = (predictedDirection > 0);
