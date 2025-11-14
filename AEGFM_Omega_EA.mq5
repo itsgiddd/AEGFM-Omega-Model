@@ -347,7 +347,14 @@ void OnDeinit(const int reason) {
 //+------------------------------------------------------------------+
 void OnTick() {
     // Update market data
-    if(!UpdateMarketData()) return;
+    if(!UpdateMarketData()) {
+        static int failCount = 0;
+        failCount++;
+        if(failCount < 5) {
+            Print("⚠ UpdateMarketData() failed - attempt ", failCount);
+        }
+        return;
+    }
 
     // Check and reset daily stats if new day
     CheckAndResetDailyStats();
@@ -361,13 +368,38 @@ void OnTick() {
     // IMMEDIATE TRADING MODE - Execute on first tick
     if(InpImmediateTrade && isFirstTick && !initialTradeExecuted) {
         Print("⚡⚡⚡ IMMEDIATE TRADING MODE ACTIVATED ⚡⚡⚡");
+
+        // Check AutoTrading
+        if(!TerminalInfoInteger(TERMINAL_TRADE_ALLOWED)) {
+            Print("✗ AutoTrading is DISABLED in terminal!");
+            Print("✗ Click the 'AutoTrading' button in the toolbar to enable it");
+            isFirstTick = false;
+            initialTradeExecuted = true;
+            return;
+        }
+
+        // Check if trading is allowed for EA
+        if(!MQLInfoInteger(MQL_TRADE_ALLOWED)) {
+            Print("✗ EA trading is NOT ALLOWED!");
+            Print("✗ Check 'Allow Algo Trading' in EA settings");
+            isFirstTick = false;
+            initialTradeExecuted = true;
+            return;
+        }
+
+        Print("✓ AutoTrading enabled");
         Print("Analyzing current market conditions...");
 
-        isFirstTick = false;
-
+        // Check if position already exists BEFORE setting isFirstTick to false
         if(!HasOpenPosition()) {
+            isFirstTick = false;  // Only set to false if we actually try to trade
             ExecuteImmediateTrade();
             initialTradeExecuted = true;
+        } else {
+            Print("⚠ Existing position detected - skipping immediate trade");
+            Print("⚠ Close the position to enable immediate trading on next EA reload");
+            isFirstTick = false;
+            initialTradeExecuted = true;  // Mark as executed to avoid retrying
         }
 
         return;
