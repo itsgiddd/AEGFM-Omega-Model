@@ -8,10 +8,12 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class AEGFMBacktester:
-    def __init__(self, num_candles=2000):
+    def __init__(self, num_candles=2000, daily_growth_target=50.0):
         self.num_candles = num_candles
         self.data = None
         self.trades = []
+        self.daily_growth_target = daily_growth_target
+        self.daily_stats = []  # Track daily performance
 
     def generate_realistic_data(self):
         """Generate realistic forex price movements"""
@@ -722,8 +724,48 @@ class AEGFMBacktester:
         open_trades = 0
         total_scanned = 0
 
+        # Daily growth tracking
+        starting_balance = 10000.0  # Starting balance in dollars
+        current_balance = starting_balance
+        daily_balance = starting_balance
+        current_day = None
+        daily_trades_count = 0
+        daily_wins_count = 0
+        daily_losses_count = 0
+
         for idx in range(100, len(self.data), 5):  # Every 5 candles for more trades
             total_scanned += 1
+
+            # Check if new day (for daily growth tracking)
+            current_time = self.data.index[idx]
+            trade_day = current_time.date()
+
+            if current_day is None:
+                current_day = trade_day
+                daily_balance = current_balance
+
+            # If new day, record daily stats and reset
+            if trade_day != current_day:
+                daily_growth = ((current_balance - daily_balance) / daily_balance) * 100 if daily_balance > 0 else 0
+                self.daily_stats.append({
+                    'date': current_day,
+                    'starting_balance': daily_balance,
+                    'ending_balance': current_balance,
+                    'daily_growth': daily_growth,
+                    'daily_profit': current_balance - daily_balance,
+                    'trades': daily_trades_count,
+                    'wins': daily_wins_count,
+                    'losses': daily_losses_count,
+                    'win_rate': (daily_wins_count / daily_trades_count * 100) if daily_trades_count > 0 else 0,
+                    'target_achieved': daily_growth >= self.daily_growth_target
+                })
+
+                # Reset for new day
+                current_day = trade_day
+                daily_balance = current_balance
+                daily_trades_count = 0
+                daily_wins_count = 0
+                daily_losses_count = 0
 
             # Show progress every 1000 scans
             if total_scanned % 1000 == 0:
@@ -741,6 +783,17 @@ class AEGFMBacktester:
 
             direction = 'BUY' if signals['predicted_direction'] > 0 else 'SELL'
 
+            # Calculate profit/loss for this trade (simplified: use R multiples)
+            trade_profit = 0
+            if result == 'WIN':
+                trade_profit = 0.75  # 0.75R profit
+            elif result == 'LOSS':
+                trade_profit = -2.0  # -2.0R loss
+
+            # Update balance (assume 1% risk per trade)
+            risk_amount = current_balance * 0.01
+            current_balance += (risk_amount * trade_profit)
+
             self.trades.append({
                 'result': result,
                 'direction': direction,
@@ -750,7 +803,9 @@ class AEGFMBacktester:
                 'pattern_score': signals['pattern_score'],
                 'engine_prediction': signals['engine_prediction'],
                 'scenario_prediction': signals['scenario_prediction'],
-                'scenario_consensus': signals['scenario_consensus']
+                'scenario_consensus': signals['scenario_consensus'],
+                'balance': current_balance,
+                'profit': risk_amount * trade_profit
             })
 
             # Determine if engine and scenarios agreed (Engine ALWAYS has opinion now)
@@ -758,18 +813,39 @@ class AEGFMBacktester:
             scenario_dir = "BUY" if signals['scenario_prediction'] > 0 else "SELL"
             agreement = "✓AGREE" if signals['engine_prediction'] == signals['scenario_prediction'] else "✗CONFLICT"
 
+            # Update daily counters
+            daily_trades_count += 1
+
             if result == 'WIN':
                 wins += 1
+                daily_wins_count += 1
                 # Only print first 50 and last 50 trades to avoid spam
                 if len(self.trades) <= 50 or len(self.trades) > len(self.trades) - 50:
                     print(f"✓ #{len(self.trades):4d} WIN  | {direction:4s} | Conf: {signals['confidence']:5.1%} | Scenarios: {signals['scenario_consensus']:4.1%} | Engine: {engine_dir} | {agreement}")
             elif result == 'LOSS':
                 losses += 1
+                daily_losses_count += 1
                 # Only print first 50 and last 50 trades to avoid spam
                 if len(self.trades) <= 50 or len(self.trades) > len(self.trades) - 50:
                     print(f"✗ #{len(self.trades):4d} LOSS | {direction:4s} | Conf: {signals['confidence']:5.1%} | Scenarios: {signals['scenario_consensus']:4.1%} | Engine: {engine_dir} | {agreement}")
             else:
                 open_trades += 1
+
+        # Record final day's stats
+        if current_day is not None and daily_trades_count > 0:
+            daily_growth = ((current_balance - daily_balance) / daily_balance) * 100 if daily_balance > 0 else 0
+            self.daily_stats.append({
+                'date': current_day,
+                'starting_balance': daily_balance,
+                'ending_balance': current_balance,
+                'daily_growth': daily_growth,
+                'daily_profit': current_balance - daily_balance,
+                'trades': daily_trades_count,
+                'wins': daily_wins_count,
+                'losses': daily_losses_count,
+                'win_rate': (daily_wins_count / daily_trades_count * 100) if daily_trades_count > 0 else 0,
+                'target_achieved': daily_growth >= self.daily_growth_target
+            })
 
         return wins, losses, open_trades
 
@@ -837,6 +913,56 @@ class AEGFMBacktester:
         else:
             print("\n✗ NO CLOSED TRADES - Cannot calculate win rate")
             print("   System may be TOO selective")
+
+        # Print daily growth stats if available
+        if len(self.daily_stats) > 0:
+            print("\n" + "="*70)
+            print("DAILY GROWTH ANALYSIS")
+            print("="*70)
+
+            daily_df = pd.DataFrame(self.daily_stats)
+            total_days = len(daily_df)
+            days_achieved_target = sum(daily_df['target_achieved'])
+            avg_daily_growth = daily_df['daily_growth'].mean()
+            max_daily_growth = daily_df['daily_growth'].max()
+            min_daily_growth = daily_df['daily_growth'].min()
+            total_profit = daily_df['daily_profit'].sum()
+
+            print(f"Total Trading Days: {total_days}")
+            print(f"Daily Growth Target: {self.daily_growth_target:.2f}%")
+            print(f"Days Achieving Target: {days_achieved_target} ({days_achieved_target/total_days*100:.1f}%)")
+            print(f"\nDaily Growth Stats:")
+            print(f"  Average Daily Growth: {avg_daily_growth:.2f}%")
+            print(f"  Max Daily Growth: {max_daily_growth:.2f}%")
+            print(f"  Min Daily Growth: {min_daily_growth:.2f}%")
+            print(f"  Total Profit: ${total_profit:.2f}")
+
+            # Show first few days and last few days
+            print(f"\nFirst 5 Trading Days:")
+            print("-" * 70)
+            for i, day in daily_df.head(5).iterrows():
+                status = "✓" if day['target_achieved'] else "✗"
+                print(f"  {status} {day['date']}: {day['daily_growth']:+6.2f}% | "
+                      f"${day['daily_profit']:+8.2f} | {day['trades']} trades ({day['win_rate']:.0f}% wins)")
+
+            if total_days > 5:
+                print(f"\nLast 5 Trading Days:")
+                print("-" * 70)
+                for i, day in daily_df.tail(5).iterrows():
+                    status = "✓" if day['target_achieved'] else "✗"
+                    print(f"  {status} {day['date']}: {day['daily_growth']:+6.2f}% | "
+                          f"${day['daily_profit']:+8.2f} | {day['trades']} trades ({day['win_rate']:.0f}% wins)")
+
+            if len(self.trades) > 0:
+                starting_balance = 10000.0
+                final_balance = self.trades[-1]['balance']
+                total_growth = ((final_balance - starting_balance) / starting_balance) * 100
+
+                print(f"\nOverall Performance:")
+                print(f"  Starting Balance: ${starting_balance:,.2f}")
+                print(f"  Final Balance: ${final_balance:,.2f}")
+                print(f"  Total Growth: {total_growth:+.2f}%")
+                print(f"  Total Profit: ${final_balance - starting_balance:+,.2f}")
 
         print("="*70)
 

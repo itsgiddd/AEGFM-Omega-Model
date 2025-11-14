@@ -34,6 +34,10 @@ input double InpMaxLossPercent = 0.25;          // Max Loss Per Trade (% of equi
 input double InpKellyFraction = 0.4;            // Fractional Kelly - if auto-calc
 input double InpMinPredictionConfidence = 0.90; // Min Prediction Confidence (90%)
 
+input group "=== Daily Growth Tracking ==="
+input bool InpEnableDailyGrowthTracking = true; // Enable Daily Growth Tracking
+input double InpDailyGrowthTarget = 50.0;       // Daily Growth Target (%)
+
 input group "=== Entry Settings ==="
 input int InpATRPeriod = 14;                    // ATR Period
 input bool InpUseFixedPips = false;             // Use Fixed Pips (instead of ATR)
@@ -105,6 +109,16 @@ PatternInfo currentPattern;
 int totalTrades = 0;
 int winningTrades = 0;
 double currentEquity = 0;
+
+// Daily growth tracking
+datetime lastResetDay = 0;
+double dailyStartBalance = 0;
+double dailyStartEquity = 0;
+double dailyPeakEquity = 0;
+double dailyMaxDrawdown = 0;
+int dailyTrades = 0;
+int dailyWins = 0;
+int dailyLosses = 0;
 
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
@@ -239,6 +253,23 @@ int OnInit() {
     initialTradeExecuted = false;
     isFirstTick = true;
 
+    // Initialize daily growth tracking
+    if(InpEnableDailyGrowthTracking) {
+        dailyStartBalance = accountInfo.Balance();
+        dailyStartEquity = accountInfo.Equity();
+        dailyPeakEquity = accountInfo.Equity();
+        dailyMaxDrawdown = 0;
+        lastResetDay = TimeCurrent();
+        dailyTrades = 0;
+        dailyWins = 0;
+        dailyLosses = 0;
+        Print("═══════════════════════════════════════════════════");
+        Print("  DAILY GROWTH TRACKING: ENABLED");
+        Print("  Daily Growth Target: ", NormalizeDouble(InpDailyGrowthTarget, 2), "%");
+        Print("  Starting Balance: $", NormalizeDouble(dailyStartBalance, 2));
+        Print("═══════════════════════════════════════════════════");
+    }
+
     if(InpImmediateTrade) {
         Print("⚡ IMMEDIATE TRADING ENABLED - Will scan market comprehensively on first tick!");
     }
@@ -256,6 +287,38 @@ void OnDeinit(const int reason) {
     Print("  Winning Trades: ", winningTrades);
     if(totalTrades > 0) {
         Print("  Win Rate: ", NormalizeDouble((double)winningTrades/totalTrades * 100, 2), "%");
+    }
+
+    // Print daily growth stats
+    if(InpEnableDailyGrowthTracking && dailyStartBalance > 0) {
+        double currentBalance = accountInfo.Balance();
+        double currentEquityVal = accountInfo.Equity();
+        double dailyGrowth = ((currentBalance - dailyStartBalance) / dailyStartBalance) * 100;
+        double dailyEquityGrowth = ((currentEquityVal - dailyStartEquity) / dailyStartEquity) * 100;
+        double dailyWinRate = dailyTrades > 0 ? (double)dailyWins / dailyTrades * 100 : 0;
+
+        Print("═══════════════════════════════════════════════════");
+        Print("  TODAY'S PERFORMANCE SUMMARY");
+        Print("  ─────────────────────────────────────────────────");
+        Print("  Starting Balance: $", NormalizeDouble(dailyStartBalance, 2));
+        Print("  Current Balance: $", NormalizeDouble(currentBalance, 2));
+        Print("  Daily Growth: ", NormalizeDouble(dailyGrowth, 2), "% (Target: ", NormalizeDouble(InpDailyGrowthTarget, 2), "%)");
+        Print("  Equity Growth: ", NormalizeDouble(dailyEquityGrowth, 2), "%");
+        Print("  Daily Profit: $", NormalizeDouble(currentBalance - dailyStartBalance, 2));
+        Print("  ─────────────────────────────────────────────────");
+        Print("  Today's Trades: ", dailyTrades);
+        Print("  Today's Wins: ", dailyWins);
+        Print("  Today's Losses: ", dailyLosses);
+        Print("  Today's Win Rate: ", NormalizeDouble(dailyWinRate, 2), "%");
+        Print("  Max Drawdown Today: ", NormalizeDouble(dailyMaxDrawdown, 2), "%");
+        Print("  ─────────────────────────────────────────────────");
+        if(dailyGrowth >= InpDailyGrowthTarget) {
+            Print("  ✓✓✓ DAILY TARGET ACHIEVED! ✓✓✓");
+        } else {
+            double remainingGrowth = InpDailyGrowthTarget - dailyGrowth;
+            Print("  Target Progress: ", NormalizeDouble((dailyGrowth/InpDailyGrowthTarget)*100, 1), "%");
+            Print("  Remaining: ", NormalizeDouble(remainingGrowth, 2), "% to reach target");
+        }
     }
     Print("═══════════════════════════════════════════════════");
 
@@ -285,6 +348,15 @@ void OnDeinit(const int reason) {
 void OnTick() {
     // Update market data
     if(!UpdateMarketData()) return;
+
+    // Check and reset daily stats if new day
+    CheckAndResetDailyStats();
+
+    // Update daily stats
+    UpdateDailyStats();
+
+    // Print daily progress periodically
+    PrintDailyProgress();
 
     // IMMEDIATE TRADING MODE - Execute on first tick
     if(InpImmediateTrade && isFirstTick && !initialTradeExecuted) {
@@ -2265,11 +2337,131 @@ void OnTrade() {
 
                 if(profit > 0) {
                     winningTrades++;
+                    if(InpEnableDailyGrowthTracking) dailyWins++;
+                } else {
+                    if(InpEnableDailyGrowthTracking) dailyLosses++;
+                }
+
+                if(InpEnableDailyGrowthTracking) {
+                    dailyTrades++;
+                    UpdateDailyStats();
                 }
 
                 break;
             }
         }
     }
+}
+
+//+------------------------------------------------------------------+
+//| Check and reset daily statistics                                 |
+//+------------------------------------------------------------------+
+void CheckAndResetDailyStats() {
+    if(!InpEnableDailyGrowthTracking) return;
+
+    MqlDateTime currentTime, lastTime;
+    TimeToStruct(TimeCurrent(), currentTime);
+    TimeToStruct(lastResetDay, lastTime);
+
+    // Check if it's a new day
+    if(currentTime.day != lastTime.day ||
+       currentTime.mon != lastTime.mon ||
+       currentTime.year != lastTime.year) {
+
+        // Print yesterday's summary
+        if(dailyStartBalance > 0) {
+            double previousBalance = accountInfo.Balance();
+            double dailyGrowth = ((previousBalance - dailyStartBalance) / dailyStartBalance) * 100;
+            double dailyWinRate = dailyTrades > 0 ? (double)dailyWins / dailyTrades * 100 : 0;
+
+            Print("═══════════════════════════════════════════════════");
+            Print("  DAILY SUMMARY - ", lastTime.year, ".", lastTime.mon, ".", lastTime.day);
+            Print("  ─────────────────────────────────────────────────");
+            Print("  Starting Balance: $", NormalizeDouble(dailyStartBalance, 2));
+            Print("  Ending Balance: $", NormalizeDouble(previousBalance, 2));
+            Print("  Daily Growth: ", NormalizeDouble(dailyGrowth, 2), "% (Target: ", NormalizeDouble(InpDailyGrowthTarget, 2), "%)");
+            Print("  Daily Profit: $", NormalizeDouble(previousBalance - dailyStartBalance, 2));
+            Print("  ─────────────────────────────────────────────────");
+            Print("  Trades: ", dailyTrades, " | Wins: ", dailyWins, " | Losses: ", dailyLosses);
+            Print("  Win Rate: ", NormalizeDouble(dailyWinRate, 2), "%");
+            Print("  Max Drawdown: ", NormalizeDouble(dailyMaxDrawdown, 2), "%");
+            if(dailyGrowth >= InpDailyGrowthTarget) {
+                Print("  ✓✓✓ DAILY TARGET ACHIEVED! ✓✓✓");
+            } else {
+                Print("  Target Progress: ", NormalizeDouble((dailyGrowth/InpDailyGrowthTarget)*100, 1), "%");
+            }
+            Print("═══════════════════════════════════════════════════");
+        }
+
+        // Reset for new day
+        dailyStartBalance = accountInfo.Balance();
+        dailyStartEquity = accountInfo.Equity();
+        dailyPeakEquity = accountInfo.Equity();
+        dailyMaxDrawdown = 0;
+        lastResetDay = TimeCurrent();
+        dailyTrades = 0;
+        dailyWins = 0;
+        dailyLosses = 0;
+
+        Print("═══════════════════════════════════════════════════");
+        Print("  NEW TRADING DAY - ", currentTime.year, ".", currentTime.mon, ".", currentTime.day);
+        Print("  Starting Balance: $", NormalizeDouble(dailyStartBalance, 2));
+        Print("  Daily Growth Target: ", NormalizeDouble(InpDailyGrowthTarget, 2), "%");
+        Print("  Target Profit: $", NormalizeDouble(dailyStartBalance * InpDailyGrowthTarget / 100, 2));
+        Print("═══════════════════════════════════════════════════");
+    }
+}
+
+//+------------------------------------------------------------------+
+//| Update daily growth statistics                                   |
+//+------------------------------------------------------------------+
+void UpdateDailyStats() {
+    if(!InpEnableDailyGrowthTracking) return;
+
+    double currentEquityVal = accountInfo.Equity();
+
+    // Update peak equity
+    if(currentEquityVal > dailyPeakEquity) {
+        dailyPeakEquity = currentEquityVal;
+    }
+
+    // Calculate current drawdown
+    if(dailyPeakEquity > 0) {
+        double currentDrawdown = ((dailyPeakEquity - currentEquityVal) / dailyPeakEquity) * 100;
+        if(currentDrawdown > dailyMaxDrawdown) {
+            dailyMaxDrawdown = currentDrawdown;
+        }
+    }
+}
+
+//+------------------------------------------------------------------+
+//| Print daily progress (called periodically)                       |
+//+------------------------------------------------------------------+
+void PrintDailyProgress() {
+    if(!InpEnableDailyGrowthTracking || dailyStartBalance <= 0) return;
+
+    static datetime lastProgressPrint = 0;
+    datetime currentTime = TimeCurrent();
+
+    // Print progress every hour
+    if(currentTime - lastProgressPrint < 3600) return;
+    lastProgressPrint = currentTime;
+
+    double currentBalance = accountInfo.Balance();
+    double currentEquityVal = accountInfo.Equity();
+    double dailyGrowth = ((currentBalance - dailyStartBalance) / dailyStartBalance) * 100;
+    double dailyEquityGrowth = ((currentEquityVal - dailyStartEquity) / dailyStartEquity) * 100;
+    double dailyProfit = currentBalance - dailyStartBalance;
+    double targetProfit = dailyStartBalance * InpDailyGrowthTarget / 100;
+    double progress = (dailyGrowth / InpDailyGrowthTarget) * 100;
+    double dailyWinRate = dailyTrades > 0 ? (double)dailyWins / dailyTrades * 100 : 0;
+
+    Print("──────────────────────────────────────────────────");
+    Print("  DAILY PROGRESS UPDATE");
+    Print("  Growth: ", NormalizeDouble(dailyGrowth, 2), "% / ", NormalizeDouble(InpDailyGrowthTarget, 2), "% (", NormalizeDouble(progress, 1), "%)");
+    Print("  Profit: $", NormalizeDouble(dailyProfit, 2), " / $", NormalizeDouble(targetProfit, 2));
+    Print("  Trades: ", dailyTrades, " (", dailyWins, " wins, ", dailyLosses, " losses, ", NormalizeDouble(dailyWinRate, 1), "%)");
+    Print("  Drawdown: ", NormalizeDouble(dailyMaxDrawdown, 2), "%");
+    Print("──────────────────────────────────────────────────");
 }
 //+------------------------------------------------------------------+
