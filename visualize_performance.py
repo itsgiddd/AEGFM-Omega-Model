@@ -17,7 +17,7 @@ import seaborn as sns
 from backtest_aegfm import AEGFMBacktester
 
 def create_visualizations(backtester, wins, losses, open_trades):
-    """Create comprehensive performance visualizations"""
+    """Create comprehensive performance visualizations with daily growth tracking"""
 
     print("\n" + "="*70)
     print("GENERATING PERFORMANCE VISUALIZATIONS")
@@ -40,15 +40,15 @@ def create_visualizations(backtester, wins, losses, open_trades):
     plt.rcParams['ytick.color'] = '#00ff00'
     plt.rcParams['grid.color'] = '#333333'
 
-    # Create figure with multiple subplots
-    fig = plt.figure(figsize=(20, 12))
-    fig.suptitle('AEGFM-Ω PREDICTIVE ENGINE PERFORMANCE ANALYSIS',
+    # Create figure with multiple subplots (increased to 4x3 for daily growth charts)
+    fig = plt.figure(figsize=(24, 16))
+    fig.suptitle('AEGFM-Ω PREDICTIVE ENGINE PERFORMANCE ANALYSIS - WITH DAILY GROWTH TRACKING',
                  fontsize=20, fontweight='bold', color='#00ff00', y=0.995)
 
     # =================================================================
     # PLOT 1: Win/Loss Timeline
     # =================================================================
-    ax1 = plt.subplot(3, 3, 1)
+    ax1 = plt.subplot(4, 3, 1)
     trades_df['trade_num'] = range(1, len(trades_df) + 1)
 
     wins_data = trades_df[trades_df['result'] == 'WIN']
@@ -80,7 +80,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 2: Cumulative Win Rate
     # =================================================================
-    ax2 = plt.subplot(3, 3, 2)
+    ax2 = plt.subplot(4, 3, 2)
     trades_df['is_win'] = (trades_df['result'] == 'WIN').astype(int)
     trades_df['cumulative_winrate'] = trades_df['is_win'].expanding().mean() * 100
 
@@ -109,7 +109,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 3: Confidence Distribution
     # =================================================================
-    ax3 = plt.subplot(3, 3, 3)
+    ax3 = plt.subplot(4, 3, 3)
 
     confidence_bins = [0.90, 0.93, 0.95, 0.97, 0.98, 1.0]
     confidence_labels = ['90-93%', '93-95%', '95-97%', '97-98%', '98%+']
@@ -144,7 +144,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 4: Win Rate by Confidence
     # =================================================================
-    ax4 = plt.subplot(3, 3, 4)
+    ax4 = plt.subplot(4, 3, 4)
 
     conf_winrate = []
     conf_labels_plot = []
@@ -183,7 +183,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 5: Direction Performance (BUY vs SELL)
     # =================================================================
-    ax5 = plt.subplot(3, 3, 5)
+    ax5 = plt.subplot(4, 3, 5)
 
     dir_grouped = trades_df.groupby(['direction', 'result']).size().unstack(fill_value=0)
 
@@ -220,7 +220,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 6: Momentum Analysis
     # =================================================================
-    ax6 = plt.subplot(3, 3, 6)
+    ax6 = plt.subplot(4, 3, 6)
 
     trades_df['abs_momentum'] = trades_df['momentum'].abs()
 
@@ -241,7 +241,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 7: Pattern Score Analysis
     # =================================================================
-    ax7 = plt.subplot(3, 3, 7)
+    ax7 = plt.subplot(4, 3, 7)
 
     pattern_bins = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     pattern_labels = ['50-60%', '60-70%', '70-80%', '80-90%', '90-100%']
@@ -295,7 +295,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 8: Rolling Win Rate (50-trade window)
     # =================================================================
-    ax8 = plt.subplot(3, 3, 8)
+    ax8 = plt.subplot(4, 3, 8)
 
     window = min(50, len(trades_df) // 5)
     trades_df['rolling_winrate'] = trades_df['is_win'].rolling(window=window, min_periods=1).mean() * 100
@@ -324,7 +324,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # =================================================================
     # PLOT 9: Performance Summary Stats
     # =================================================================
-    ax9 = plt.subplot(3, 3, 9)
+    ax9 = plt.subplot(4, 3, 9)
     ax9.axis('off')
 
     total_trades = len(trades_df)
@@ -382,6 +382,95 @@ SYSTEM STATUS
             color='#00ff00', bbox=dict(boxstyle='round', facecolor='#1a1a1a',
             edgecolor='#00ff00', linewidth=2, alpha=0.9))
 
+    # =================================================================
+    # PLOT 10: Account Balance Growth Over Time
+    # =================================================================
+    ax10 = plt.subplot(4, 3, 10)
+
+    if 'balance' in trades_df.columns and len(trades_df) > 0:
+        starting_balance = 10000.0
+        ax10.plot(trades_df['trade_num'], trades_df['balance'],
+                 color='#00ff00', linewidth=2, label='Balance Growth')
+        ax10.axhline(y=starting_balance, color='#ffff00', linestyle='--',
+                    linewidth=1, alpha=0.5, label='Starting Balance')
+        ax10.fill_between(trades_df['trade_num'], starting_balance, trades_df['balance'],
+                          where=(trades_df['balance'] >= starting_balance),
+                          color='#00ff00', alpha=0.2)
+        ax10.fill_between(trades_df['trade_num'], trades_df['balance'], starting_balance,
+                          where=(trades_df['balance'] < starting_balance),
+                          color='#ff0000', alpha=0.2)
+
+        final_balance = trades_df['balance'].iloc[-1]
+        total_growth = ((final_balance - starting_balance) / starting_balance) * 100
+
+        ax10.set_xlabel('Trade Number', fontsize=10, color='#00ff00')
+        ax10.set_ylabel('Account Balance ($)', fontsize=10, color='#00ff00')
+        ax10.set_title(f'Account Balance Growth\nStart: ${starting_balance:,.0f} → End: ${final_balance:,.0f} ({total_growth:+.1f}%)',
+                      fontsize=12, color='#00ff00', fontweight='bold')
+        ax10.legend(loc='upper left', fontsize=8)
+        ax10.grid(True, alpha=0.3)
+        ax10.ticklabel_format(style='plain', axis='y')
+
+    # =================================================================
+    # PLOT 11: Daily Growth Percentage Over Time
+    # =================================================================
+    ax11 = plt.subplot(4, 3, 11)
+
+    if len(backtester.daily_stats) > 0:
+        daily_df = pd.DataFrame(backtester.daily_stats)
+        days = range(1, len(daily_df) + 1)
+
+        colors = ['#00ff00' if achieved else '#ff8800' for achieved in daily_df['target_achieved']]
+
+        bars = ax11.bar(days, daily_df['daily_growth'], color=colors, alpha=0.8, edgecolor='white')
+
+        ax11.axhline(y=backtester.daily_growth_target, color='#ffff00', linestyle='--',
+                    linewidth=2, label=f'Target: {backtester.daily_growth_target}%', alpha=0.7)
+        ax11.axhline(y=0, color='#ffffff', linestyle='-', linewidth=1, alpha=0.3)
+
+        days_achieved = sum(daily_df['target_achieved'])
+        avg_growth = daily_df['daily_growth'].mean()
+
+        ax11.set_xlabel('Trading Day', fontsize=10, color='#00ff00')
+        ax11.set_ylabel('Daily Growth (%)', fontsize=10, color='#00ff00')
+        ax11.set_title(f'Daily Growth Rate\nAvg: {avg_growth:.1f}% | Days Achieving Target: {days_achieved}/{len(daily_df)} ({days_achieved/len(daily_df)*100:.0f}%)',
+                      fontsize=12, color='#00ff00', fontweight='bold')
+        ax11.legend(loc='upper left', fontsize=8)
+        ax11.grid(True, alpha=0.3, axis='y')
+
+    # =================================================================
+    # PLOT 12: Daily Profit Distribution
+    # =================================================================
+    ax12 = plt.subplot(4, 3, 12)
+
+    if len(backtester.daily_stats) > 0:
+        daily_df = pd.DataFrame(backtester.daily_stats)
+
+        profit_days = daily_df[daily_df['daily_profit'] >= 0]
+        loss_days = daily_df[daily_df['daily_profit'] < 0]
+
+        profit_count = len(profit_days)
+        loss_count = len(loss_days)
+        total_days = len(daily_df)
+
+        bars = ax12.bar(['Profit Days', 'Loss Days'], [profit_count, loss_count],
+                       color=['#00ff00', '#ff0000'], alpha=0.8, width=0.6)
+
+        ax12.text(0, profit_count + (total_days * 0.02), f'{profit_count}', ha='center', va='bottom',
+                 color='#00ff00', fontsize=14, fontweight='bold')
+        ax12.text(1, loss_count + (total_days * 0.02), f'{loss_count}', ha='center', va='bottom',
+                 color='#ff0000', fontsize=14, fontweight='bold')
+
+        profit_rate = (profit_count / total_days * 100) if total_days > 0 else 0
+        avg_profit = profit_days['daily_profit'].mean() if len(profit_days) > 0 else 0
+        avg_loss = loss_days['daily_profit'].mean() if len(loss_days) > 0 else 0
+
+        ax12.set_ylabel('Number of Days', fontsize=10, color='#00ff00')
+        ax12.set_title(f'Daily Profit Distribution\n{profit_rate:.0f}% Profitable Days | Avg Profit: ${avg_profit:.2f} | Avg Loss: ${avg_loss:.2f}',
+                      fontsize=12, color='#00ff00', fontweight='bold')
+        ax12.grid(True, alpha=0.2, axis='y')
+        ax12.set_ylim(0, total_days * 1.15)
+
     # Adjust layout and save
     plt.tight_layout(rect=[0, 0, 1, 0.99])
 
@@ -389,9 +478,14 @@ SYSTEM STATUS
     plt.savefig(filename, dpi=150, facecolor='#0a0a0a', edgecolor='none')
 
     print(f"\n✓ Visualization saved: {filename}")
-    print(f"✓ Generated 9 performance charts")
+    print(f"✓ Generated 12 performance charts (including 3 daily growth charts)")
     print(f"✓ Overall Win Rate: {overall_winrate:.2f}%")
     print(f"✓ Expected Profit: {expected_profit:.2f}R per trade")
+
+    if len(backtester.daily_stats) > 0:
+        daily_df = pd.DataFrame(backtester.daily_stats)
+        days_achieved = sum(daily_df['target_achieved'])
+        print(f"✓ Daily Growth Target Achievement: {days_achieved}/{len(daily_df)} days ({days_achieved/len(daily_df)*100:.0f}%)")
 
     plt.close()  # Close the plot to free memory
 
