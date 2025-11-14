@@ -17,10 +17,10 @@ import seaborn as sns
 from backtest_aegfm import AEGFMBacktester
 
 def create_visualizations(backtester, wins, losses, open_trades):
-    """Create comprehensive performance visualizations with daily growth tracking"""
+    """Create comprehensive performance visualizations with REAL FOREX CONDITIONS"""
 
     print("\n" + "="*70)
-    print("GENERATING PERFORMANCE VISUALIZATIONS")
+    print("GENERATING PERFORMANCE VISUALIZATIONS - REAL FOREX CONDITIONS")
     print("="*70)
 
     # Create DataFrame from trades
@@ -29,6 +29,41 @@ def create_visualizations(backtester, wins, losses, open_trades):
     if len(trades_df) == 0:
         print("✗ No trades to visualize")
         return
+
+    # ===================================================================
+    # REAL FOREX CONDITIONS - Apply spreads, slippage, and commissions
+    # ===================================================================
+    SPREAD_PIPS = 1.5  # Average spread for EURUSD (1.5 pips)
+    SLIPPAGE_PIPS = 0.5  # Average slippage (0.5 pips)
+    COMMISSION_PER_LOT = 7.0  # Round-trip commission ($7 per standard lot)
+    PIP_VALUE = 10.0  # Standard lot pip value ($10 per pip for EURUSD)
+
+    # Adjust profits for real forex costs
+    total_cost_per_trade = (SPREAD_PIPS + SLIPPAGE_PIPS) * PIP_VALUE + COMMISSION_PER_LOT
+
+    # Recalculate balance with real forex costs
+    starting_balance = 10000.0
+    real_balance = starting_balance
+    trades_df['real_profit'] = 0.0
+    trades_df['real_balance'] = 0.0
+
+    for i in range(len(trades_df)):
+        # Original profit
+        original_profit = trades_df.iloc[i]['profit']
+
+        # Subtract forex costs
+        real_profit = original_profit - total_cost_per_trade
+
+        # For losses, costs make them worse
+        if trades_df.iloc[i]['result'] == 'LOSS':
+            real_profit = original_profit - total_cost_per_trade
+
+        real_balance += real_profit
+        trades_df.at[i, 'real_profit'] = real_profit
+        trades_df.at[i, 'real_balance'] = real_balance
+
+    print(f"✓ Applied REAL FOREX conditions: {SPREAD_PIPS} pip spread + {SLIPPAGE_PIPS} pip slippage + ${COMMISSION_PER_LOT} commission")
+    print(f"✓ Realistic costs per trade: ${total_cost_per_trade:.2f}")
 
     # Setup the plot style
     sns.set_style("darkgrid")
@@ -42,7 +77,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
 
     # Create figure with multiple subplots (increased to 4x3 for daily growth charts)
     fig = plt.figure(figsize=(24, 16))
-    fig.suptitle('AEGFM-Ω PREDICTIVE ENGINE PERFORMANCE ANALYSIS - WITH DAILY GROWTH TRACKING',
+    fig.suptitle('AEGFM-Ω REAL FOREX CONDITIONS - Spreads, Slippage & Commission Included',
                  fontsize=20, fontweight='bold', color='#00ff00', y=0.995)
 
     # =================================================================
@@ -322,7 +357,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
     ax8.grid(True, alpha=0.3)
 
     # =================================================================
-    # PLOT 9: Performance Summary Stats
+    # PLOT 9: REAL FOREX Performance Summary Stats
     # =================================================================
     ax9 = plt.subplot(4, 3, 9)
     ax9.axis('off')
@@ -345,68 +380,100 @@ def create_visualizations(backtester, wins, losses, open_trades):
     loss_streaks = trades_df[trades_df['is_win'] == 0].groupby('streak').size()
     max_loss_streak = loss_streaks.max() if len(loss_streaks) > 0 else 0
 
-    # Expected profit
+    # REAL FOREX METRICS
+    total_gross_profit = trades_df[trades_df['real_profit'] > 0]['real_profit'].sum() if len(trades_df[trades_df['real_profit'] > 0]) > 0 else 0
+    total_gross_loss = abs(trades_df[trades_df['real_profit'] < 0]['real_profit'].sum()) if len(trades_df[trades_df['real_profit'] < 0]) > 0 else 0
+    profit_factor = total_gross_profit / total_gross_loss if total_gross_loss > 0 else 0
+
+    avg_win = trades_df[trades_df['real_profit'] > 0]['real_profit'].mean() if len(trades_df[trades_df['real_profit'] > 0]) > 0 else 0
+    avg_loss = trades_df[trades_df['real_profit'] < 0]['real_profit'].mean() if len(trades_df[trades_df['real_profit'] < 0]) > 0 else 0
+
+    # Calculate max drawdown from real balance
+    peak = trades_df['real_balance'].expanding(min_periods=1).max()
+    drawdown = (trades_df['real_balance'] - peak) / peak * 100
+    max_drawdown = abs(drawdown.min())
+
+    # Calculate Sharpe Ratio (simplified - assuming 252 trading days/year)
+    returns = trades_df['real_profit'] / starting_balance * 100
+    sharpe_ratio = (returns.mean() / returns.std() * np.sqrt(252)) if returns.std() > 0 else 0
+
+    # Expected profit with real costs
     expected_profit = (overall_winrate/100 * 0.75) - ((100-overall_winrate)/100 * 2.0)
+
+    # Total profit/loss
+    net_profit = trades_df['real_balance'].iloc[-1] - starting_balance if len(trades_df) > 0 else 0
 
     stats_text = f"""
 ╔══════════════════════════════════════════════════════╗
-║       PREDICTIVE ENGINE PERFORMANCE SUMMARY          ║
+║      REAL FOREX CONDITIONS - PERFORMANCE SUMMARY     ║
 ╚══════════════════════════════════════════════════════╝
 
 OVERALL ACCURACY
 ├─ Total Trades: {total_trades:,}
-├─ Wins: {total_wins:,}
-├─ Losses: {total_losses:,}
+├─ Wins: {total_wins:,} | Losses: {total_losses:,}
 └─ Win Rate: {overall_winrate:.2f}%
 
-CONFIDENCE METRICS
-├─ Average Confidence: {avg_confidence:.1f}%
-├─ High Confidence (98%+): {high_conf_trades} ({high_conf_pct:.1f}%)
-└─ Target Accuracy: 98.00%
+REAL FOREX PROFITABILITY (After Costs)
+├─ Net Profit: ${net_profit:,.2f}
+├─ Profit Factor: {profit_factor:.2f}
+├─ Avg Win: ${avg_win:.2f} | Avg Loss: ${avg_loss:.2f}
+├─ Max Drawdown: {max_drawdown:.2f}%
+└─ Sharpe Ratio: {sharpe_ratio:.2f}
+
+TRADING COSTS (Per Trade)
+├─ Spread: {SPREAD_PIPS} pips (${SPREAD_PIPS * PIP_VALUE:.2f})
+├─ Slippage: {SLIPPAGE_PIPS} pips (${SLIPPAGE_PIPS * PIP_VALUE:.2f})
+├─ Commission: ${COMMISSION_PER_LOT:.2f}
+└─ Total Cost: ${total_cost_per_trade:.2f}/trade
 
 STREAK ANALYSIS
-├─ Max Win Streak: {max_win_streak} consecutive wins
-└─ Max Loss Streak: {max_loss_streak} consecutive losses
-
-PROFITABILITY
-├─ Risk:Reward Ratio: 1:0.375 (0.75:2.0 ATR)
-├─ Expected Profit: {expected_profit:.2f}R per trade
-└─ Status: {"✓ PROFITABLE" if expected_profit > 0 else "✗ UNPROFITABLE"}
+├─ Max Win Streak: {max_win_streak} consecutive
+└─ Max Loss Streak: {max_loss_streak} consecutive
 
 SYSTEM STATUS
-└─ {'✓✓✓ TARGET ACHIEVED (98%+)' if overall_winrate >= 98 else '✓✓ EXCELLENT (95%+)' if overall_winrate >= 95 else '✓ GOOD (90%+)' if overall_winrate >= 90 else '⚠ BELOW TARGET'}
+└─ {'✓✓✓ PROFITABLE' if profit_factor > 1.5 else '✓✓ GOOD' if profit_factor > 1.0 else '⚠ NEEDS WORK'}
     """
 
     ax9.text(0.05, 0.95, stats_text, transform=ax9.transAxes,
-            fontsize=10, verticalalignment='top', fontfamily='monospace',
+            fontsize=9, verticalalignment='top', fontfamily='monospace',
             color='#00ff00', bbox=dict(boxstyle='round', facecolor='#1a1a1a',
             edgecolor='#00ff00', linewidth=2, alpha=0.9))
 
     # =================================================================
-    # PLOT 10: Account Balance Growth Over Time
+    # PLOT 10: REAL FOREX Account Balance (With Spreads & Costs)
     # =================================================================
     ax10 = plt.subplot(4, 3, 10)
 
-    if 'balance' in trades_df.columns and len(trades_df) > 0:
-        starting_balance = 10000.0
+    if 'real_balance' in trades_df.columns and len(trades_df) > 0:
+        # Plot both ideal and real balance for comparison
         ax10.plot(trades_df['trade_num'], trades_df['balance'],
-                 color='#00ff00', linewidth=2, label='Balance Growth')
+                 color='#888888', linewidth=1.5, alpha=0.5, linestyle='--',
+                 label='Ideal (No Costs)')
+        ax10.plot(trades_df['trade_num'], trades_df['real_balance'],
+                 color='#00ff00', linewidth=2.5, label='Real (With Costs)')
+
         ax10.axhline(y=starting_balance, color='#ffff00', linestyle='--',
                     linewidth=1, alpha=0.5, label='Starting Balance')
-        ax10.fill_between(trades_df['trade_num'], starting_balance, trades_df['balance'],
-                          where=(trades_df['balance'] >= starting_balance),
+
+        # Fill area for real balance
+        ax10.fill_between(trades_df['trade_num'], starting_balance, trades_df['real_balance'],
+                          where=(trades_df['real_balance'] >= starting_balance),
                           color='#00ff00', alpha=0.2)
-        ax10.fill_between(trades_df['trade_num'], trades_df['balance'], starting_balance,
-                          where=(trades_df['balance'] < starting_balance),
+        ax10.fill_between(trades_df['trade_num'], trades_df['real_balance'], starting_balance,
+                          where=(trades_df['real_balance'] < starting_balance),
                           color='#ff0000', alpha=0.2)
 
-        final_balance = trades_df['balance'].iloc[-1]
-        total_growth = ((final_balance - starting_balance) / starting_balance) * 100
+        final_balance_ideal = trades_df['balance'].iloc[-1]
+        final_balance_real = trades_df['real_balance'].iloc[-1]
+        total_growth = ((final_balance_real - starting_balance) / starting_balance) * 100
+        cost_impact = final_balance_ideal - final_balance_real
 
         ax10.set_xlabel('Trade Number', fontsize=10, color='#00ff00')
         ax10.set_ylabel('Account Balance ($)', fontsize=10, color='#00ff00')
-        ax10.set_title(f'Account Balance Growth\nStart: ${starting_balance:,.0f} → End: ${final_balance:,.0f} ({total_growth:+.1f}%)',
-                      fontsize=12, color='#00ff00', fontweight='bold')
+        ax10.set_title(f'REAL FOREX Account Growth (Spreads + Slippage + Commission)\n' +
+                      f'Start: ${starting_balance:,.0f} → Real: ${final_balance_real:,.0f} ({total_growth:+.1f}%) | ' +
+                      f'Cost Impact: -${cost_impact:,.0f}',
+                      fontsize=11, color='#00ff00', fontweight='bold')
         ax10.legend(loc='upper left', fontsize=8)
         ax10.grid(True, alpha=0.3)
         ax10.ticklabel_format(style='plain', axis='y')
@@ -474,13 +541,22 @@ SYSTEM STATUS
     # Adjust layout and save
     plt.tight_layout(rect=[0, 0, 1, 0.99])
 
-    filename = f'AEGFM_Performance_Analysis_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png'
+    filename = f'AEGFM_Performance_RealForex_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png'
     plt.savefig(filename, dpi=150, facecolor='#0a0a0a', edgecolor='none')
 
     print(f"\n✓ Visualization saved: {filename}")
-    print(f"✓ Generated 12 performance charts (including 3 daily growth charts)")
+    print(f"✓ Generated 12 performance charts with REAL FOREX CONDITIONS")
+    print(f"✓ Applied trading costs: {SPREAD_PIPS} pip spread + {SLIPPAGE_PIPS} pip slippage + ${COMMISSION_PER_LOT} commission")
+    print(f"\n" + "="*70)
+    print(f"REAL FOREX RESULTS:")
+    print(f"="*70)
     print(f"✓ Overall Win Rate: {overall_winrate:.2f}%")
-    print(f"✓ Expected Profit: {expected_profit:.2f}R per trade")
+    print(f"✓ Profit Factor: {profit_factor:.2f}")
+    print(f"✓ Net Profit (After Costs): ${net_profit:,.2f}")
+    print(f"✓ Max Drawdown: {max_drawdown:.2f}%")
+    print(f"✓ Sharpe Ratio: {sharpe_ratio:.2f}")
+    print(f"✓ Total Cost Impact: ${cost_impact:,.2f} ({(cost_impact/final_balance_ideal)*100:.1f}% of gross profit)")
+    print(f"="*70)
 
     if len(backtester.daily_stats) > 0:
         daily_df = pd.DataFrame(backtester.daily_stats)
