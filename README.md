@@ -281,19 +281,27 @@ This applies to ALL layers, with each layer contributing its weighted score to t
 
 **Key Insight**: The 7-layer system achieves the highest accuracy (97%+) while maintaining 100% immediate trading.
 
-### Daily Growth Performance
+### Realistic Performance (Mini Lot Trading)
 
-Based on backtesting with 50% daily target:
+Based on **REALISTIC** backtesting with **0.2% risk per trade** and **mini lot** (0.10) sizing for $10k account:
 
 | Metric | Value |
 |--------|-------|
-| **Days Achieving Target** | 65-75% |
-| **Average Daily Growth** | 42-58% |
-| **Max Daily Growth** | 120%+ |
-| **Consecutive Profit Days** | 8-12 days |
-| **Monthly Account Growth** | 1000%+ |
+| **Net Profit (520 days)** | +$1,319 (+13.2%) |
+| **Average Daily Growth** | 0.26% |
+| **Max Drawdown** | 5.14% |
+| **Profit Factor** | 1.05 |
+| **Avg Win** | $3.25 |
+| **Avg Loss** | -$24.28 |
+| **Cost Impact** | 70.4% of gross profit |
 
-*Note: Past performance doesn't guarantee future results*
+**Why So Conservative?**
+- Mini lot sizing (0.10 = $1/pip, not $10/pip)
+- Only 0.2% risk per trade (not 1%+)
+- Realistic costs: $2.70 per trade (spread + slippage + commission)
+- Not all wins hit full TP (realistic exits)
+
+*This reflects ACTUAL retail forex trading - slow, steady, realistic growth*
 
 ---
 
@@ -543,14 +551,20 @@ Live trading will likely show:
 - **No safety filter** - will trade in ANY market condition
 - Use appropriate risk management!
 
-### Daily Growth Expectations
-**IMPORTANT**: 50% daily growth is extremely aggressive:
-- Achievable with high win rate + proper compounding
-- Requires strong market conditions
-- Not every day will hit target
-- Drawdown days will occur
-- **Manage expectations realistically**
-- Consider lowering target for more consistent results (10-20%)
+### Realistic Profit Expectations
+**IMPORTANT**: The backtest now shows REALISTIC results:
+- **13.2% profit over 520 days** with mini lot and 0.2% risk
+- **0.26% average daily growth** (not 50%!)
+- **$1,319 profit** on $10k account over 520 trading days
+- **Profit Factor: 1.05** - barely profitable after costs (this is normal!)
+- **70% of gross profit** eaten by spreads, slippage, and commission
+
+**To increase profits (with more risk):**
+- Increase lot size (0.20 = 2x profit, 2x risk)
+- Increase risk per trade (0.5% instead of 0.2%)
+- Use standard lots (requires $50k+ account)
+
+**This is REALISTIC retail forex trading** - not get-rich-quick schemes
 
 ### Recommended Approach
 1. **Paper trade first** (demo account) for 2+ weeks
