@@ -783,16 +783,49 @@ class AEGFMBacktester:
 
             direction = 'BUY' if signals['predicted_direction'] > 0 else 'SELL'
 
-            # Calculate profit/loss for this trade (simplified: use R multiples)
+            # Calculate profit/loss for this trade - REALISTIC FOREX
             trade_profit = 0
-            if result == 'WIN':
-                trade_profit = 0.75  # 0.75R profit
-            elif result == 'LOSS':
-                trade_profit = -2.0  # -2.0R loss
 
-            # Update balance (assume 1% risk per trade)
-            risk_amount = current_balance * 0.01
-            current_balance += (risk_amount * trade_profit)
+            # Realistic position sizing (0.2% risk per trade instead of 1%)
+            risk_percent = 0.002  # 0.2% risk (realistic for retail traders)
+            risk_amount = current_balance * risk_percent
+
+            # Realistic lot size calculation (standard lot = $10/pip)
+            # With $10,000 balance, 0.2% risk = $20 risk
+            # SL of 20 pips (2.0 ATR × 10 pips) = $200 with standard lot
+            # So realistic lot = $20/$200 = 0.10 lots (1 mini lot)
+            realistic_lot_size = 0.10  # Mini lot for $10k account
+
+            if result == 'WIN':
+                # Not all wins hit full TP - simulate realistic exits
+                # 70% hit full TP, 20% hit 50% TP, 10% breakeven/small profit
+                random_exit = np.random.random()
+                if random_exit < 0.70:
+                    # Full TP: 0.75 ATR = ~7.5 pips with mini lot = $7.50
+                    trade_profit_dollars = 7.5 * realistic_lot_size * 10
+                elif random_exit < 0.90:
+                    # Partial TP: 50% of target = ~3.75 pips = $3.75
+                    trade_profit_dollars = 3.75 * realistic_lot_size * 10
+                else:
+                    # Small profit/breakeven = ~1 pip = $1
+                    trade_profit_dollars = 1.0 * realistic_lot_size * 10
+
+                # Subtract commission (charged on EVERY trade)
+                commission = 0.70  # $0.70 per mini lot round-trip
+                trade_profit_dollars -= commission
+
+            elif result == 'LOSS':
+                # Full SL hit: 2.0 ATR = ~20 pips with mini lot = $20
+                trade_profit_dollars = -20.0 * realistic_lot_size * 10
+
+                # Add commission (makes losses worse)
+                commission = 0.70
+                trade_profit_dollars -= commission
+            else:
+                trade_profit_dollars = 0
+
+            # Update balance with realistic dollar amounts
+            current_balance += trade_profit_dollars
 
             self.trades.append({
                 'result': result,
@@ -805,7 +838,7 @@ class AEGFMBacktester:
                 'scenario_prediction': signals['scenario_prediction'],
                 'scenario_consensus': signals['scenario_consensus'],
                 'balance': current_balance,
-                'profit': risk_amount * trade_profit
+                'profit': trade_profit_dollars  # Realistic dollar profit/loss
             })
 
             # Determine if engine and scenarios agreed (Engine ALWAYS has opinion now)

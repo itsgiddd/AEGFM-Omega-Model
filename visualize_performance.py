@@ -33,13 +33,15 @@ def create_visualizations(backtester, wins, losses, open_trades):
     # ===================================================================
     # REAL FOREX CONDITIONS - Apply spreads, slippage, and commissions
     # ===================================================================
+    # Using REALISTIC mini lot sizing (0.10 lots for $10k account)
     SPREAD_PIPS = 1.5  # Average spread for EURUSD (1.5 pips)
     SLIPPAGE_PIPS = 0.5  # Average slippage (0.5 pips)
-    COMMISSION_PER_LOT = 7.0  # Round-trip commission ($7 per standard lot)
-    PIP_VALUE = 10.0  # Standard lot pip value ($10 per pip for EURUSD)
+    COMMISSION_PER_LOT = 0.70  # Round-trip commission ($0.70 per mini lot)
+    LOT_SIZE = 0.10  # Mini lot (realistic for $10k account)
+    PIP_VALUE = 10.0  # $10 per pip for standard lot ($1 per pip for mini lot)
 
-    # Adjust profits for real forex costs
-    total_cost_per_trade = (SPREAD_PIPS + SLIPPAGE_PIPS) * PIP_VALUE + COMMISSION_PER_LOT
+    # Adjust profits for real forex costs (scaled for mini lot)
+    total_cost_per_trade = (SPREAD_PIPS + SLIPPAGE_PIPS) * LOT_SIZE * PIP_VALUE + COMMISSION_PER_LOT
 
     # Recalculate balance with real forex costs
     starting_balance = 10000.0
@@ -63,6 +65,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
         trades_df.at[i, 'real_balance'] = real_balance
 
     print(f"✓ Applied REAL FOREX conditions: {SPREAD_PIPS} pip spread + {SLIPPAGE_PIPS} pip slippage + ${COMMISSION_PER_LOT} commission")
+    print(f"✓ Realistic lot size: {LOT_SIZE} lots (mini lot for $10k account)")
     print(f"✓ Realistic costs per trade: ${total_cost_per_trade:.2f}")
 
     # Setup the plot style
@@ -77,7 +80,7 @@ def create_visualizations(backtester, wins, losses, open_trades):
 
     # Create figure with multiple subplots (increased to 4x3 for daily growth charts)
     fig = plt.figure(figsize=(24, 16))
-    fig.suptitle('AEGFM-Ω REAL FOREX CONDITIONS - Spreads, Slippage & Commission Included',
+    fig.suptitle('AEGFM-Ω REALISTIC FOREX - Mini Lot Trading ($10k Account)',
                  fontsize=20, fontweight='bold', color='#00ff00', y=0.995)
 
     # =================================================================
@@ -420,9 +423,10 @@ REAL FOREX PROFITABILITY (After Costs)
 ├─ Max Drawdown: {max_drawdown:.2f}%
 └─ Sharpe Ratio: {sharpe_ratio:.2f}
 
-TRADING COSTS (Per Trade)
-├─ Spread: {SPREAD_PIPS} pips (${SPREAD_PIPS * PIP_VALUE:.2f})
-├─ Slippage: {SLIPPAGE_PIPS} pips (${SLIPPAGE_PIPS * PIP_VALUE:.2f})
+TRADING COSTS (Per Trade - Mini Lot)
+├─ Lot Size: {LOT_SIZE} lots (mini lot)
+├─ Spread: {SPREAD_PIPS} pips (${SPREAD_PIPS * LOT_SIZE * PIP_VALUE:.2f})
+├─ Slippage: {SLIPPAGE_PIPS} pips (${SLIPPAGE_PIPS * LOT_SIZE * PIP_VALUE:.2f})
 ├─ Commission: ${COMMISSION_PER_LOT:.2f}
 └─ Total Cost: ${total_cost_per_trade:.2f}/trade
 
@@ -546,15 +550,21 @@ SYSTEM STATUS
 
     print(f"\n✓ Visualization saved: {filename}")
     print(f"✓ Generated 12 performance charts with REAL FOREX CONDITIONS")
-    print(f"✓ Applied trading costs: {SPREAD_PIPS} pip spread + {SLIPPAGE_PIPS} pip slippage + ${COMMISSION_PER_LOT} commission")
+    print(f"✓ Applied REALISTIC trading costs for {LOT_SIZE} lot (mini lot):")
+    print(f"  - Spread: {SPREAD_PIPS} pips = ${SPREAD_PIPS * LOT_SIZE * PIP_VALUE:.2f}")
+    print(f"  - Slippage: {SLIPPAGE_PIPS} pips = ${SLIPPAGE_PIPS * LOT_SIZE * PIP_VALUE:.2f}")
+    print(f"  - Commission: ${COMMISSION_PER_LOT:.2f}")
+    print(f"  - Total per trade: ${total_cost_per_trade:.2f}")
     print(f"\n" + "="*70)
-    print(f"REAL FOREX RESULTS:")
+    print(f"REALISTIC FOREX RESULTS:")
     print(f"="*70)
+    print(f"✓ Starting Balance: ${starting_balance:,.2f}")
     print(f"✓ Overall Win Rate: {overall_winrate:.2f}%")
     print(f"✓ Profit Factor: {profit_factor:.2f}")
-    print(f"✓ Net Profit (After Costs): ${net_profit:,.2f}")
+    print(f"✓ Net Profit (After Costs): ${net_profit:,.2f} ({(net_profit/starting_balance)*100:+.1f}%)")
     print(f"✓ Max Drawdown: {max_drawdown:.2f}%")
     print(f"✓ Sharpe Ratio: {sharpe_ratio:.2f}")
+    print(f"✓ Avg Win: ${avg_win:.2f} | Avg Loss: ${avg_loss:.2f}")
     print(f"✓ Total Cost Impact: ${cost_impact:,.2f} ({(cost_impact/final_balance_ideal)*100:.1f}% of gross profit)")
     print(f"="*70)
 
