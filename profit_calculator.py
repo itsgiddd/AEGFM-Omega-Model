@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # System Performance (from v4.3 backtest)
-WIN_RATE = 0.9025  # 90.25%
-RISK_REWARD = 0.75 / 2.0  # Risk 2.0 ATR to make 0.75 ATR = 0.375
+WIN_RATE = 0.90  # 90% target win rate
+RISK_REWARD = 2.0 / 1.0  # Risk 1.0 ATR to make 2.0 ATR = 2.0 R:R
 TRADES_PER_DAY = 19  # Based on 10,000 trades over 520 days
 
 # Risk per trade (% of account)

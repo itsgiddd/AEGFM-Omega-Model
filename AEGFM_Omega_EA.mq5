@@ -43,8 +43,8 @@ input int InpATRPeriod = 14;                    // ATR Period
 input bool InpUseFixedPips = false;             // Use Fixed Pips (instead of ATR)
 input double InpStopLossPips = 50.0;            // Stop Loss (pips) - if Fixed Pips enabled
 input double InpTakeProfitPips = 100.0;         // Take Profit (pips) - if Fixed Pips enabled
-input double InpStopATRMultiplier = 2.0;        // Stop Loss (ATR multiplier) - if ATR mode
-input double InpTargetATRMultiplier = 0.75;     // Take Profit (ATR multiplier) - if ATR mode
+input double InpStopATRMultiplier = 1.0;        // Stop Loss (ATR multiplier) - if ATR mode
+input double InpTargetATRMultiplier = 2.0;      // Take Profit (ATR multiplier) - if ATR mode
 input int InpMinBarsForPattern = 30;            // Minimum Bars for Pattern
 
 input group "=== Pattern Detection ==="
