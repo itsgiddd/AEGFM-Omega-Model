@@ -654,15 +654,15 @@ class AEGFMBacktester:
         return confidence
 
     def should_trade(self, signals, probability):
-        """Check if trade should be taken - 7-LAYER IMMEDIATE MODE for 97%+ accuracy"""
+        """Check if trade should be taken - ELITE MODE for 90% win rate"""
         # Must have a clear prediction (scenarios always provide one)
         if signals['predicted_direction'] == 0:
             return False, "No clear prediction"
 
-        # IMMEDIATE MODE: All trades execute with 7-layer weighted scoring
-        # Layer 7 (Volume Quality) boosts confidence on high-quality setups for 97%+ accuracy
-        ELITE_MODE = False  # Disabled - using 7-layer system for immediate trading
-        MIN_ELITE_CONFIDENCE = 0.93  # 93% minimum confidence
+        # ELITE MODE: Filter for high-quality setups only
+        # Targets 90% win rate by taking only the best signals
+        ELITE_MODE = True  # ENABLED - filtering for 90% win rate
+        MIN_ELITE_CONFIDENCE = 0.90  # 90% minimum confidence
         MIN_ELITE_QUALITY = 7  # 7/9 minimum Bayesian quality score
 
         if ELITE_MODE:
@@ -677,7 +677,7 @@ class AEGFMBacktester:
             # All Elite filters passed
             return True, f"ELITE SETUP: Conf {signals['confidence']:.1%}, Quality {signals['quality_score']}/9"
         else:
-            # IMMEDIATE MODE: No filtering - 7-layer weighted scoring (97%+ accuracy)
+            # IMMEDIATE MODE: No filtering - 7-layer weighted scoring (lower win rate but more trades)
             return True, f"7-Layer: Conf {signals['confidence']:.1%}, Bayesian {signals['quality_score']}/9, Volume {signals['vq_score']}/10"
 
     def simulate_trade(self, idx, signals):
@@ -714,9 +714,9 @@ class AEGFMBacktester:
         return 'OPEN', None
 
     def run_backtest(self):
-        """Run backtest with DUAL SYSTEM (Engine + Scenarios)"""
+        """Run backtest with ELITE MODE targeting 90% win rate"""
         print("\n" + "="*70)
-        print("7-LAYER SYSTEM BACKTEST - All Layers Active + Working Together")
+        print("ELITE MODE BACKTEST - 90% Win Rate Target")
         print("="*70)
 
         wins = 0
