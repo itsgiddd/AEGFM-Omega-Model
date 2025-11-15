@@ -654,31 +654,37 @@ class AEGFMBacktester:
         return confidence
 
     def should_trade(self, signals, probability):
-        """Check if trade should be taken - IMMEDIATE MODE using predictions for 90% win rate"""
+        """Check if trade should be taken - IMMEDIATE MODE with strict filters for 90% win rate @ 1:2 R:R"""
         # Must have a clear prediction (scenarios always provide one)
         if signals['predicted_direction'] == 0:
             return False, "No clear prediction"
 
-        # IMMEDIATE MODE: All trades execute using prediction system for 90% win rate
-        # The prediction system should guide us to 90% accuracy
-        ELITE_MODE = False  # Disabled - using prediction-based immediate trading for 90% win rate
-        MIN_ELITE_CONFIDENCE = 0.93  # 93% minimum confidence
-        MIN_ELITE_QUALITY = 7  # 7/9 minimum Bayesian quality score
+        # IMMEDIATE MODE: Trade immediately when ultra-high-conviction signals appear
+        # For 1:2 R:R (TP is 2x harder to hit), we need maximum confirmation for 90% win rate
+        MIN_CONFIDENCE = 0.97  # 97% minimum confidence for 1:2 R:R
+        MIN_QUALITY = 8  # 8/9 Bayesian quality
+        MIN_VOLUME_QUALITY = 8  # 8/10 volume quality
 
-        if ELITE_MODE:
-            # Filter 1: Minimum Confidence
-            if signals['confidence'] < MIN_ELITE_CONFIDENCE:
-                return False, f"Elite Mode: Confidence too low ({signals['confidence']:.1%} < {MIN_ELITE_CONFIDENCE:.1%})"
+        # Check if Engine and Scenarios agree on direction
+        engine_agrees = signals['engine_prediction'] == signals['scenario_prediction']
 
-            # Filter 2: Minimum Quality Score
-            if signals['quality_score'] < MIN_ELITE_QUALITY:
-                return False, f"Elite Mode: Quality too low ({signals['quality_score']}/9 < {MIN_ELITE_QUALITY}/9)"
+        if not engine_agrees:
+            return False, f"Engine/Scenario conflict"
 
-            # All Elite filters passed
-            return True, f"ELITE SETUP: Conf {signals['confidence']:.1%}, Quality {signals['quality_score']}/9"
-        else:
-            # IMMEDIATE MODE: Prediction-based trading for 90% win rate
-            return True, f"Prediction: Conf {signals['confidence']:.1%}, Bayesian {signals['quality_score']}/9, Volume {signals['vq_score']}/10"
+        # Check confidence threshold
+        if signals['confidence'] < MIN_CONFIDENCE:
+            return False, f"Confidence {signals['confidence']:.1%} < {MIN_CONFIDENCE:.1%}"
+
+        # Check quality score
+        if signals['quality_score'] < MIN_QUALITY:
+            return False, f"Quality {signals['quality_score']}/9 < {MIN_QUALITY}/9"
+
+        # Check volume quality
+        if signals['vq_score'] < MIN_VOLUME_QUALITY:
+            return False, f"Volume quality {signals['vq_score']}/10 < {MIN_VOLUME_QUALITY}/10"
+
+        # Ultra-high-conviction signal - trade immediately
+        return True, f"IMMEDIATE: Conf {signals['confidence']:.1%}, Q{signals['quality_score']}/9, Vol{signals['vq_score']}/10"
 
     def simulate_trade(self, idx, signals):
         """Simulate trade outcome based on prediction"""
@@ -715,9 +721,9 @@ class AEGFMBacktester:
         return 'OPEN', None
 
     def run_backtest(self):
-        """Run backtest with 1:2 Risk:Reward ratio"""
+        """Run backtest with ELITE MODE + 1:2 Risk:Reward ratio"""
         print("\n" + "="*70)
-        print("AEGFM-Ω BACKTEST - Testing 1:2 R:R (SL=1.0 ATR, TP=2.0 ATR)")
+        print("AEGFM-Ω ELITE MODE - 90% Target with 1:2 R:R (SL=1.0, TP=2.0)")
         print("="*70)
 
         wins = 0
