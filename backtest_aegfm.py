@@ -689,13 +689,13 @@ class AEGFMBacktester:
         entry_price = row['Close']
         atr = row['ATR']
 
-        # Use TP/SL ratio optimized for 90% win rate
+        # Testing 1:2 Risk:Reward ratio
         if direction == 'BUY':
-            sl = entry_price - (2.0 * atr)  # Stop Loss: 2.0 ATR
-            tp = entry_price + (0.75 * atr)  # Take Profit: 0.75 ATR
+            sl = entry_price - (1.0 * atr)  # Stop Loss: 1.0 ATR
+            tp = entry_price + (2.0 * atr)  # Take Profit: 2.0 ATR
         else:
-            sl = entry_price + (2.0 * atr)  # Stop Loss: 2.0 ATR
-            tp = entry_price - (0.75 * atr)  # Take Profit: 0.75 ATR
+            sl = entry_price + (1.0 * atr)  # Stop Loss: 1.0 ATR
+            tp = entry_price - (2.0 * atr)  # Take Profit: 2.0 ATR
 
         # Check next 100 candles
         for future_idx in range(idx + 1, min(idx + 100, len(df))):
@@ -715,9 +715,9 @@ class AEGFMBacktester:
         return 'OPEN', None
 
     def run_backtest(self):
-        """Run backtest with prediction-based immediate trading for 90% win rate"""
+        """Run backtest with 1:2 Risk:Reward ratio"""
         print("\n" + "="*70)
-        print("AEGFM-Ω BACKTEST - 90% Win Rate Target (Immediate Mode)")
+        print("AEGFM-Ω BACKTEST - Testing 1:2 R:R (SL=1.0 ATR, TP=2.0 ATR)")
         print("="*70)
 
         wins = 0
@@ -791,36 +791,36 @@ class AEGFMBacktester:
             risk_percent = 0.002  # 0.2% risk (realistic for retail traders)
             risk_amount = current_balance * risk_percent
 
-            # Realistic lot size calculation (standard lot = $10/pip)
+            # Realistic lot size calculation with 1:2 R:R (standard lot = $10/pip)
             # With $10,000 balance, 0.2% risk = $20 risk
-            # SL of 20 pips (2.0 ATR × 10 pips) = $200 with standard lot
-            # So realistic lot = $20/$200 = 0.10 lots (1 mini lot)
-            realistic_lot_size = 0.10  # Mini lot for $10k account
+            # SL of 10 pips (1.0 ATR × 10 pips) = $100 with standard lot
+            # So realistic lot = $20/$100 = 0.20 lots (2 mini lots)
+            realistic_lot_size = 0.20  # 2 mini lots for $10k account
 
             if result == 'WIN':
                 # Not all wins hit full TP - simulate realistic exits
                 # 70% hit full TP, 20% hit 50% TP, 10% breakeven/small profit
                 random_exit = np.random.random()
                 if random_exit < 0.70:
-                    # Full TP: 0.75 ATR = ~7.5 pips with mini lot = $7.50
-                    trade_profit_dollars = 7.5 * realistic_lot_size * 10
+                    # Full TP: 2.0 ATR = ~20 pips with 0.20 lots = $40
+                    trade_profit_dollars = 20.0 * realistic_lot_size * 10
                 elif random_exit < 0.90:
-                    # Partial TP: 50% of target = ~3.75 pips = $3.75
-                    trade_profit_dollars = 3.75 * realistic_lot_size * 10
+                    # Partial TP: 50% of target = ~10 pips = $20
+                    trade_profit_dollars = 10.0 * realistic_lot_size * 10
                 else:
-                    # Small profit/breakeven = ~1 pip = $1
-                    trade_profit_dollars = 1.0 * realistic_lot_size * 10
+                    # Small profit/breakeven = ~2 pips = $4
+                    trade_profit_dollars = 2.0 * realistic_lot_size * 10
 
                 # Subtract commission (charged on EVERY trade)
-                commission = 0.70  # $0.70 per mini lot round-trip
+                commission = 1.40  # $0.70 per mini lot × 2 mini lots round-trip
                 trade_profit_dollars -= commission
 
             elif result == 'LOSS':
-                # Full SL hit: 2.0 ATR = ~20 pips with mini lot = $20
-                trade_profit_dollars = -20.0 * realistic_lot_size * 10
+                # Full SL hit: 1.0 ATR = ~10 pips with 0.20 lots = $20
+                trade_profit_dollars = -10.0 * realistic_lot_size * 10
 
                 # Add commission (makes losses worse)
-                commission = 0.70
+                commission = 1.40
                 trade_profit_dollars -= commission
             else:
                 trade_profit_dollars = 0
