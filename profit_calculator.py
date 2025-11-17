@@ -8,10 +8,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-# System Performance (from v4.3 backtest)
-WIN_RATE = 0.90  # 90% target win rate
+# System Performance (from v4.4 backtest with multi-step path prediction)
+WIN_RATE = 0.9406  # 94.06% win rate (arXiv:2510.00184 implementation)
 RISK_REWARD = 0.75 / 2.0  # Risk 2.0 ATR to make 0.75 ATR = 0.375
-TRADES_PER_DAY = 19  # Based on 10,000 trades over 520 days
+TRADES_PER_DAY = 4  # Based on 2,069 trades over 520 days (more selective)
 
 # Risk per trade (% of account)
 RISK_PERCENT = 0.02  # 2% risk per trade
@@ -123,11 +123,11 @@ print("SCENARIO 1: $1000 Account (NO COMPOUNDING - Fixed Position Size)")
 print("="*70)
 
 scenarios_1000 = [
-    ("1 Week", 133),
-    ("1 Month", 570),
-    ("3 Months", 1710),
-    ("6 Months", 3420),
-    ("1 Year", 6935)
+    ("1 Week", 28),      # 4 trades/day * 7 days
+    ("1 Month", 120),    # 4 trades/day * 30 days
+    ("3 Months", 360),   # 4 trades/day * 90 days
+    ("6 Months", 720),   # 4 trades/day * 180 days
+    ("1 Year", 1460)     # 4 trades/day * 365 days
 ]
 
 for period, trades in scenarios_1000:
@@ -167,7 +167,7 @@ print("SCENARIO 3: Different Account Sizes (1 Month, NO COMPOUNDING)")
 print("="*70)
 
 account_sizes = [500, 1000, 2000, 5000, 10000, 25000, 50000]
-trades_1_month = 570
+trades_1_month = 120  # 4 trades/day * 30 days
 
 for account in account_sizes:
     result = calculate_simple_profit(account, trades_1_month)
@@ -190,7 +190,7 @@ fig.suptitle('AEGFM-Ω Profit Projections', fontsize=16, fontweight='bold')
 # Plot 1: Account Growth Over Time (No Compounding)
 ax1 = axes[0, 0]
 starting_capital = 1000
-trades_per_period = [0, 133, 570, 1710, 3420, 6935]
+trades_per_period = [0, 28, 120, 360, 720, 1460]
 periods = ['Start', '1 Week', '1 Month', '3 Months', '6 Months', '1 Year']
 balances = [starting_capital]
 
@@ -216,7 +216,7 @@ account_sizes = [500, 1000, 2000, 5000, 10000, 25000, 50000]
 profits = []
 
 for account in account_sizes:
-    result = calculate_simple_profit(account, 570)
+    result = calculate_simple_profit(account, 120)
     profits.append(result['net_profit'])
 
 ax2.bar(range(len(account_sizes)), profits, color='#3498db', alpha=0.8, edgecolor='black')
@@ -233,7 +233,7 @@ for i, profit in enumerate(profits):
 # Plot 3: Compounding Simulation (100 runs)
 ax3 = axes[1, 0]
 starting_capital = 1000
-num_trades = 570  # 1 month
+num_trades = 120  # 1 month
 
 # Run 20 simulations for visualization
 for run in range(20):
@@ -254,7 +254,7 @@ ax3.grid(True, alpha=0.3)
 # Plot 4: ROI Comparison
 ax4 = axes[1, 1]
 periods_roi = ['1 Week', '1 Month', '3 Months', '6 Months', '1 Year']
-trades_roi = [133, 570, 1710, 3420, 6935]
+trades_roi = [28, 120, 360, 720, 1460]
 rois = []
 
 for trades in trades_roi:
@@ -294,9 +294,9 @@ print(f"   Every trade expects to make {expectancy:.4f}R profit")
 print(f"   With 2% risk, that's ~{expectancy * RISK_PERCENT * 100:.3f}% account growth per trade")
 
 print("\n2. $1000 ACCOUNT (Realistic Scenario):")
-result_1month = calculate_simple_profit(1000, 570)
+result_1month = calculate_simple_profit(1000, 120)
 print(f"   1 Month: ${result_1month['net_profit']:.2f} profit ({result_1month['roi']:.1f}% ROI)")
-result_1year = calculate_simple_profit(1000, 6935)
+result_1year = calculate_simple_profit(1000, 1460)
 print(f"   1 Year: ${result_1year['net_profit']:.2f} profit ({result_1year['roi']:.1f}% ROI)")
 
 print("\n3. COMPOUNDING WARNING:")
