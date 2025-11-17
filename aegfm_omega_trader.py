@@ -12,7 +12,7 @@ A complete trading system integrating:
 - CVaR/DRO portfolio optimization
 - Kelly sizing and SPRT confirmation
 
-Target: 75% accuracy on accepted trades with mathematically bounded risk
+Target: 90% win rate on accepted trades with mathematically bounded risk
 """
 
 import numpy as np
