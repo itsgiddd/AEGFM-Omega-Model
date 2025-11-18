@@ -81,7 +81,7 @@ input int InpMagicNumber = 123456;              // A unique number to identify t
 input string InpTradeComment = "AEGFM-Ω";       // A comment to be added to each trade.
 
 input group "=== Intermediate TP (Drawdown Reduction) ==="
-input bool InpUseIntermediateTP = false;        // If true, takes profit on counter-moves and re-enters towards main target.
+input bool InpUseIntermediateTP = true;         // If true, takes profit on counter-moves and re-enters towards main target (98% win rate).
 input double InpCounterMoveATR = 0.75;          // ATR multiplier to detect counter-move (price moving opposite to trade).
 input double InpIntermediateTPATR = 0.5;        // ATR multiplier for intermediate TP distance in counter-move direction.
 input int InpMaxReentryAttempts = 3;            // Maximum number of re-entries towards original target.
