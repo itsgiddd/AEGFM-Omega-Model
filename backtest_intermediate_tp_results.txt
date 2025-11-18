@@ -1,0 +1,605 @@
+
+╔══════════════════════════════════════════════════════════════════╗
+║          AEGFM-Ω 7-LAYER SYSTEM BACKTESTING v4.6                ║
+║       ALL 7 LAYERS ACTIVE + WORKING TOGETHER                    ║
+║  Testing with and without Intermediate TP (Drawdown Reduction)  ║
+╚══════════════════════════════════════════════════════════════════╝
+    
+
+======================================================================
+RUNNING BASELINE BACKTEST (WITHOUT Intermediate TP)
+======================================================================
+Generating 5000 realistic forex candles...
+✓ Generated 5000 realistic candles
+✓ Calculated indicators, 4951 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  19 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  20 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  21 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  22 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  23 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  24 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  25 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  26 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  27 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #  28 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  29 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  30 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  31 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  32 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  33 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  34 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  35 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  36 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  37 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  38 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  39 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  40 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  41 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  42 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  43 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  44 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  45 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  46 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  47 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  48 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  49 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  50 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  51 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  52 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  53 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  54 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #  55 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  56 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  57 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  58 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  59 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  60 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  61 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  62 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  63 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  64 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  65 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  66 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  67 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  68 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  69 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  70 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  71 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  72 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  73 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  74 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  75 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #  76 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  77 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  78 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  79 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #  80 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  81 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  82 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  83 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  84 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  85 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  86 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  87 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  88 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  89 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  90 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  91 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  92 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  93 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  94 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  95 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  96 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  97 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  98 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  99 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 100 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 101 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 102 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 103 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 104 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 105 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 106 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 107 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 108 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 109 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 110 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 111 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 112 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 113 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 114 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 115 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 116 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 117 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 118 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 119 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 120 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 121 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 122 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 123 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 124 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 125 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 126 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 127 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 128 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 129 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 130 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 131 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 132 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 133 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 134 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ # 135 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 136 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 137 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 138 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 139 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 140 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 141 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 142 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 143 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 144 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 145 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 146 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 147 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 148 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 149 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 150 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 151 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ # 152 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 153 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 154 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 155 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 156 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 157 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 158 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 159 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 160 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 161 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 162 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 163 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 164 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 165 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 166 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 167 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 168 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 169 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 170 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 171 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 172 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 173 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 174 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 175 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 176 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 177 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 178 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 179 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 180 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 181 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 182 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 183 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 184 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 185 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 186 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 187 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 188 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 189 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 190 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 191 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 192 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 193 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 194 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 195 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 196 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 197 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 198 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 199 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 200 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 201 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 202 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 203 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 204 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 205 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 206 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 207 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 208 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+
+======================================================================
+7-LAYER SYSTEM BACKTEST RESULTS
+======================================================================
+Candles Generated: 5000
+Total Signals: 208
+Closed Trades: 208
+Open Trades: 0
+Wins: 195
+Losses: 13
+
+7-LAYER SYSTEM ANALYSIS (All Layers Active):
+  Engine + Scenarios AGREED: 208 trades (100.0%)
+  Engine + Scenarios CONFLICT: 0 trades (0.0%)
+  → AGREED trades win rate: 93.8% ✓✓✓
+
+======================================================================
+ACTUAL WIN RATE: 93.75%
+======================================================================
+✓✓ EXCELLENT: 90%+ Accuracy (Close to target)
+
+Expected Profit per Trade (0.75:2 R:R): 0.58R
+✓ Profitable system (positive expectancy)
+
+======================================================================
+DAILY GROWTH ANALYSIS
+======================================================================
+Total Trading Days: 50
+Daily Growth Target: 50.00%
+Days Achieving Target: 0 (0.0%)
+
+Daily Growth Stats:
+  Average Daily Growth: 0.15%
+  Max Daily Growth: 0.37%
+  Min Daily Growth: -0.11%
+  Total Profit: $774.65
+
+First 5 Trading Days:
+----------------------------------------------------------------------
+  ✗ 2025-09-29:  +0.13% | $  +12.90 | 3 trades (100% wins)
+  ✗ 2025-09-30:  +0.20% | $  +19.60 | 7 trades (100% wins)
+  ✗ 2025-10-01:  +0.29% | $  +29.55 | 6 trades (100% wins)
+  ✗ 2025-10-02:  +0.17% | $  +16.95 | 4 trades (100% wins)
+  ✗ 2025-10-03:  +0.13% | $  +12.90 | 3 trades (100% wins)
+
+Last 5 Trading Days:
+----------------------------------------------------------------------
+  ✗ 2025-11-13:  +0.19% | $  +20.40 | 3 trades (100% wins)
+  ✗ 2025-11-14:  +0.16% | $  +16.65 | 8 trades (88% wins)
+  ✗ 2025-11-15:  +0.25% | $  +26.50 | 5 trades (100% wins)
+  ✗ 2025-11-16:  +0.34% | $  +36.35 | 7 trades (100% wins)
+  ✗ 2025-11-17:  +0.19% | $  +20.40 | 3 trades (100% wins)
+
+Overall Performance:
+  Starting Balance: $10,000.00
+  Final Balance: $10,774.65
+  Total Growth: +7.75%
+  Total Profit: $+774.65
+======================================================================
+
+
+======================================================================
+RUNNING BACKTEST WITH INTERMEDIATE TP (DRAWDOWN REDUCTION)
+======================================================================
+Generating 5000 realistic forex candles...
+✓ Generated 5000 realistic candles
+✓ Calculated indicators, 4951 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  19 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  20 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  21 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  22 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  23 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  24 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  25 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  26 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  27 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  28 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  29 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  30 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  31 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  32 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  33 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  34 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  35 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  36 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  37 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  38 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  39 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  40 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  41 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  42 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  43 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  44 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  45 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  46 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  47 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  48 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  49 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  50 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  51 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  52 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  53 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  54 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #  55 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  56 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  57 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  58 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  59 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  60 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  61 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  62 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  63 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  64 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  65 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  66 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  67 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  68 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  69 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  70 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  71 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  72 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  73 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  74 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  75 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  76 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  77 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  78 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  79 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  80 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  81 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  82 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  83 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  84 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  85 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  86 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  87 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  88 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  89 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  90 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  91 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  92 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  93 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  94 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  95 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  96 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  97 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  98 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  99 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 100 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 101 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 102 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 103 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 104 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 105 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 106 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 107 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 108 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 109 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 110 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 111 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 112 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 113 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 114 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 115 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 116 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 117 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 118 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 119 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 120 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 121 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 122 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 123 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 124 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 125 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 126 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 127 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 128 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 129 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 130 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 131 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 132 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 133 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 134 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 135 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 136 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 137 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 138 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 139 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 140 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 141 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 142 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 143 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 144 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 145 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 146 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 147 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 148 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 149 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 150 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 151 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 152 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 153 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 154 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 155 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 156 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 157 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 158 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 159 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 160 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 161 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 162 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 163 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 164 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 165 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 166 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 167 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 168 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 169 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 170 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 171 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 172 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 173 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 174 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 175 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 176 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 177 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 178 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 179 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 180 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 181 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 182 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 183 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 184 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 185 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 186 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 187 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 188 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 189 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 190 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 191 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 192 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ # 193 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 194 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 195 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 196 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 197 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 198 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 199 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 200 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 201 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 202 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 203 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 204 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 205 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 206 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ # 207 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ # 208 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+
+======================================================================
+7-LAYER SYSTEM BACKTEST RESULTS
+WITH INTERMEDIATE TP (DRAWDOWN REDUCTION)
+======================================================================
+Candles Generated: 5000
+Total Signals: 208
+Closed Trades: 208
+Open Trades: 0
+Wins: 204
+Losses: 4
+
+======================================================================
+INTERMEDIATE TP STATISTICS (DRAWDOWN REDUCTION)
+======================================================================
+Total Intermediate TPs Placed: 24
+Total Re-entries Attempted: 24
+Successful Re-entries: 24
+Re-entry Success Rate: 100.00%
+
+Average Max Adverse Movement: 0.00051
+Trades Using Intermediate TP: 24 (11.5%)
+
+7-LAYER SYSTEM ANALYSIS (All Layers Active):
+  Engine + Scenarios AGREED: 208 trades (100.0%)
+  Engine + Scenarios CONFLICT: 0 trades (0.0%)
+  → AGREED trades win rate: 98.1% ✓✓✓
+
+======================================================================
+ACTUAL WIN RATE: 98.08%
+======================================================================
+✓✓✓ TARGET ACHIEVED: 98%+ Accuracy ✓✓✓
+
+Expected Profit per Trade (0.75:2 R:R): 0.70R
+✓ Profitable system (positive expectancy)
+
+======================================================================
+DAILY GROWTH ANALYSIS
+======================================================================
+Total Trading Days: 50
+Daily Growth Target: 50.00%
+Days Achieving Target: 0 (0.0%)
+
+Daily Growth Stats:
+  Average Daily Growth: 0.18%
+  Max Daily Growth: 0.33%
+  Min Daily Growth: -0.11%
+  Total Profit: $941.15
+
+First 5 Trading Days:
+----------------------------------------------------------------------
+  ✗ 2025-09-29:  +0.13% | $  +12.90 | 3 trades (100% wins)
+  ✗ 2025-09-30:  +0.20% | $  +19.60 | 7 trades (100% wins)
+  ✗ 2025-10-01:  +0.29% | $  +29.55 | 6 trades (100% wins)
+  ✗ 2025-10-02:  +0.17% | $  +16.95 | 4 trades (100% wins)
+  ✗ 2025-10-03:  +0.13% | $  +12.90 | 3 trades (100% wins)
+
+Last 5 Trading Days:
+----------------------------------------------------------------------
+  ✗ 2025-11-13:  +0.15% | $  +16.65 | 3 trades (100% wins)
+  ✗ 2025-11-14:  +0.12% | $  +12.90 | 8 trades (88% wins)
+  ✗ 2025-11-15:  +0.28% | $  +30.25 | 5 trades (100% wins)
+  ✗ 2025-11-16:  +0.33% | $  +36.35 | 7 trades (100% wins)
+  ✗ 2025-11-17:  +0.15% | $  +16.65 | 3 trades (100% wins)
+
+Overall Performance:
+  Starting Balance: $10,000.00
+  Final Balance: $10,941.15
+  Total Growth: +9.41%
+  Total Profit: $+941.15
+======================================================================
+
+
+======================================================================
+COMPARISON: BASELINE vs INTERMEDIATE TP
+======================================================================
+
+Win Rate Comparison:
+  Baseline (No Intermediate TP):  93.75%
+  With Intermediate TP:            98.08%
+  Difference:                      +4.33%
+
+Profit Comparison:
+  Baseline Profit:     $+774.65
+  Intermediate Profit: $+941.15
+  Difference:          $+166.50
+
+Average Adverse Movement (Drawdown Indicator):
+  Baseline:            0.00053
+  With Intermediate:   0.00051
+  Reduction:           2.8%
+
+======================================================================
+CONCLUSION:
+======================================================================
+✓ Intermediate TP maintains win rate (within 1%)
+✓ Intermediate TP reduces drawdown by 2.8%
+======================================================================

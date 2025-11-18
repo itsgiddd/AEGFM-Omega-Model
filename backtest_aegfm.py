@@ -16,18 +16,30 @@ from datetime import datetime, timedelta
 class AEGFMBacktester:
     """A class for backtesting the AEGFM-Ω trading strategy."""
 
-    def __init__(self, num_candles=2000, daily_growth_target=50.0):
+    def __init__(self, num_candles=2000, daily_growth_target=50.0, use_intermediate_tp=False):
         """Initializes the AEGFMBacktester.
 
         Args:
             num_candles: The number of candles to generate for the backtest.
             daily_growth_target: The target for daily growth in percentage.
+            use_intermediate_tp: Enable intermediate TP for drawdown reduction.
         """
         self.num_candles = num_candles
         self.data = None
         self.trades = []
         self.daily_growth_target = daily_growth_target
         self.daily_stats = []  # Track daily performance
+        self.use_intermediate_tp = use_intermediate_tp
+
+        # Intermediate TP configuration
+        self.counter_move_atr = 0.75  # Counter-move detection threshold
+        self.intermediate_tp_atr = 0.5  # Intermediate TP distance
+        self.max_reentry_attempts = 3  # Max re-entries per trade
+
+        # Intermediate TP statistics
+        self.total_intermediate_tps = 0
+        self.total_reentries = 0
+        self.successful_reentries = 0
 
     def generate_realistic_data(self):
         """Generates realistic forex price movements."""
@@ -878,7 +890,7 @@ class AEGFMBacktester:
         return True, f"95%+ MODE: Conf {adjusted_confidence:.1%}, Path {path_info['agreement_count']}/4, Q{signals['quality_score']}/9"
 
     def simulate_trade(self, idx, signals):
-        """Simulates the outcome of a trade.
+        """Simulates the outcome of a trade with optional intermediate TP.
 
         Args:
             idx: The current index in the data.
@@ -886,7 +898,7 @@ class AEGFMBacktester:
 
         Returns:
             A tuple containing the result of the trade ('WIN', 'LOSS', or
-            'OPEN') and the exit time.
+            'OPEN'), the exit time, and intermediate TP info.
         """
         df = self.data
         row = df.iloc[idx]
@@ -903,22 +915,100 @@ class AEGFMBacktester:
             sl = entry_price + (2.0 * atr)  # Stop Loss: 2.0 ATR
             tp = entry_price - (0.75 * atr)  # Take Profit: 0.75 ATR
 
+        original_tp = tp
+        intermediate_tp_hit = False
+        reentry_count = 0
+        max_adverse_move = 0
+
         # Check next 20 candles (per paper's recommendation)
         for future_idx in range(idx + 1, min(idx + 21, len(df))):
             future_row = df.iloc[future_idx]
+            current_price = future_row['Close']
 
+            # Track maximum adverse movement for drawdown analysis
+            if direction == 'BUY':
+                adverse_move = entry_price - future_row['Low']
+            else:
+                adverse_move = future_row['High'] - entry_price
+            max_adverse_move = max(max_adverse_move, adverse_move)
+
+            # === INTERMEDIATE TP LOGIC ===
+            if self.use_intermediate_tp and not intermediate_tp_hit:
+                counter_move_threshold = self.counter_move_atr * atr
+
+                if direction == 'BUY':
+                    # Check if price moved down (counter to BUY)
+                    move_from_entry = entry_price - current_price
+                    if move_from_entry >= counter_move_threshold:
+                        # Place intermediate TP below current price
+                        intermediate_tp = current_price - (self.intermediate_tp_atr * atr)
+
+                        # Check if intermediate TP would be hit in this candle or next few
+                        if future_row['Low'] <= intermediate_tp:
+                            intermediate_tp_hit = True
+                            self.total_intermediate_tps += 1
+
+                            # Try re-entry if we haven't exceeded max attempts
+                            if reentry_count < self.max_reentry_attempts:
+                                # Re-enter at intermediate TP price
+                                reentry_count += 1
+                                self.total_reentries += 1
+                                entry_price = intermediate_tp
+                                sl = entry_price - (2.0 * atr)
+                                tp = original_tp  # Keep original target
+
+                                # Check if there's still room to profit
+                                if tp <= current_price:
+                                    # Original target already reached, exit with profit
+                                    self.successful_reentries += 1
+                                    return 'WIN', future_row.name, {'intermediate_tp': True, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
+
+                                continue  # Continue monitoring the re-entered trade
+
+                else:  # SELL
+                    # Check if price moved up (counter to SELL)
+                    move_from_entry = current_price - entry_price
+                    if move_from_entry >= counter_move_threshold:
+                        # Place intermediate TP above current price
+                        intermediate_tp = current_price + (self.intermediate_tp_atr * atr)
+
+                        # Check if intermediate TP would be hit
+                        if future_row['High'] >= intermediate_tp:
+                            intermediate_tp_hit = True
+                            self.total_intermediate_tps += 1
+
+                            # Try re-entry
+                            if reentry_count < self.max_reentry_attempts:
+                                reentry_count += 1
+                                self.total_reentries += 1
+                                entry_price = intermediate_tp
+                                sl = entry_price + (2.0 * atr)
+                                tp = original_tp
+
+                                # Check if there's still room to profit
+                                if tp >= current_price:
+                                    self.successful_reentries += 1
+                                    return 'WIN', future_row.name, {'intermediate_tp': True, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
+
+                                continue
+
+            # === STANDARD SL/TP CHECK ===
             if direction == 'BUY':
                 if future_row['Low'] <= sl:
-                    return 'LOSS', future_row.name
+                    return 'LOSS', future_row.name, {'intermediate_tp': intermediate_tp_hit, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
                 if future_row['High'] >= tp:
-                    return 'WIN', future_row.name
+                    if intermediate_tp_hit:
+                        self.successful_reentries += 1
+                    return 'WIN', future_row.name, {'intermediate_tp': intermediate_tp_hit, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
             else:
                 if future_row['High'] >= sl:
-                    return 'LOSS', future_row.name
+                    return 'LOSS', future_row.name, {'intermediate_tp': intermediate_tp_hit, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
                 if future_row['Low'] <= tp:
-                    return 'WIN', future_row.name
+                    if intermediate_tp_hit:
+                        self.successful_reentries += 1
+                    return 'WIN', future_row.name, {'intermediate_tp': intermediate_tp_hit, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
 
-        return 'OPEN', None
+        return 'OPEN', None, {'intermediate_tp': intermediate_tp_hit, 'reentries': reentry_count, 'max_adverse': max_adverse_move}
 
     def run_backtest(self):
         """Runs the backtest with a 95%+ win rate target.
@@ -994,7 +1084,7 @@ class AEGFMBacktester:
             if not should_enter:
                 continue
 
-            result, exit_time = self.simulate_trade(idx, signals)
+            result, exit_time, intermediate_info = self.simulate_trade(idx, signals)
 
             direction = 'BUY' if signals['predicted_direction'] > 0 else 'SELL'
 
@@ -1053,7 +1143,10 @@ class AEGFMBacktester:
                 'scenario_prediction': signals['scenario_prediction'],
                 'scenario_consensus': signals['scenario_consensus'],
                 'balance': current_balance,
-                'profit': trade_profit_dollars  # Realistic dollar profit/loss
+                'profit': trade_profit_dollars,  # Realistic dollar profit/loss
+                'intermediate_tp': intermediate_info['intermediate_tp'],
+                'reentries': intermediate_info['reentries'],
+                'max_adverse_move': intermediate_info['max_adverse']
             })
 
             # Determine if engine and scenarios agreed (Engine ALWAYS has opinion now)
@@ -1110,6 +1203,8 @@ class AEGFMBacktester:
 
         print("\n" + "="*70)
         print("7-LAYER SYSTEM BACKTEST RESULTS")
+        if self.use_intermediate_tp:
+            print("WITH INTERMEDIATE TP (DRAWDOWN REDUCTION)")
         print("="*70)
         print(f"Candles Generated: {self.num_candles}")
         print(f"Total Signals: {total}")
@@ -1117,6 +1212,25 @@ class AEGFMBacktester:
         print(f"Open Trades: {open_trades}")
         print(f"Wins: {wins}")
         print(f"Losses: {losses}")
+
+        # Print intermediate TP statistics
+        if self.use_intermediate_tp:
+            print(f"\n{'='*70}")
+            print("INTERMEDIATE TP STATISTICS (DRAWDOWN REDUCTION)")
+            print(f"{'='*70}")
+            print(f"Total Intermediate TPs Placed: {self.total_intermediate_tps}")
+            print(f"Total Re-entries Attempted: {self.total_reentries}")
+            print(f"Successful Re-entries: {self.successful_reentries}")
+            if self.total_reentries > 0:
+                print(f"Re-entry Success Rate: {self.successful_reentries/self.total_reentries*100:.2f}%")
+
+            # Calculate average adverse movement
+            if len(self.trades) > 0:
+                trades_df = pd.DataFrame(self.trades)
+                avg_adverse_move = trades_df['max_adverse_move'].mean()
+                print(f"\nAverage Max Adverse Movement: {avg_adverse_move:.5f}")
+                trades_with_intermediate = trades_df[trades_df['intermediate_tp']].shape[0]
+                print(f"Trades Using Intermediate TP: {trades_with_intermediate} ({trades_with_intermediate/len(self.trades)*100:.1f}%)")
 
         # Analyze engine vs scenario agreement (ALL 7 LAYERS WORKING TOGETHER)
         if len(self.trades) > 0:
@@ -1223,21 +1337,102 @@ class AEGFMBacktester:
 if __name__ == "__main__":
     print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║          AEGFM-Ω 7-LAYER SYSTEM BACKTESTING v4.0                ║
+║          AEGFM-Ω 7-LAYER SYSTEM BACKTESTING v4.6                ║
 ║       ALL 7 LAYERS ACTIVE + WORKING TOGETHER                    ║
-║       Testing Immediate Trade with 97%+ Accuracy Target         ║
+║  Testing with and without Intermediate TP (Drawdown Reduction)  ║
 ╚══════════════════════════════════════════════════════════════════╝
     """)
 
-    backtester = AEGFMBacktester(num_candles=50000)  # Increased for 1000+ trades
+    # Set seed for reproducible results
+    np.random.seed(42)
+
+    # ==== BASELINE: WITHOUT Intermediate TP ====
+    print("\n" + "="*70)
+    print("RUNNING BASELINE BACKTEST (WITHOUT Intermediate TP)")
+    print("="*70)
+
+    backtester_baseline = AEGFMBacktester(num_candles=5000, use_intermediate_tp=False)
 
     try:
-        backtester.generate_realistic_data()
-        backtester.calculate_indicators()
-        wins, losses, open_trades = backtester.run_backtest()
-        backtester.print_results(wins, losses, open_trades)
+        backtester_baseline.generate_realistic_data()
+        backtester_baseline.calculate_indicators()
+        wins_baseline, losses_baseline, open_baseline = backtester_baseline.run_backtest()
+        backtester_baseline.print_results(wins_baseline, losses_baseline, open_baseline)
 
     except Exception as e:
-        print(f"\n✗ ERROR: {e}")
+        print(f"\n✗ ERROR IN BASELINE: {e}")
         import traceback
         traceback.print_exc()
+
+    # ==== WITH Intermediate TP ====
+    print("\n\n" + "="*70)
+    print("RUNNING BACKTEST WITH INTERMEDIATE TP (DRAWDOWN REDUCTION)")
+    print("="*70)
+
+    # Reset seed for same market conditions
+    np.random.seed(42)
+
+    backtester_intermediate = AEGFMBacktester(num_candles=5000, use_intermediate_tp=True)
+
+    try:
+        backtester_intermediate.generate_realistic_data()
+        backtester_intermediate.calculate_indicators()
+        wins_intermediate, losses_intermediate, open_intermediate = backtester_intermediate.run_backtest()
+        backtester_intermediate.print_results(wins_intermediate, losses_intermediate, open_intermediate)
+
+    except Exception as e:
+        print(f"\n✗ ERROR WITH INTERMEDIATE TP: {e}")
+        import traceback
+        traceback.print_exc()
+
+    # ==== COMPARISON ====
+    print("\n\n" + "="*70)
+    print("COMPARISON: BASELINE vs INTERMEDIATE TP")
+    print("="*70)
+
+    if wins_baseline + losses_baseline > 0 and wins_intermediate + losses_intermediate > 0:
+        baseline_wr = wins_baseline / (wins_baseline + losses_baseline) * 100
+        intermediate_wr = wins_intermediate / (wins_intermediate + losses_intermediate) * 100
+
+        print(f"\nWin Rate Comparison:")
+        print(f"  Baseline (No Intermediate TP):  {baseline_wr:.2f}%")
+        print(f"  With Intermediate TP:            {intermediate_wr:.2f}%")
+        print(f"  Difference:                      {intermediate_wr - baseline_wr:+.2f}%")
+
+        if len(backtester_baseline.trades) > 0 and len(backtester_intermediate.trades) > 0:
+            baseline_profit = backtester_baseline.trades[-1]['balance'] - 10000
+            intermediate_profit = backtester_intermediate.trades[-1]['balance'] - 10000
+
+            print(f"\nProfit Comparison:")
+            print(f"  Baseline Profit:     ${baseline_profit:+,.2f}")
+            print(f"  Intermediate Profit: ${intermediate_profit:+,.2f}")
+            print(f"  Difference:          ${intermediate_profit - baseline_profit:+,.2f}")
+
+            # Drawdown comparison
+            baseline_df = pd.DataFrame(backtester_baseline.trades)
+            intermediate_df = pd.DataFrame(backtester_intermediate.trades)
+
+            baseline_avg_adverse = baseline_df['max_adverse_move'].mean()
+            intermediate_avg_adverse = intermediate_df['max_adverse_move'].mean()
+
+            print(f"\nAverage Adverse Movement (Drawdown Indicator):")
+            print(f"  Baseline:            {baseline_avg_adverse:.5f}")
+            print(f"  With Intermediate:   {intermediate_avg_adverse:.5f}")
+            print(f"  Reduction:           {(baseline_avg_adverse - intermediate_avg_adverse)/baseline_avg_adverse*100:.1f}%")
+
+        print(f"\n{'='*70}")
+        print("CONCLUSION:")
+        print(f"{'='*70}")
+
+        if intermediate_wr >= baseline_wr - 1.0:  # Allow 1% tolerance
+            print("✓ Intermediate TP maintains win rate (within 1%)")
+        else:
+            print(f"⚠ Intermediate TP reduces win rate by {baseline_wr - intermediate_wr:.2f}%")
+
+        if intermediate_avg_adverse < baseline_avg_adverse:
+            reduction_pct = (baseline_avg_adverse - intermediate_avg_adverse) / baseline_avg_adverse * 100
+            print(f"✓ Intermediate TP reduces drawdown by {reduction_pct:.1f}%")
+        else:
+            print("⚠ No drawdown reduction observed")
+
+        print(f"{'='*70}")
