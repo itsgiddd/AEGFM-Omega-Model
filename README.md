@@ -21,6 +21,7 @@ AEGFM-Ω is a sophisticated, multi-layered algorithmic trading system designed f
 *   **Comprehensive Backtesting:** Includes a Python-based backtesting engine to rigorously test and validate the strategy.
 *   **Visual Proof:** Generates detailed performance dashboards and charts to visually verify every trade.
 *   **Risk Management:** Implements fractional Kelly criterion for position sizing and provides small account protection.
+*   **Drawdown Reduction:** Optional intermediate take profit feature that captures profits on counter-moves before re-entering towards the original target, significantly reducing drawdown exposure.
 
 ## System Architecture
 
@@ -138,6 +139,7 @@ The MetaTrader 5 EA offers a wide range of configurable input parameters. To acc
 *   **Trade Management:**
     *   `InpUseBreakeven`: Automatically move the stop loss to breakeven.
     *   `InpUseTrailingStop`: Use a trailing stop to lock in profits.
+    *   `InpUseIntermediateTP`: Enable intermediate take profit for drawdown reduction (takes profit on counter-moves and re-enters towards original target).
 
 ## Performance
 

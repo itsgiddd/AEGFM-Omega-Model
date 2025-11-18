@@ -8,10 +8,11 @@
 //|   Trade Frequency: ~4 trades/day (selective due to path filter) |
 //|   Risk:Reward: 2.0 ATR risk : 0.75 ATR profit = 1:0.375        |
 //|   Small Account Protection: Auto-scales stop loss for accounts <$1000 |
+//|   Intermediate TP: Reduces drawdown by taking counter-move profits |
 //+------------------------------------------------------------------+
 #property copyright "AEGFM-Ω Trading System - Gideon Liciaga"
 #property link      ""
-#property version   "4.5"
+#property version   "4.6"
 #property strict
 
 #include <Trade\Trade.mqh>
@@ -79,6 +80,13 @@ input double InpMaxEntryMomentum = 3.0;         // The maximum entry momentum in
 input int InpMagicNumber = 123456;              // A unique number to identify trades placed by this EA.
 input string InpTradeComment = "AEGFM-Ω";       // A comment to be added to each trade.
 
+input group "=== Intermediate TP (Drawdown Reduction) ==="
+input bool InpUseIntermediateTP = false;        // If true, takes profit on counter-moves and re-enters towards main target.
+input double InpCounterMoveATR = 0.75;          // ATR multiplier to detect counter-move (price moving opposite to trade).
+input double InpIntermediateTPATR = 0.5;        // ATR multiplier for intermediate TP distance in counter-move direction.
+input int InpMaxReentryAttempts = 3;            // Maximum number of re-entries towards original target.
+input double InpMinCounterMoveProfit = 20.0;    // Minimum profit in pips for intermediate TP to be valid.
+
 input group "=== Time Filters ==="
 input bool InpUseTimeFilter = false;            // If true, trading will only be allowed during a specific time window.
 input int InpStartHour = 0;                     // The start hour for trading (server time).
@@ -141,6 +149,23 @@ int dailyTrades = 0;           // The number of trades taken today.
 int dailyWins = 0;             // The number of winning trades today.
 int dailyLosses = 0;           // The number of losing trades today.
 
+// Intermediate TP tracking structure
+struct IntermediateTPInfo {
+    ulong ticket;              // The ticket number of the position.
+    double originalTarget;     // The original take profit target.
+    double originalEntry;      // The original entry price.
+    int reentryCount;          // The number of times we've re-entered this trade.
+    bool isIntermediateMode;   // Flag indicating if we're using intermediate TP for this position.
+    ENUM_ORDER_TYPE originalDirection; // The original trade direction (BUY or SELL).
+};
+
+IntermediateTPInfo intermediateTPData[]; // Array to track intermediate TP data for positions.
+
+// Intermediate TP statistics
+int totalIntermediateTPs = 0;  // Total intermediate TPs placed.
+int totalReentries = 0;        // Total re-entries executed.
+int successfulReentries = 0;   // Re-entries that reached original target.
+
 /**
  * @brief Initializes the Expert Advisor.
  * This function is called once when the EA is first loaded onto a chart. It sets up all necessary parameters,
@@ -149,7 +174,7 @@ int dailyLosses = 0;           // The number of losing trades today.
  */
 int OnInit() {
     Print("═══════════════════════════════════════════════════");
-    Print("  AEGFM-Ω Expert Advisor v4.5 Initialized");
+    Print("  AEGFM-Ω Expert Advisor v4.6 Initialized");
     Print("  7-LAYER + PATH PREDICTION ENGINE: ", (InpPredictiveMode ? "ON" : "OFF"));
 
     if(InpUltraPrecisionMode) {
@@ -204,6 +229,17 @@ int OnInit() {
         Print("    Stop Reduction: ", NormalizeDouble((1.0 - InpSmallAccountStopReduction) * 100, 0), "%");
     } else {
         Print("  SMALL ACCOUNT PROTECTION: DISABLED");
+    }
+
+    // Intermediate TP Info
+    if(InpUseIntermediateTP) {
+        Print("  INTERMEDIATE TP (DRAWDOWN REDUCTION): ENABLED");
+        Print("    Counter-Move Threshold: ", NormalizeDouble(InpCounterMoveATR, 2), "× ATR");
+        Print("    Intermediate TP Distance: ", NormalizeDouble(InpIntermediateTPATR, 2), "× ATR");
+        Print("    Max Re-entry Attempts: ", InpMaxReentryAttempts);
+        Print("    Min Counter-Move Profit: ", NormalizeDouble(InpMinCounterMoveProfit, 1), " pips");
+    } else {
+        Print("  INTERMEDIATE TP: DISABLED");
     }
     Print("═══════════════════════════════════════════════════");
 
@@ -326,6 +362,18 @@ void OnDeinit(const int reason) {
     Print("  Winning Trades: ", winningTrades);
     if(totalTrades > 0) {
         Print("  Win Rate: ", NormalizeDouble((double)winningTrades/totalTrades * 100, 2), "%");
+    }
+
+    // Print intermediate TP statistics
+    if(InpUseIntermediateTP) {
+        Print("  ─────────────────────────────────────────────────");
+        Print("  INTERMEDIATE TP STATISTICS (Drawdown Reduction)");
+        Print("  Total Intermediate TPs: ", totalIntermediateTPs);
+        Print("  Total Re-entries: ", totalReentries);
+        if(totalReentries > 0) {
+            Print("  Successful Re-entries: ", successfulReentries);
+            Print("  Re-entry Success Rate: ", NormalizeDouble((double)successfulReentries/totalReentries * 100, 2), "%");
+        }
     }
 
     // Print daily growth stats
@@ -457,6 +505,11 @@ void OnTick() {
 
     // Manage existing positions
     ManageOpenPositions();
+
+    // Check for re-entry opportunities (intermediate TP feature)
+    if(InpUseIntermediateTP) {
+        CheckForReentry();
+    }
 
     // If no position, look for entry (regular mode)
     if(!HasOpenPosition() && !InpImmediateTrade) {
@@ -2074,6 +2127,11 @@ void ManageOpenPositions() {
             if(positionInfo.Symbol() == _Symbol &&
                positionInfo.Magic() == InpMagicNumber) {
 
+                // Check for intermediate TP opportunities first
+                if(InpUseIntermediateTP) {
+                    ManageIntermediateTP();
+                }
+
                 // Move to breakeven first
                 if(InpUseBreakeven) {
                     MoveToBreakeven();
@@ -2169,6 +2227,252 @@ void TrailingStop() {
                 Print("✓ Trailing stop updated for SELL");
                 Print("  New SL: ", newSL, " (locked profit: +", NormalizeDouble(lockedProfit, 1), " pips)");
             }
+        }
+    }
+}
+
+/**
+ * @brief Finds intermediate TP data for a given ticket.
+ * @param ticket The ticket number to search for.
+ * @return int The index in the array, or -1 if not found.
+ */
+int FindIntermediateTPData(ulong ticket) {
+    for(int i = 0; i < ArraySize(intermediateTPData); i++) {
+        if(intermediateTPData[i].ticket == ticket) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/**
+ * @brief Adds or updates intermediate TP data for a position.
+ * @param ticket The ticket number.
+ * @param originalTarget The original take profit target.
+ * @param originalEntry The original entry price.
+ * @param direction The trade direction.
+ */
+void AddIntermediateTPData(ulong ticket, double originalTarget, double originalEntry, ENUM_ORDER_TYPE direction) {
+    int index = FindIntermediateTPData(ticket);
+
+    if(index == -1) {
+        // Add new entry
+        int size = ArraySize(intermediateTPData);
+        ArrayResize(intermediateTPData, size + 1);
+        index = size;
+        intermediateTPData[index].ticket = ticket;
+        intermediateTPData[index].reentryCount = 0;
+        intermediateTPData[index].isIntermediateMode = false;
+    }
+
+    intermediateTPData[index].originalTarget = originalTarget;
+    intermediateTPData[index].originalEntry = originalEntry;
+    intermediateTPData[index].originalDirection = direction;
+}
+
+/**
+ * @brief Removes intermediate TP data for a closed position.
+ * @param ticket The ticket number to remove.
+ */
+void RemoveIntermediateTPData(ulong ticket) {
+    int index = FindIntermediateTPData(ticket);
+    if(index == -1) return;
+
+    // Shift all elements after this one
+    int size = ArraySize(intermediateTPData);
+    for(int i = index; i < size - 1; i++) {
+        intermediateTPData[i] = intermediateTPData[i + 1];
+    }
+    ArrayResize(intermediateTPData, size - 1);
+}
+
+/**
+ * @brief Manages intermediate take profit logic to reduce drawdown.
+ * This function detects when price moves opposite to the trade direction (counter-move)
+ * and places an intermediate TP to capture profit on that move. After the intermediate TP
+ * is hit, it can re-enter the trade towards the original target.
+ */
+void ManageIntermediateTP() {
+    if(!InpUseIntermediateTP) return;
+
+    double atr = GetATR(0);
+    if(atr <= 0) return;
+
+    ulong ticket = positionInfo.Ticket();
+    double currentPrice = positionInfo.PriceCurrent();
+    double openPrice = positionInfo.PriceOpen();
+    double currentTP = positionInfo.TakeProfit();
+    ENUM_POSITION_TYPE posType = positionInfo.Type();
+
+    int index = FindIntermediateTPData(ticket);
+
+    // If this position is not tracked yet, add it
+    if(index == -1) {
+        ENUM_ORDER_TYPE direction = (posType == POSITION_TYPE_BUY) ? ORDER_TYPE_BUY : ORDER_TYPE_SELL;
+        AddIntermediateTPData(ticket, currentTP, openPrice, direction);
+        index = FindIntermediateTPData(ticket);
+        if(index == -1) return; // Failed to add
+    }
+
+    // Skip if already in intermediate mode
+    if(intermediateTPData[index].isIntermediateMode) return;
+
+    double counterMoveThreshold = InpCounterMoveATR * atr;
+    double pipValue = (_Digits == 5 || _Digits == 3) ? _Point * 10 : _Point;
+
+    if(posType == POSITION_TYPE_BUY) {
+        // Check if price is moving down (counter to BUY)
+        double moveFromEntry = openPrice - currentPrice;
+
+        if(moveFromEntry >= counterMoveThreshold) {
+            // Price has moved down significantly, place intermediate TP below current price
+            double intermediateTP = currentPrice - (InpIntermediateTPATR * atr);
+            double potentialProfit = (openPrice - intermediateTP) / pipValue;
+
+            if(potentialProfit >= InpMinCounterMoveProfit) {
+                intermediateTP = NormalizeDouble(intermediateTP, _Digits);
+
+                if(trade.PositionModify(ticket, positionInfo.StopLoss(), intermediateTP)) {
+                    intermediateTPData[index].isIntermediateMode = true;
+                    totalIntermediateTPs++;
+
+                    Print("═══════════════════════════════════════════════════");
+                    Print("✓ INTERMEDIATE TP PLACED (BUY counter-move detected)");
+                    Print("  Ticket: ", ticket);
+                    Print("  Original TP: ", intermediateTPData[index].originalTarget);
+                    Print("  Intermediate TP: ", intermediateTP);
+                    Print("  Counter-move: ", NormalizeDouble(moveFromEntry / pipValue, 1), " pips");
+                    Print("  Expected profit: ", NormalizeDouble(potentialProfit, 1), " pips");
+                    Print("═══════════════════════════════════════════════════");
+                }
+            }
+        }
+    }
+    else if(posType == POSITION_TYPE_SELL) {
+        // Check if price is moving up (counter to SELL)
+        double moveFromEntry = currentPrice - openPrice;
+
+        if(moveFromEntry >= counterMoveThreshold) {
+            // Price has moved up significantly, place intermediate TP above current price
+            double intermediateTP = currentPrice + (InpIntermediateTPATR * atr);
+            double potentialProfit = (intermediateTP - openPrice) / pipValue;
+
+            if(potentialProfit >= InpMinCounterMoveProfit) {
+                intermediateTP = NormalizeDouble(intermediateTP, _Digits);
+
+                if(trade.PositionModify(ticket, positionInfo.StopLoss(), intermediateTP)) {
+                    intermediateTPData[index].isIntermediateMode = true;
+                    totalIntermediateTPs++;
+
+                    Print("═══════════════════════════════════════════════════");
+                    Print("✓ INTERMEDIATE TP PLACED (SELL counter-move detected)");
+                    Print("  Ticket: ", ticket);
+                    Print("  Original TP: ", intermediateTPData[index].originalTarget);
+                    Print("  Intermediate TP: ", intermediateTP);
+                    Print("  Counter-move: ", NormalizeDouble(moveFromEntry / pipValue, 1), " pips");
+                    Print("  Expected profit: ", NormalizeDouble(potentialProfit, 1), " pips");
+                    Print("═══════════════════════════════════════════════════");
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @brief Checks for closed positions that had intermediate TPs and attempts re-entry.
+ * This function runs on each tick to detect when a position with an intermediate TP has closed.
+ * If the original conditions are still favorable, it re-enters the trade towards the original target.
+ */
+void CheckForReentry() {
+    if(!InpUseIntermediateTP) return;
+
+    // Check each tracked position to see if it's still open
+    for(int i = ArraySize(intermediateTPData) - 1; i >= 0; i--) {
+        ulong ticket = intermediateTPData[i].ticket;
+
+        // Try to select the position
+        if(!positionInfo.SelectByTicket(ticket)) {
+            // Position is closed, check if we should re-enter
+            if(intermediateTPData[i].isIntermediateMode &&
+               intermediateTPData[i].reentryCount < InpMaxReentryAttempts) {
+
+                // Attempt re-entry
+                double currentPrice = close[0];
+                double originalTarget = intermediateTPData[i].originalTarget;
+                double atr = GetATR(0);
+
+                bool shouldReenter = false;
+                bool isBullish = false;
+
+                if(intermediateTPData[i].originalDirection == ORDER_TYPE_BUY) {
+                    // Original was BUY, check if we should re-enter BUY
+                    isBullish = true;
+                    // Re-enter if current price is below original target (room to profit)
+                    shouldReenter = (currentPrice < originalTarget - (0.5 * atr));
+                }
+                else {
+                    // Original was SELL, check if we should re-enter SELL
+                    isBullish = false;
+                    // Re-enter if current price is above original target (room to profit)
+                    shouldReenter = (currentPrice > originalTarget + (0.5 * atr));
+                }
+
+                if(shouldReenter) {
+                    // Calculate position size and SL
+                    double entryPrice = currentPrice;
+                    double stopLoss, takeProfit;
+                    double stopDistance = InpStopATRMultiplier * atr;
+
+                    if(isBullish) {
+                        stopLoss = entryPrice - stopDistance;
+                        takeProfit = originalTarget;
+                    } else {
+                        stopLoss = entryPrice + stopDistance;
+                        takeProfit = originalTarget;
+                    }
+
+                    double riskReward = MathAbs(takeProfit - entryPrice) / MathAbs(entryPrice - stopLoss);
+                    double lotSize = CalculatePositionSize(0.80, riskReward, MathAbs(entryPrice - stopLoss));
+
+                    if(lotSize >= SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN)) {
+                        stopLoss = NormalizeDouble(stopLoss, _Digits);
+                        takeProfit = NormalizeDouble(takeProfit, _Digits);
+
+                        bool success = false;
+                        string reentryComment = InpTradeComment + "-RE" + IntegerToString(intermediateTPData[i].reentryCount + 1);
+
+                        if(isBullish) {
+                            success = trade.Buy(lotSize, _Symbol, 0, stopLoss, takeProfit, reentryComment);
+                        } else {
+                            success = trade.Sell(lotSize, _Symbol, 0, stopLoss, takeProfit, reentryComment);
+                        }
+
+                        if(success) {
+                            totalReentries++;
+
+                            Print("═══════════════════════════════════════════════════");
+                            Print("✓ RE-ENTRY EXECUTED");
+                            Print("  Original ticket: ", ticket);
+                            Print("  Direction: ", (isBullish ? "BUY" : "SELL"));
+                            Print("  Entry: ", entryPrice);
+                            Print("  Target: ", takeProfit);
+                            Print("  Re-entry attempt: ", intermediateTPData[i].reentryCount + 1, " of ", InpMaxReentryAttempts);
+                            Print("  R:R: 1:", NormalizeDouble(riskReward, 2));
+                            Print("═══════════════════════════════════════════════════");
+
+                            // Update tracking data for new position
+                            ulong newTicket = trade.ResultOrder();
+                            intermediateTPData[i].ticket = newTicket;
+                            intermediateTPData[i].reentryCount++;
+                            intermediateTPData[i].isIntermediateMode = false;
+                            continue; // Keep tracking this position
+                        }
+                    }
+                }
+            }
+
+            // Remove the data if position closed and no re-entry
+            RemoveIntermediateTPData(ticket);
         }
     }
 }
