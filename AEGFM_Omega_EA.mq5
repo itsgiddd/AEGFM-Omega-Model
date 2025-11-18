@@ -7,10 +7,11 @@
 //|   Path Prediction: Analyzes 5/10/15/20 candles ahead           |
 //|   Trade Frequency: ~4 trades/day (selective due to path filter) |
 //|   Risk:Reward: 2.0 ATR risk : 0.75 ATR profit = 1:0.375        |
+//|   Small Account Protection: Auto-scales stop loss for accounts <$1000 |
 //+------------------------------------------------------------------+
 #property copyright "AEGFM-Ω Trading System - Gideon Liciaga"
 #property link      ""
-#property version   "4.4"
+#property version   "4.5"
 #property strict
 
 #include <Trade\Trade.mqh>
@@ -39,6 +40,12 @@ input double InpRiskPercent = 4.0;              // Risk Per Trade (%) - if auto-
 input double InpMaxLossPercent = 0.25;          // Max Loss Per Trade (% of equity) - if auto-calc
 input double InpKellyFraction = 0.4;            // Fractional Kelly - if auto-calc
 input double InpMinPredictionConfidence = 0.90; // Min Prediction Confidence (90%)
+
+input group "=== Small Account Protection ==="
+input bool InpEnableSmallAccountProtection = true;  // Enable Small Account Protection
+input double InpSmallAccountThreshold = 1000.0;     // Small Account Threshold ($)
+input double InpMaxStopLossPercent = 3.0;           // Max Stop Loss (% of balance)
+input double InpSmallAccountStopReduction = 0.6;    // Stop Loss Reduction for Small Accounts (60%)
 
 input group "=== Daily Growth Tracking ==="
 input bool InpEnableDailyGrowthTracking = true; // Enable Daily Growth Tracking
@@ -137,7 +144,7 @@ int dailyLosses = 0;
 //+------------------------------------------------------------------+
 int OnInit() {
     Print("═══════════════════════════════════════════════════");
-    Print("  AEGFM-Ω Expert Advisor v4.4 Initialized");
+    Print("  AEGFM-Ω Expert Advisor v4.5 Initialized");
     Print("  7-LAYER + PATH PREDICTION ENGINE: ", (InpPredictiveMode ? "ON" : "OFF"));
 
     if(InpUltraPrecisionMode) {
@@ -182,6 +189,16 @@ int OnInit() {
         Print("  PIP MODE: FIXED (", InpStopLossPips, " SL / ", InpTakeProfitPips, " TP pips)");
     } else {
         Print("  PIP MODE: ATR-BASED (", InpStopATRMultiplier, "× / ", InpTargetATRMultiplier, "× ATR)");
+    }
+
+    // Small Account Protection Info
+    if(InpEnableSmallAccountProtection) {
+        Print("  SMALL ACCOUNT PROTECTION: ENABLED");
+        Print("    Threshold: $", NormalizeDouble(InpSmallAccountThreshold, 2));
+        Print("    Max Stop Loss: ", NormalizeDouble(InpMaxStopLossPercent, 2), "% of balance");
+        Print("    Stop Reduction: ", NormalizeDouble((1.0 - InpSmallAccountStopReduction) * 100, 0), "%");
+    } else {
+        Print("  SMALL ACCOUNT PROTECTION: DISABLED");
     }
     Print("═══════════════════════════════════════════════════");
 
@@ -1045,15 +1062,24 @@ void ExecuteImmediateTrade() {
         stopDistance = InpStopLossPips * pipValue;
         targetDistance = InpTakeProfitPips * pipValue;
         Print("  Mode: FIXED PIPS");
-        Print("  Stop Loss: ", InpStopLossPips, " pips");
+        Print("  Stop Loss: ", InpStopLossPips, " pips (requested)");
         Print("  Take Profit: ", InpTakeProfitPips, " pips");
     } else {
         // ATR MODE - Dynamic based on market volatility
         stopDistance = InpStopATRMultiplier * atr;
         targetDistance = InpTargetATRMultiplier * atr;
         Print("  Mode: ATR-BASED (adaptive)");
-        Print("  Stop Loss: ", NormalizeDouble(InpStopATRMultiplier, 2), " × ATR");
+        Print("  Stop Loss: ", NormalizeDouble(InpStopATRMultiplier, 2), " × ATR (requested)");
         Print("  Take Profit: ", NormalizeDouble(InpTargetATRMultiplier, 2), " × ATR");
+    }
+
+    // Apply account-aware stop loss protection for small accounts
+    double originalStopDistance = stopDistance;
+    stopDistance = CalculateAccountAwareStopLoss(stopDistance, entry);
+
+    if(stopDistance != originalStopDistance) {
+        Print("  Stop Loss: ADJUSTED from ", NormalizeDouble(originalStopDistance / _Point, 1),
+              " to ", NormalizeDouble(stopDistance / _Point, 1), " points");
     }
 
     if(goLong) {
@@ -2380,10 +2406,13 @@ void ExecuteTrade(double probability) {
     double stopLoss = currentPattern.stop;
     double takeProfit = currentPattern.target;
 
+    // Calculate initial stop distance from pattern
+    double stopDistance = MathAbs(entryPrice - stopLoss);
+
     // OVERRIDE: Use fixed pips if enabled (overrides pattern-based levels)
     if(InpUseFixedPips) {
         double pipValue = (_Digits == 5 || _Digits == 3) ? _Point * 10 : _Point;
-        double stopDistance = InpStopLossPips * pipValue;
+        stopDistance = InpStopLossPips * pipValue;
         double targetDistance = InpTakeProfitPips * pipValue;
 
         if(isBullish) {
@@ -2395,6 +2424,21 @@ void ExecuteTrade(double probability) {
         }
 
         Print("  FIXED PIP MODE: ", InpStopLossPips, " SL / ", InpTakeProfitPips, " TP pips");
+    }
+
+    // Apply account-aware stop loss protection for small accounts
+    double originalStopDistance = stopDistance;
+    stopDistance = CalculateAccountAwareStopLoss(stopDistance, entryPrice);
+
+    // Recalculate stop loss if it was adjusted
+    if(stopDistance != originalStopDistance) {
+        if(isBullish) {
+            stopLoss = entryPrice - stopDistance;
+        } else {
+            stopLoss = entryPrice + stopDistance;
+        }
+        Print("  Stop Loss: ADJUSTED from ", NormalizeDouble(originalStopDistance / _Point, 1),
+              " to ", NormalizeDouble(stopDistance / _Point, 1), " points");
     }
 
     double riskReward = MathAbs(takeProfit - entryPrice) /
@@ -2438,6 +2482,59 @@ void ExecuteTrade(double probability) {
     } else {
         Print("✗ Order failed: ", GetLastError());
     }
+}
+
+//+------------------------------------------------------------------+
+//| Calculate account-aware stop loss distance                       |
+//+------------------------------------------------------------------+
+double CalculateAccountAwareStopLoss(double requestedStopDistance, double entryPrice) {
+    // If small account protection is disabled, return the original stop distance
+    if(!InpEnableSmallAccountProtection) {
+        return requestedStopDistance;
+    }
+
+    double balance = accountInfo.Balance();
+    double adjustedStopDistance = requestedStopDistance;
+
+    // Check if this is a small account
+    bool isSmallAccount = (balance < InpSmallAccountThreshold);
+
+    // PROTECTION 1: Reduce stop loss for small accounts
+    if(isSmallAccount) {
+        adjustedStopDistance = requestedStopDistance * InpSmallAccountStopReduction;
+        Print("⚠ Small Account Protection: Stop reduced by ",
+              NormalizeDouble((1.0 - InpSmallAccountStopReduction) * 100, 1),
+              "% (Balance: $", NormalizeDouble(balance, 2), ")");
+    }
+
+    // PROTECTION 2: Ensure stop loss doesn't exceed maximum percentage of balance
+    double pointValue = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
+    double stopPoints = adjustedStopDistance / _Point;
+
+    // Calculate minimum lot size to check worst-case scenario
+    double minLot = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
+    double potentialLoss = stopPoints * pointValue * minLot;
+    double lossPercent = (potentialLoss / balance) * 100.0;
+
+    // If even minimum lot size would exceed max loss percent, reduce stop further
+    if(lossPercent > InpMaxStopLossPercent) {
+        double maxAllowedLoss = balance * (InpMaxStopLossPercent / 100.0);
+        double maxStopPoints = maxAllowedLoss / (pointValue * minLot);
+        adjustedStopDistance = maxStopPoints * _Point;
+
+        Print("⚠ Stop Loss Cap Applied: Max ", InpMaxStopLossPercent,
+              "% of balance ($", NormalizeDouble(maxAllowedLoss, 2), ")");
+    }
+
+    // PROTECTION 3: Ensure stop loss is at least broker's minimum distance
+    double minStopLevel = SymbolInfoInteger(_Symbol, SYMBOL_TRADE_STOPS_LEVEL) * _Point;
+    if(adjustedStopDistance < minStopLevel) {
+        Print("⚠ Stop too tight: Adjusted to broker minimum (",
+              NormalizeDouble(minStopLevel / _Point, 1), " points)");
+        adjustedStopDistance = minStopLevel;
+    }
+
+    return adjustedStopDistance;
 }
 
 //+------------------------------------------------------------------+
