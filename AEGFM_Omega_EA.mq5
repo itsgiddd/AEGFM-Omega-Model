@@ -19,129 +19,134 @@
 #include <Trade\AccountInfo.mqh>
 
 //--- Input Parameters
+// These are the user-configurable settings for the Expert Advisor.
 input group "=== PREDICTIVE MODE ==="
-input bool InpImmediateTrade = true;            // ✓ Trade Immediately on Load (no delay)
-input bool InpPredictiveMode = true;            // ✓ 7-LAYER + PATH PREDICTION (94.06% Win Rate)
-input bool InpUltraPrecisionMode = true;        // ✓ ULTRA-PRECISION (weighted + path scoring)
-input bool InpEliteMode = false;                // ELITE MODE (94%+ accuracy - highly selective)
-input int InpPredictionBars = 20;               // Path Lookahead (5/10/15/20 candles ahead)
+input bool InpImmediateTrade = true;            // If true, the EA will attempt to trade immediately upon loading.
+input bool InpPredictiveMode = true;            // If true, enables the 7-layer prediction engine with path prediction.
+input bool InpUltraPrecisionMode = true;        // If true, enables ultra-precision mode with weighted scoring.
+input bool InpEliteMode = false;                // If true, enables elite mode, which is highly selective for accuracy.
+input int InpPredictionBars = 20;               // The number of bars to look ahead for path prediction.
 
 input group "=== ELITE MODE FILTERS (94.06% Accuracy - Path Prediction) ==="
-input double InpMinEliteConfidence = 0.93;      // Min Confidence for Elite Mode (93%)
-input int InpMinLayersPassed = 6;               // Min Layers Passed (6 or 7 out of 7)
-input int InpMinBayesianQuality = 8;            // Min Bayesian Quality Score (8/9 = 94.06%)
-input int InpMinConfluenceScore = 3;            // Min Confluence Score (3-5 points)
+input double InpMinEliteConfidence = 0.93;      // The minimum confidence level required for elite mode.
+input int InpMinLayersPassed = 6;               // The minimum number of layers that must pass for a trade to be considered.
+input int InpMinBayesianQuality = 8;            // The minimum Bayesian quality score required.
+input int InpMinConfluenceScore = 3;            // The minimum confluence score required.
 // NOTE: Path filtering = higher win rate (94.06%) but fewer trades (~4/day vs 14.5/day)
 
 input group "=== Risk Management ==="
-input bool InpUseFixedLotSize = false;          // Use Fixed Lot Size (instead of auto-calc)
-input double InpFixedLotSize = 0.01;            // Fixed Lot Size (0.01, 0.03, 0.04, etc.)
-input double InpRiskPercent = 4.0;              // Risk Per Trade (%) - if auto-calc
-input double InpMaxLossPercent = 0.25;          // Max Loss Per Trade (% of equity) - if auto-calc
-input double InpKellyFraction = 0.4;            // Fractional Kelly - if auto-calc
-input double InpMinPredictionConfidence = 0.90; // Min Prediction Confidence (90%)
+input bool InpUseFixedLotSize = false;          // If true, a fixed lot size is used; otherwise, it's auto-calculated.
+input double InpFixedLotSize = 0.01;            // The fixed lot size to use if InpUseFixedLotSize is true.
+input double InpRiskPercent = 4.0;              // The percentage of equity to risk per trade (if auto-calculating).
+input double InpMaxLossPercent = 0.25;          // The maximum percentage of equity to lose in a single trade.
+input double InpKellyFraction = 0.4;            // The fraction of the Kelly criterion to use for position sizing.
+input double InpMinPredictionConfidence = 0.90; // The minimum prediction confidence required to place a trade.
 
 input group "=== Small Account Protection ==="
-input bool InpEnableSmallAccountProtection = true;  // Enable Small Account Protection
-input double InpSmallAccountThreshold = 1000.0;     // Small Account Threshold ($)
-input double InpMaxStopLossPercent = 3.0;           // Max Stop Loss (% of balance)
-input double InpSmallAccountStopReduction = 0.6;    // Stop Loss Reduction for Small Accounts (60%)
+input bool InpEnableSmallAccountProtection = true;  // If true, enables protection for small accounts.
+input double InpSmallAccountThreshold = 1000.0;     // The threshold (in dollars) for a small account.
+input double InpMaxStopLossPercent = 3.0;           // The maximum stop loss as a percentage of the account balance.
+input double InpSmallAccountStopReduction = 0.6;    // The stop loss reduction factor for small accounts.
 
 input group "=== Daily Growth Tracking ==="
-input bool InpEnableDailyGrowthTracking = true; // Enable Daily Growth Tracking
-input double InpDailyGrowthTarget = 50.0;       // Daily Growth Target (%)
+input bool InpEnableDailyGrowthTracking = true; // If true, enables daily growth tracking.
+input double InpDailyGrowthTarget = 50.0;       // The target for daily growth in percentage.
 
 input group "=== Entry Settings ==="
-input int InpATRPeriod = 14;                    // ATR Period
-input bool InpUseFixedPips = false;             // Use Fixed Pips (instead of ATR)
-input double InpStopLossPips = 50.0;            // Stop Loss (pips) - if Fixed Pips enabled
-input double InpTakeProfitPips = 100.0;         // Take Profit (pips) - if Fixed Pips enabled
-input double InpStopATRMultiplier = 2.0;        // Stop Loss (ATR multiplier) - if ATR mode
-input double InpTargetATRMultiplier = 0.75;     // Take Profit (ATR multiplier) - if ATR mode
-input int InpMinBarsForPattern = 30;            // Minimum Bars for Pattern
+input int InpATRPeriod = 14;                    // The period for the Average True Range (ATR) indicator.
+input bool InpUseFixedPips = false;             // If true, fixed pips are used for stop loss and take profit.
+input double InpStopLossPips = 50.0;            // The stop loss in pips (if using fixed pips).
+input double InpTakeProfitPips = 100.0;         // The take profit in pips (if using fixed pips).
+input double InpStopATRMultiplier = 2.0;        // The multiplier for ATR to set the stop loss.
+input double InpTargetATRMultiplier = 0.75;     // The multiplier for ATR to set the take profit.
+input int InpMinBarsForPattern = 30;            // The minimum number of bars required to form a pattern.
 
 input group "=== Pattern Detection ==="
-input double InpMinProbability = 0.75;          // Min Pattern Probability (75%)
-input double InpPatternTolerance = 0.02;        // Pattern Level Tolerance (ATR fraction)
-input double InpNecklineTolerance = 0.03;       // Neckline Tolerance (ATR fraction)
-input int InpSwingLookback = 5;                 // Swing Point Lookback
+input double InpMinProbability = 0.75;          // The minimum probability for a pattern to be considered valid.
+input double InpPatternTolerance = 0.02;        // The tolerance for pattern level matching, as a fraction of ATR.
+input double InpNecklineTolerance = 0.03;       // The tolerance for the neckline in pattern detection, as a fraction of ATR.
+input int InpSwingLookback = 5;                 // The number of bars to look back to identify swing points.
 
 input group "=== Trade Management ==="
-input bool InpUseBreakeven = true;              // Move to Breakeven
-input double InpBreakevenATR = 1.5;             // Breakeven Trigger (ATR)
-input bool InpUseTrailingStop = true;           // Use Trailing Stop
-input double InpTrailingStopATR = 1.0;          // Trailing Stop Distance (ATR)
-input double InpTrailingStepATR = 0.5;          // Trailing Step (ATR)
-input bool InpUseMicroFilter = true;            // Use Micro-Structure Filter (prevents bad entries)
-input int InpMicroFilterBars = 5;               // Micro-Structure Analysis Bars (3-5)
-input double InpMaxEntryMomentum = 3.0;         // Max Entry Momentum (ATR - prevents chasing)
-input int InpMagicNumber = 123456;              // Magic Number
-input string InpTradeComment = "AEGFM-Ω";       // Trade Comment
+input bool InpUseBreakeven = true;              // If true, the stop loss will be moved to breakeven when a trade is in profit.
+input double InpBreakevenATR = 1.5;             // The ATR multiplier to trigger the breakeven stop.
+input bool InpUseTrailingStop = true;           // If true, a trailing stop will be used to lock in profits.
+input double InpTrailingStopATR = 1.0;          // The distance of the trailing stop in ATR multiples.
+input double InpTrailingStepATR = 0.5;          // The step of the trailing stop in ATR multiples.
+input bool InpUseMicroFilter = true;            // If true, a micro-structure filter is used to prevent bad entries.
+input int InpMicroFilterBars = 5;               // The number of bars to analyze for the micro-structure filter.
+input double InpMaxEntryMomentum = 3.0;         // The maximum entry momentum in ATR multiples.
+input int InpMagicNumber = 123456;              // A unique number to identify trades placed by this EA.
+input string InpTradeComment = "AEGFM-Ω";       // A comment to be added to each trade.
 
 input group "=== Time Filters ==="
-input bool InpUseTimeFilter = false;            // Use Time Filter
-input int InpStartHour = 0;                     // Start Hour (Server Time)
-input int InpEndHour = 23;                      // End Hour (Server Time)
+input bool InpUseTimeFilter = false;            // If true, trading will only be allowed during a specific time window.
+input int InpStartHour = 0;                     // The start hour for trading (server time).
+input int InpEndHour = 23;                      // The end hour for trading (server time).
 
 //--- Global Variables
-CTrade trade;
-CPositionInfo positionInfo;
-CAccountInfo accountInfo;
+// These variables are used throughout the Expert Advisor.
+CTrade trade;                  // The trade object for executing trades.
+CPositionInfo positionInfo;    // The position info object for managing open positions.
+CAccountInfo accountInfo;      // The account info object for accessing account details.
 
 // Pattern detection arrays
-double high[], low[], close[], open[];
-datetime time[];
+double high[], low[], close[], open[]; // Arrays to store price data.
+datetime time[];                      // Array to store timestamps.
 
 // Indicator handles - Current timeframe
-int atrHandle;
-int maHandle;       // MA(50)
-int rsiHandle;      // RSI(14)
-int macdHandle;     // MACD
-int bbHandle;       // Bollinger Bands
-int stochHandle;    // Stochastic
-int adxHandle;      // ADX
-int cciHandle;      // CCI
+int atrHandle;      // Handle for the ATR indicator.
+int maHandle;       // Handle for the Moving Average (50) indicator.
+int rsiHandle;      // Handle for the Relative Strength Index (14) indicator.
+int macdHandle;     // Handle for the Moving Average Convergence Divergence indicator.
+int bbHandle;       // Handle for the Bollinger Bands indicator.
+int stochHandle;    // Handle for the Stochastic Oscillator indicator.
+int adxHandle;      // Handle for the Average Directional Index indicator.
+int cciHandle;      // Handle for the Commodity Channel Index indicator.
 
 // Multi-timeframe indicator handles
-int maHandle_H1, maHandle_H4, maHandle_D1;
-int rsiHandle_H1, rsiHandle_H4;
-int adxHandle_H1, adxHandle_H4;
+int maHandle_H1, maHandle_H4, maHandle_D1; // Handles for MAs on different timeframes.
+int rsiHandle_H1, rsiHandle_H4;           // Handles for RSIs on different timeframes.
+int adxHandle_H1, adxHandle_H4;           // Handles for ADXs on different timeframes.
 
 // Immediate trading flag
-bool initialTradeExecuted = false;
-bool isFirstTick = true;
+bool initialTradeExecuted = false; // Flag to check if the initial trade has been executed.
+bool isFirstTick = true;          // Flag to check if it's the first tick.
 
 // Structure for detected patterns
 struct PatternInfo {
-    string type;
-    double entry;
-    double stop;
-    double target;
-    double quality;
-    datetime detectTime;
-    bool isValid;
+    string type;          // The type of pattern detected.
+    double entry;         // The entry price of the pattern.
+    double stop;          // The stop loss of the pattern.
+    double target;        // The take profit of the pattern.
+    double quality;       // The quality score of the pattern.
+    datetime detectTime;  // The time the pattern was detected.
+    bool isValid;         // Flag indicating if the pattern is valid.
 };
 
-PatternInfo currentPattern;
+PatternInfo currentPattern; // The currently detected pattern.
 
 // Trade statistics
-int totalTrades = 0;
-int winningTrades = 0;
-double currentEquity = 0;
+int totalTrades = 0;     // The total number of trades taken.
+int winningTrades = 0;   // The number of winning trades.
+double currentEquity = 0; // The current equity of the account.
 
 // Daily growth tracking
-datetime lastResetDay = 0;
-double dailyStartBalance = 0;
-double dailyStartEquity = 0;
-double dailyPeakEquity = 0;
-double dailyMaxDrawdown = 0;
-int dailyTrades = 0;
-int dailyWins = 0;
-int dailyLosses = 0;
+datetime lastResetDay = 0;     // The last day the daily stats were reset.
+double dailyStartBalance = 0;  // The starting balance for the day.
+double dailyStartEquity = 0;   // The starting equity for the day.
+double dailyPeakEquity = 0;    // The peak equity for the day.
+double dailyMaxDrawdown = 0;   // The maximum drawdown for the day.
+int dailyTrades = 0;           // The number of trades taken today.
+int dailyWins = 0;             // The number of winning trades today.
+int dailyLosses = 0;           // The number of losing trades today.
 
-//+------------------------------------------------------------------+
-//| Expert initialization function                                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Initializes the Expert Advisor.
+ * This function is called once when the EA is first loaded onto a chart. It sets up all necessary parameters,
+ * initializes indicators, and prints configuration details to the log.
+ * @return int Returns INIT_SUCCEEDED on successful initialization, otherwise returns INIT_FAILED.
+ */
 int OnInit() {
     Print("═══════════════════════════════════════════════════");
     Print("  AEGFM-Ω Expert Advisor v4.5 Initialized");
@@ -308,9 +313,12 @@ int OnInit() {
     return(INIT_SUCCEEDED);
 }
 
-//+------------------------------------------------------------------+
-//| Expert deinitialization function                                 |
-//+------------------------------------------------------------------+
+/**
+ * @brief Deinitializes the Expert Advisor.
+ * This function is called when the EA is being unloaded. It prints final performance statistics,
+ * daily growth summaries, and releases all indicator handles to free up resources.
+ * @param reason The reason code for deinitialization.
+ */
 void OnDeinit(const int reason) {
     Print("═══════════════════════════════════════════════════");
     Print("  AEGFM-Ω EA Stopped");
@@ -373,9 +381,12 @@ void OnDeinit(const int reason) {
     IndicatorRelease(adxHandle_H4);
 }
 
-//+------------------------------------------------------------------+
-//| Expert tick function                                             |
-//+------------------------------------------------------------------+
+/**
+ * @brief Called on every new tick of market data.
+ * This is the main function of the EA, executed on every price update. It handles updating market data,
+ * managing daily statistics, executing immediate trades on the first tick, and analyzing the market
+ * for new trading opportunities on each new bar.
+ */
 void OnTick() {
     // Update market data
     if(!UpdateMarketData()) {
@@ -453,10 +464,14 @@ void OnTick() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Micro-Structure Filter: Analyzes current timeframe price action |
-//| Returns: true if safe to enter, false if reversal imminent      |
-//+------------------------------------------------------------------+
+/**
+ * @brief Analyzes recent price action to filter out poor entry timings.
+ * This function checks the micro-structure of the last few bars to prevent entering trades that are likely
+ * to reverse immediately. It checks for extreme momentum (chasing price) and entering against strong,
+ * very recent counter-momentum.
+ * @param direction The intended trade direction (1 for buy, -1 for sell).
+ * @return bool Returns true if the micro-structure is favorable for entry, false otherwise.
+ */
 bool CheckMicroStructure(int direction) {
     if(!InpUseMicroFilter) return true; // Filter disabled
 
@@ -536,9 +551,12 @@ bool CheckMicroStructure(int direction) {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Execute immediate trade with PREDICTIVE ENGINE                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Executes a trade immediately based on the predictive engine's analysis.
+ * This function is called when `InpImmediateTrade` is true. It runs a multi-layered analysis of market
+ * conditions, including momentum, velocity, acceleration, and pattern sequences, to make a high-confidence
+ * trading decision without waiting for a new bar. It encapsulates the core logic of the predictive model.
+ */
 void ExecuteImmediateTrade() {
     Print("════════════════════════════════════════════════════════════");
     if(InpUltraPrecisionMode) {
@@ -1140,9 +1158,13 @@ void ExecuteImmediateTrade() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Calculate Momentum (1st derivative of price)                    |
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates the price momentum over a specified number of bars.
+ * Momentum is calculated as the simple difference between the current closing price and the closing price
+ * `bars` ago. It represents the first derivative of price.
+ * @param bars The lookback period for the momentum calculation.
+ * @return double The calculated momentum value.
+ */
 double CalculateMomentum(int bars) {
     if(bars <= 0 || bars >= ArraySize(close)) return 0;
 
@@ -1153,9 +1175,13 @@ double CalculateMomentum(int bars) {
     return currentPrice - pastPrice;
 }
 
-//+------------------------------------------------------------------+
-//| Calculate Velocity (speed and direction of price movement)      |
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates the weighted velocity of price movement.
+ * Velocity is the rate of price change, with more weight given to recent price action. This helps in
+ * understanding both the speed and direction of the market.
+ * @param bars The lookback period for the velocity calculation.
+ * @return double The calculated weighted velocity.
+ */
 double CalculateVelocity(int bars) {
     if(bars <= 1 || bars >= ArraySize(close)) return 0;
 
@@ -1176,9 +1202,13 @@ double CalculateVelocity(int bars) {
     return totalWeightedChange / totalWeight;
 }
 
-//+------------------------------------------------------------------+
-//| Calculate Acceleration (2nd derivative - rate of momentum change)|
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates the acceleration of price.
+ * Acceleration is the rate of change of momentum (the second derivative of price). It helps identify
+ * if a trend is strengthening or weakening.
+ * @param bars The lookback period for the acceleration calculation.
+ * @return double The calculated acceleration value.
+ */
 double CalculateAcceleration(int bars) {
     if(bars <= 4 || bars >= ArraySize(close)) return 0;
 
@@ -1194,9 +1224,14 @@ double CalculateAcceleration(int bars) {
     return acceleration;
 }
 
-//+------------------------------------------------------------------+
-//| Analyze Pattern Sequence (consistency of price movements)       |
-//+------------------------------------------------------------------+
+/**
+ * @brief Analyzes the consistency of price movements over a recent period.
+ * This function calculates a "pattern consistency" score by measuring the proportion of bars that move in
+ * the dominant direction. A high score indicates a clear, consistent trend, while a low score suggests
+ * choppy or consolidating price action.
+ * @param bars The number of recent bars to analyze.
+ * @return double A consistency score between 0.0 and 1.0.
+ */
 double AnalyzePatternSequence(int bars) {
     if(bars <= 3 || bars >= ArraySize(close)) return 0.5;
 
@@ -1223,9 +1258,12 @@ double AnalyzePatternSequence(int bars) {
     return consistency;
 }
 
-//+------------------------------------------------------------------+
-//| Detect Market Structure (Trending vs Ranging)                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Determines if the market is currently trending based on the ADX indicator.
+ * @param adx The current ADX value.
+ * @param[out] trendStrength A reference to a double that will be populated with the normalized trend strength (0-1).
+ * @return bool Returns true if the market is considered to be trending (ADX > 20), false otherwise.
+ */
 bool IsMarketTrending(double adx, double &trendStrength) {
     // ADX > 25 = Strong trend
     // ADX 20-25 = Moderate trend
@@ -1243,9 +1281,17 @@ bool IsMarketTrending(double adx, double &trendStrength) {
     return false;
 }
 
-//+------------------------------------------------------------------+
-//| BAYESIAN MARKET REGIME CLASSIFIER (Quality Scoring)            |
-//+------------------------------------------------------------------+
+/**
+ * @brief Classifies the current market regime using a Bayesian-inspired scoring model.
+ * This function analyzes the interplay between momentum, velocity, and acceleration to determine the
+ * quality of a potential mean-reversion setup. It scores the setup based on divergence, alignment,
+ * and strength, providing a robust filter for high-probability trades.
+ * @param momentum The current price momentum.
+ * @param velocity The current price velocity.
+ * @param acceleration The current price acceleration.
+ * @param atr The current Average True Range (ATR) for normalization.
+ * @return MarketRegime A struct containing the detailed quality scores of the current market regime.
+ */
 struct MarketRegime {
     int quality_score;       // Total quality (0-9 points)
     int divergence_score;    // Divergence score (0-4)
@@ -1316,9 +1362,13 @@ MarketRegime ClassifyMarketRegime(double momentum, double velocity, double accel
     return regime;
 }
 
-//+------------------------------------------------------------------+
-//| LAYER 4: MULTI-TIMEFRAME CONFLUENCE ANALYZER (99% Accuracy)    |
-//+------------------------------------------------------------------+
+/**
+ * @brief Analyzes market trends across multiple timeframes (H1, H4, D1) to find confluence.
+ * For the highest accuracy, this layer checks if the predicted trade direction is supported by the
+ * prevailing trends on higher timeframes. A unanimous agreement across all analyzed timeframes
+ * significantly boosts the confidence of a trade.
+ * @return MTFAnalysis A struct containing the analysis results for each timeframe and the overall consensus.
+ */
 struct MTFAnalysis {
     int h1_prediction;       // H1 timeframe prediction
     int h4_prediction;       // H4 timeframe prediction
@@ -1363,9 +1413,13 @@ MTFAnalysis AnalyzeMultiTimeframeConfluence() {
     return mtf;
 }
 
-//+------------------------------------------------------------------+
-//| LAYER 5: VOLATILITY REGIME FILTER (Sweet Spot Detection)       |
-//+------------------------------------------------------------------+
+/**
+ * @brief Analyzes the current market volatility to determine if it's in an optimal range.
+ * This function filters trades based on volatility, avoiding periods that are too choppy (low volatility)
+ * or too erratic (high volatility). It identifies a "sweet spot" (30-70th percentile of recent ATR)
+ * where the market is most conducive to predictable movements.
+ * @return VolatilityRegime A struct containing the ATR percentile and a flag indicating if volatility is optimal.
+ */
 struct VolatilityRegime {
     double atr_percentile;    // ATR percentile (0-100)
     bool is_optimal;          // Is in optimal volatility range (30-70th percentile)
@@ -1413,9 +1467,13 @@ VolatilityRegime AnalyzeVolatilityRegime() {
     return vol;
 }
 
-//+------------------------------------------------------------------+
-//| LAYER 6: MATHEMATICAL CONFLUENCE SYSTEM (Fibonacci + S/R)      |
-//+------------------------------------------------------------------+
+/**
+ * @brief Scores the proximity of the current price to key mathematical levels.
+ * This layer checks for confluence of support and resistance from Fibonacci levels, round numbers, and
+ * recent swing points. A high confluence score indicates that the price is at a significant level,
+ * increasing the probability of a reaction.
+ * @return ConfluenceAnalysis A struct containing the confluence score and other related data.
+ */
 struct ConfluenceAnalysis {
     int confluence_score;     // 0-5 points (how many levels nearby)
     bool at_major_level;      // Price is at major confluence zone
@@ -1483,9 +1541,13 @@ ConfluenceAnalysis AnalyzeMathematicalConfluence() {
     return conf;
 }
 
-//+------------------------------------------------------------------+
-//| LAYER 7: VOLUME & MARKET QUALITY ANALYSIS                       |
-//+------------------------------------------------------------------+
+/**
+ * @brief Analyzes volume and price action to determine the quality of the market setup.
+ * This function scores the market based on volume trends, price action cleanliness (directional vs. choppy),
+ * momentum consistency, and candle body quality. A high score indicates a clean, high-quality market
+ * environment suitable for trading.
+ * @return VolumeQuality A struct containing the quality score and related analysis.
+ */
 struct VolumeQuality {
     int quality_score;          // 0-10 points (volume & price action quality)
     bool high_quality_setup;    // Is this a high-quality setup?
@@ -1587,9 +1649,18 @@ VolumeQuality AnalyzeVolumeAndQuality() {
     return vq;
 }
 
-//+------------------------------------------------------------------+
-//| Predict Next Move based on momentum/velocity/acceleration       |
-//+------------------------------------------------------------------+
+/**
+ * @brief Predicts the next market move by synthesizing multiple layers of analysis.
+ * This is the core predictive function that integrates market structure (trending vs. ranging),
+ * oscillator readings, multi-timeframe analysis, and momentum metrics to generate a final trading
+ * decision. It uses a scoring system to weigh different factors and adapts its logic based on the
+ * current market condition.
+ * @param momentum The calculated momentum.
+ * @param velocity The calculated velocity.
+ * @param acceleration The calculated acceleration.
+ * @param patternScore The pattern consistency score.
+ * @return int Returns 1 for a bullish prediction, -1 for a bearish prediction, and 0 for neutral.
+ */
 int PredictNextMove(double momentum, double velocity, double acceleration, double patternScore) {
     // Get market structure
     double adx = GetADX(0);
@@ -1725,9 +1796,19 @@ int PredictNextMove(double momentum, double velocity, double acceleration, doubl
     }
 }
 
-//+------------------------------------------------------------------+
-//| Calculate Prediction Confidence Score                           |
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates a confidence score for a trading prediction.
+ * This function quantifies the certainty of a trade setup by scoring various contributing factors,
+ * such as momentum strength, alignment of velocity and acceleration, pattern consistency, and
+ * multi-timeframe confluence. The final score is used to modulate trade risk.
+ * @param momentum The calculated momentum.
+ * @param velocity The calculated velocity.
+ * @param acceleration The calculated acceleration.
+ * @param patternScore The pattern consistency score.
+ * @param momentumStrength The normalized momentum strength.
+ * @param atr The current ATR for normalization.
+ * @return double A confidence score between 0.50 and 0.98.
+ */
 double CalculatePredictionConfidence(double momentum, double velocity, double acceleration,
                                       double patternScore, double momentumStrength, double atr) {
     double confidence = 0.50;  // Base 50%
@@ -1783,9 +1864,11 @@ double CalculatePredictionConfidence(double momentum, double velocity, double ac
     return confidence;
 }
 
-//+------------------------------------------------------------------+
-//| Get RSI value                                                     |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Relative Strength Index (RSI) value for a given bar.
+ * @param shift The bar index to retrieve the RSI value from (0 is the current bar).
+ * @return double The RSI value, or 50.0 on failure.
+ */
 double GetRSI(int shift) {
     double buffer[];
     ArraySetAsSeries(buffer, true);
@@ -1793,9 +1876,12 @@ double GetRSI(int shift) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get MACD values                                                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the MACD main and signal line values for a given bar.
+ * @param shift The bar index to retrieve the MACD values from.
+ * @param[out] main A reference to a double that will be populated with the MACD main line value.
+ * @param[out] signal A reference to a double that will be populated with the MACD signal line value.
+ */
 void GetMACD(int shift, double &main, double &signal) {
     double mainBuffer[], signalBuffer[];
     ArraySetAsSeries(mainBuffer, true);
@@ -1808,9 +1894,13 @@ void GetMACD(int shift, double &main, double &signal) {
     signal = signalBuffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get Bollinger Bands values                                        |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Bollinger Bands values (upper, middle, lower) for a given bar.
+ * @param shift The bar index to retrieve the values from.
+ * @param[out] upper A reference to a double for the upper band value.
+ * @param[out] middle A reference to a double for the middle band value.
+ * @param[out] lower A reference to a double for the lower band value.
+ */
 void GetBollingerBands(int shift, double &upper, double &middle, double &lower) {
     double upperBuffer[], middleBuffer[], lowerBuffer[];
     ArraySetAsSeries(upperBuffer, true);
@@ -1826,9 +1916,11 @@ void GetBollingerBands(int shift, double &upper, double &middle, double &lower) 
     lower = lowerBuffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get Stochastic value                                              |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Stochastic Oscillator value for a given bar.
+ * @param shift The bar index to retrieve the value from.
+ * @return double The Stochastic value, or 50.0 on failure.
+ */
 double GetStochastic(int shift) {
     double buffer[];
     ArraySetAsSeries(buffer, true);
@@ -1836,9 +1928,11 @@ double GetStochastic(int shift) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get ADX value                                                     |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Average Directional Index (ADX) value for a given bar.
+ * @param shift The bar index to retrieve the value from.
+ * @return double The ADX value, or 0.0 on failure.
+ */
 double GetADX(int shift) {
     double buffer[];
     ArraySetAsSeries(buffer, true);
@@ -1846,9 +1940,11 @@ double GetADX(int shift) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get CCI value                                                     |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Commodity Channel Index (CCI) value for a given bar.
+ * @param shift The bar index to retrieve the value from.
+ * @return double The CCI value, or 0.0 on failure.
+ */
 double GetCCI(int shift) {
     double buffer[];
     ArraySetAsSeries(buffer, true);
@@ -1856,9 +1952,11 @@ double GetCCI(int shift) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get MA value from different timeframe                            |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Moving Average (MA) value from a specified higher timeframe.
+ * @param timeframe The ENUM_TIMEFRAMES from which to retrieve the MA value (e.g., PERIOD_H1).
+ * @return double The MA value, or 0 on failure.
+ */
 double GetMA_MTF(ENUM_TIMEFRAMES timeframe) {
     int handle;
     if(timeframe == PERIOD_H1) handle = maHandle_H1;
@@ -1872,9 +1970,11 @@ double GetMA_MTF(ENUM_TIMEFRAMES timeframe) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get RSI value from different timeframe                           |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the RSI value from a specified higher timeframe.
+ * @param timeframe The ENUM_TIMEFRAMES from which to retrieve the RSI value.
+ * @return double The RSI value, or 50.0 on failure.
+ */
 double GetRSI_MTF(ENUM_TIMEFRAMES timeframe) {
     int handle;
     if(timeframe == PERIOD_H1) handle = rsiHandle_H1;
@@ -1887,9 +1987,11 @@ double GetRSI_MTF(ENUM_TIMEFRAMES timeframe) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get ADX value from different timeframe                           |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the ADX value from a specified higher timeframe.
+ * @param timeframe The ENUM_TIMEFRAMES from which to retrieve the ADX value.
+ * @return double The ADX value, or 0.0 on failure.
+ */
 double GetADX_MTF(ENUM_TIMEFRAMES timeframe) {
     int handle;
     if(timeframe == PERIOD_H1) handle = adxHandle_H1;
@@ -1902,9 +2004,11 @@ double GetADX_MTF(ENUM_TIMEFRAMES timeframe) {
     return buffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Get MA value                                                      |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Moving Average (MA) value for a given bar on the current timeframe.
+ * @param shift The bar index to retrieve the value from.
+ * @return double The MA value, or the close price on failure.
+ */
 double GetMA(int shift) {
     double maBuffer[];
     ArraySetAsSeries(maBuffer, true);
@@ -1916,9 +2020,11 @@ double GetMA(int shift) {
     return maBuffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Update market data arrays                                        |
-//+------------------------------------------------------------------+
+/**
+ * @brief Updates the EA's internal market data arrays with the latest price and time information.
+ * This function is called on each tick to ensure the EA is working with the most recent data.
+ * @return bool Returns true on success, false if any data copy operation fails.
+ */
 bool UpdateMarketData() {
     int bars = 200; // Lookback period
 
@@ -1931,18 +2037,20 @@ bool UpdateMarketData() {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Check if time to trade                                           |
-//+------------------------------------------------------------------+
+/**
+ * @brief Checks if the current server time is within the user-defined trading hours.
+ * @return bool Returns true if trading is allowed at the current time, false otherwise.
+ */
 bool IsTimeToTrade() {
     MqlDateTime dt;
     TimeToStruct(TimeCurrent(), dt);
     return (dt.hour >= InpStartHour && dt.hour < InpEndHour);
 }
 
-//+------------------------------------------------------------------+
-//| Check if there's an open position                                |
-//+------------------------------------------------------------------+
+/**
+ * @brief Checks if there is currently an open position managed by this EA on the current symbol.
+ * @return bool Returns true if a position exists, false otherwise.
+ */
 bool HasOpenPosition() {
     for(int i = PositionsTotal() - 1; i >= 0; i--) {
         if(positionInfo.SelectByIndex(i)) {
@@ -1955,9 +2063,11 @@ bool HasOpenPosition() {
     return false;
 }
 
-//+------------------------------------------------------------------+
-//| Manage open positions (breakeven, trailing, etc.)                |
-//+------------------------------------------------------------------+
+/**
+ * @brief Manages all open positions, applying breakeven and trailing stop logic.
+ * This function iterates through all open positions managed by the EA and calls the appropriate
+ * trade management functions.
+ */
 void ManageOpenPositions() {
     for(int i = PositionsTotal() - 1; i >= 0; i--) {
         if(positionInfo.SelectByIndex(i)) {
@@ -1976,9 +2086,12 @@ void ManageOpenPositions() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Move stop loss to breakeven                                      |
-//+------------------------------------------------------------------+
+/**
+ * @brief Moves the stop loss to the breakeven point once a trade is sufficiently in profit.
+ * This function checks if a trade has moved in the favorable direction by a predefined ATR multiple.
+ * If it has, the stop loss is moved to slightly above (for buys) or below (for sells) the entry
+ * price to protect against losses.
+ */
 void MoveToBreakeven() {
     double atr = GetATR(0);
     double openPrice = positionInfo.PriceOpen();
@@ -2007,10 +2120,11 @@ void MoveToBreakeven() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Trailing Stop: Locks in profits as trade moves favorably        |
-//| This is KEY for achieving near-100% accuracy                     |
-//+------------------------------------------------------------------+
+/**
+ * @brief Manages the trailing stop for an open position.
+ * This function dynamically adjusts the stop loss to lock in profits as the price moves in a favorable
+ * direction. The trailing distance and step are based on ATR multiples to adapt to market volatility.
+ */
 void TrailingStop() {
     if(!InpUseTrailingStop) return;
 
@@ -2059,9 +2173,12 @@ void TrailingStop() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Main market analysis function (pattern-based)                    |
-//+------------------------------------------------------------------+
+/**
+ * @brief Analyzes the market for classic chart patterns.
+ * This is the main function for the pattern-recognition logic of the EA. It scans for swing points,
+ * attempts to detect various patterns (e.g., Double Top/Bottom, Head & Shoulders), and if a valid
+ * pattern with high probability is found, it proceeds to execute a trade.
+ */
 void AnalyzeMarket() {
     // Reset pattern
     ResetPattern();
@@ -2114,9 +2231,14 @@ void AnalyzeMarket() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Find swing highs and swing lows                                  |
-//+------------------------------------------------------------------+
+/**
+ * @brief Identifies swing high and swing low points in the historical price data.
+ * A swing high is a bar with a high that is higher than the highs of the surrounding bars.
+ * A swing low is a bar with a low that is lower than the lows of the surrounding bars.
+ * These points are fundamental for pattern recognition.
+ * @param[out] swingHighs An array to be filled with the bar indices of swing highs.
+ * @param[out] swingLows An array to be filled with the bar indices of swing lows.
+ */
 void FindSwingPoints(int &swingHighs[], int &swingLows[]) {
     ArrayResize(swingHighs, 0);
     ArrayResize(swingLows, 0);
@@ -2151,9 +2273,14 @@ void FindSwingPoints(int &swingHighs[], int &swingLows[]) {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Detect Double Bottom pattern                                     |
-//+------------------------------------------------------------------+
+/**
+ * @brief Detects a Double Bottom chart pattern.
+ * A Double Bottom is a bullish reversal pattern formed by two consecutive lows at roughly the same level,
+ * separated by a peak (the neckline).
+ * @param swingLows An array of previously identified swing low indices.
+ * @param atr The current ATR, used for tolerance calculations.
+ * @return bool Returns true if a valid Double Bottom pattern is detected.
+ */
 bool DetectDoubleBottom(int &swingLows[], double atr) {
     int size = ArraySize(swingLows);
     if(size < 2) return false;
@@ -2188,9 +2315,14 @@ bool DetectDoubleBottom(int &swingLows[], double atr) {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Detect Double Top pattern                                        |
-//+------------------------------------------------------------------+
+/**
+ * @brief Detects a Double Top chart pattern.
+ * A Double Top is a bearish reversal pattern formed by two consecutive highs at roughly the same level,
+ * separated by a trough (the neckline).
+ * @param swingHighs An array of previously identified swing high indices.
+ * @param atr The current ATR, used for tolerance calculations.
+ * @return bool Returns true if a valid Double Top pattern is detected.
+ */
 bool DetectDoubleTop(int &swingHighs[], double atr) {
     int size = ArraySize(swingHighs);
     if(size < 2) return false;
@@ -2225,9 +2357,14 @@ bool DetectDoubleTop(int &swingHighs[], double atr) {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Detect Head & Shoulders pattern                                  |
-//+------------------------------------------------------------------+
+/**
+ * @brief Detects a Head and Shoulders chart pattern.
+ * This is a bearish reversal pattern characterized by three peaks: a central peak (the head) that is
+ * higher than two surrounding peaks (the shoulders).
+ * @param swingHighs An array of previously identified swing high indices.
+ * @param atr The current ATR, used for tolerance calculations.
+ * @return bool Returns true if a valid Head and Shoulders pattern is detected.
+ */
 bool DetectHeadAndShoulders(int &swingHighs[], double atr) {
     int size = ArraySize(swingHighs);
     if(size < 3) return false;
@@ -2263,9 +2400,14 @@ bool DetectHeadAndShoulders(int &swingHighs[], double atr) {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Detect Inverse Head & Shoulders                                  |
-//+------------------------------------------------------------------+
+/**
+ * @brief Detects an Inverse Head and Shoulders chart pattern.
+ * This is a bullish reversal pattern, the mirror image of the Head and Shoulders pattern, with three
+ * troughs instead of three peaks.
+ * @param swingLows An array of previously identified swing low indices.
+ * @param atr The current ATR, used for tolerance calculations.
+ * @return bool Returns true if a valid Inverse Head and Shoulders pattern is detected.
+ */
 bool DetectInverseHeadAndShoulders(int &swingLows[], double atr) {
     int size = ArraySize(swingLows);
     if(size < 3) return false;
@@ -2301,9 +2443,13 @@ bool DetectInverseHeadAndShoulders(int &swingLows[], double atr) {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Detect Triangle pattern                                          |
-//+------------------------------------------------------------------+
+/**
+ * @brief Detects a Symmetrical Triangle chart pattern.
+ * This pattern is characterized by converging trendlines, indicating market consolidation. A breakout
+ * from the triangle is often a strong trading signal.
+ * @param atr The current ATR, used for tolerance calculations.
+ * @return bool Returns true if a valid triangle pattern is detected.
+ */
 bool DetectTriangle(double atr) {
     int window = InpMinBarsForPattern;
     if(ArraySize(high) < window) return false;
@@ -2335,9 +2481,13 @@ bool DetectTriangle(double atr) {
     return true;
 }
 
-//+------------------------------------------------------------------+
-//| Calculate simple linear trendline                                |
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates a linear trendline using linear regression.
+ * @param prices An array of price data.
+ * @param window The number of bars to include in the calculation.
+ * @param[out] slope A reference to a double that will be populated with the slope of the trendline.
+ * @param[out] intercept A reference to a double that will be populated with the intercept of the trendline.
+ */
 void CalculateTrendline(double &prices[], int window, double &slope, double &intercept) {
     double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
 
@@ -2356,9 +2506,13 @@ void CalculateTrendline(double &prices[], int window, double &slope, double &int
     intercept = (sumY - slope * sumX) / n;
 }
 
-//+------------------------------------------------------------------+
-//| Calculate probability of success (pattern-based)                 |
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates the probability of success for a detected chart pattern.
+ * This function creates a composite score based on the pattern's quality, current market momentum,
+ * volatility, and the potential risk/reward ratio of the trade. This probability score is used to
+ * filter for high-quality trading setups.
+ * @return double The calculated probability score, ranging from 0.0 to 0.99.
+ */
 double CalculateProbability() {
     double qualityScore = currentPattern.quality;
 
@@ -2391,9 +2545,12 @@ double CalculateProbability() {
     return MathMin(probability, 0.99);
 }
 
-//+------------------------------------------------------------------+
-//| Execute trade based on pattern                                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Executes a trade based on a detected and validated chart pattern.
+ * This function calculates the final entry, stop loss, and take profit levels, determines the
+ * appropriate lot size based on risk parameters, and places the corresponding market or pending order.
+ * @param probability The calculated success probability of the pattern, used in position sizing.
+ */
 void ExecuteTrade(double probability) {
     double atr = GetATR(0);
     double currentPrice = close[0];
@@ -2484,9 +2641,15 @@ void ExecuteTrade(double probability) {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Calculate account-aware stop loss distance                       |
-//+------------------------------------------------------------------+
+/**
+ * @brief Adjusts the stop loss distance to protect small accounts and manage risk.
+ * This function applies several layers of protection: it reduces the stop loss for accounts below a
+ * certain threshold, caps the maximum potential loss as a percentage of the account balance, and
+ * ensures the stop loss respects the broker's minimum stop level.
+ * @param requestedStopDistance The initially calculated stop loss distance in price points.
+ * @param entryPrice The entry price of the potential trade.
+ * @return double The adjusted, safer stop loss distance.
+ */
 double CalculateAccountAwareStopLoss(double requestedStopDistance, double entryPrice) {
     // If small account protection is disabled, return the original stop distance
     if(!InpEnableSmallAccountProtection) {
@@ -2537,9 +2700,16 @@ double CalculateAccountAwareStopLoss(double requestedStopDistance, double entryP
     return adjustedStopDistance;
 }
 
-//+------------------------------------------------------------------+
-//| Calculate position size using fractional Kelly                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Calculates the appropriate position size for a trade.
+ * The function can operate in two modes: fixed lot size or dynamic lot size calculation using the
+ * Fractional Kelly Criterion. The Kelly Criterion optimizes position size based on the trade's
+ * probability, risk/reward ratio, and predefined account risk parameters.
+ * @param probability The success probability of the trade.
+ * @param rewardRiskRatio The reward-to-risk ratio of the trade.
+ * @param stopDistance The stop loss distance in price points.
+ * @return double The calculated lot size, adjusted for broker limitations.
+ */
 double CalculatePositionSize(double probability, double rewardRiskRatio, double stopDistance) {
     // FIXED LOT SIZE MODE - Use your custom lot size
     if(InpUseFixedLotSize) {
@@ -2584,9 +2754,13 @@ double CalculatePositionSize(double probability, double rewardRiskRatio, double 
     return lotSize;
 }
 
-//+------------------------------------------------------------------+
-//| Get ATR value                                                     |
-//+------------------------------------------------------------------+
+/**
+ * @brief Retrieves the Average True Range (ATR) value for a given bar.
+ * ATR is a key measure of market volatility used throughout the EA for setting stop losses,
+ * take profits, and various tolerance levels.
+ * @param shift The bar index to retrieve the ATR value from.
+ * @return double The ATR value, or 0 on failure.
+ */
 double GetATR(int shift) {
     double atrBuffer[];
     ArraySetAsSeries(atrBuffer, true);
@@ -2598,9 +2772,11 @@ double GetATR(int shift) {
     return atrBuffer[0];
 }
 
-//+------------------------------------------------------------------+
-//| Reset pattern structure                                          |
-//+------------------------------------------------------------------+
+/**
+ * @brief Resets the global pattern information structure.
+ * This function is called before each new market analysis to clear any previously detected
+ * pattern data, ensuring a clean state for the new analysis.
+ */
 void ResetPattern() {
     currentPattern.type = "";
     currentPattern.entry = 0;
@@ -2611,9 +2787,11 @@ void ResetPattern() {
     currentPattern.isValid = false;
 }
 
-//+------------------------------------------------------------------+
-//| Trade event handler                                              |
-//+------------------------------------------------------------------+
+/**
+ * @brief Event handler for trade events.
+ * This function is automatically called by the terminal whenever a trade operation occurs. It is used here
+ * to detect when a position is closed, in order to update the total and daily win/loss statistics.
+ */
 void OnTrade() {
     HistorySelect(0, TimeCurrent());
 
@@ -2647,9 +2825,11 @@ void OnTrade() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Check and reset daily statistics                                 |
-//+------------------------------------------------------------------+
+/**
+ * @brief Checks if a new day has started and resets daily statistics if necessary.
+ * At the beginning of each new trading day, this function prints a summary of the previous day's
+ * performance and re-initializes all daily tracking variables.
+ */
 void CheckAndResetDailyStats() {
     if(!InpEnableDailyGrowthTracking) return;
 
@@ -2706,9 +2886,11 @@ void CheckAndResetDailyStats() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Update daily growth statistics                                   |
-//+------------------------------------------------------------------+
+/**
+ * @brief Updates the daily peak equity and maximum drawdown statistics.
+ * This function is called on every tick to keep track of the day's high-water mark for equity and
+ * to calculate the current drawdown from that peak.
+ */
 void UpdateDailyStats() {
     if(!InpEnableDailyGrowthTracking) return;
 
@@ -2728,9 +2910,11 @@ void UpdateDailyStats() {
     }
 }
 
-//+------------------------------------------------------------------+
-//| Print daily progress (called periodically)                       |
-//+------------------------------------------------------------------+
+/**
+ * @brief Prints a periodic summary of the current day's trading performance to the log.
+ * This function is called periodically (e.g., every hour) to provide a status update on daily growth,
+ * profit, trade counts, and drawdown, allowing the user to monitor progress in real-time.
+ */
 void PrintDailyProgress() {
     if(!InpEnableDailyGrowthTracking || dailyStartBalance <= 0) return;
 
