@@ -1,0 +1,1550 @@
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                   AEGFM AGGRESSIVE TRADING CHALLENGE                     ║
+║                  $20 to $1,000,000 in ~27 Days                          ║
+║                                                                          ║
+║  WARNING: Uses 25x more aggressive position sizing than conservative     ║
+║           Higher risk, higher reward - targets 50% daily growth          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+    
+================================================================================
+AEGFM OMEGA: AGGRESSIVE $20 TO $1 MILLION CHALLENGE
+================================================================================
+
+Starting Balance: $20.00
+Target Balance: $1,000,000.00
+Risk Multiplier: 25.0x (AGGRESSIVE)
+Forex Pairs: 15
+Strategy: 7-Layer AEGFM with Aggressive Position Sizing
+Daily Target: 50% growth per day
+
+================================================================================
+
+================================================================================
+DAY 1 - Starting Balance: $20.00
+================================================================================
+
+  [EURUSD] Trading with $20.00...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #   8 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 16 | W/L: 15/1 | Win Rate: 93.8% | Profit: $+126.38
+
+  [GBPUSD] Trading with $146.38...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   5 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 13 | W/L: 12/1 | Win Rate: 92.3% | Profit: $+124.13
+
+  [USDJPY] Trading with $270.50...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   3 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 13/1 | Win Rate: 92.9% | Profit: $+124.88
+
+🎯 Day 1 Summary:
+  Growth: +1876.88% | Profit: $+375.38
+  Ending Balance: $395.38
+  Trades: 43 (W:40 L:3)
+
+================================================================================
+DAY 2 - Starting Balance: $395.38
+================================================================================
+
+  [USDCHF] Trading with $395.38...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #   6 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #   8 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 13/2 | Win Rate: 86.7% | Profit: $+91.88
+
+  [AUDUSD] Trading with $487.25...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   8 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  10 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 13/2 | Win Rate: 86.7% | Profit: $+85.00
+
+  [USDCAD] Trading with $572.25...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+    Trades: 15 | W/L: 15/0 | Win Rate: 100.0% | Profit: $+220.00
+
+🎯 Day 2 Summary:
+  Growth: +100.38% | Profit: $+396.87
+  Ending Balance: $792.25
+  Trades: 45 (W:41 L:4)
+
+================================================================================
+DAY 3 - Starting Balance: $792.25
+================================================================================
+
+  [NZDUSD] Trading with $792.25...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  19 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  20 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  21 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 21 | W/L: 21/0 | Win Rate: 100.0% | Profit: $+287.00
+
+  [EURGBP] Trading with $1,079.25...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+    Trades: 11 | W/L: 11/0 | Win Rate: 100.0% | Profit: $+192.32
+
+  [EURJPY] Trading with $1,271.57...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  13 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  19 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 19 | W/L: 18/1 | Win Rate: 94.7% | Profit: $+271.02
+
+🎯 Day 3 Summary:
+  Growth: +94.71% | Profit: $+750.34
+  Ending Balance: $1,542.59
+  Trades: 51 (W:50 L:1)
+
+================================================================================
+DAY 4 - Starting Balance: $1,542.59
+================================================================================
+
+  [GBPJPY] Trading with $1,542.59...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 13 | W/L: 13/0 | Win Rate: 100.0% | Profit: $+298.58
+
+  [EURAUD] Trading with $1,841.17...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  14 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 14/1 | Win Rate: 93.3% | Profit: $+261.75
+
+  [EURCHF] Trading with $2,102.92...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   8 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 16 | W/L: 15/1 | Win Rate: 93.8% | Profit: $+340.19
+
+🎯 Day 4 Summary:
+  Growth: +58.38% | Profit: $+900.52
+  Ending Balance: $2,443.11
+  Trades: 44 (W:42 L:2)
+
+================================================================================
+DAY 5 - Starting Balance: $2,443.11
+================================================================================
+
+  [AUDJPY] Trading with $2,443.11...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 11 | W/L: 11/0 | Win Rate: 100.0% | Profit: $+418.45
+
+  [GBPAUD] Trading with $2,861.56...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   8 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 17 | W/L: 16/1 | Win Rate: 94.1% | Profit: $+310.51
+
+  [NZDJPY] Trading with $3,172.06...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 16 | W/L: 16/0 | Win Rate: 100.0% | Profit: $+591.22
+
+🎯 Day 5 Summary:
+  Growth: +54.04% | Profit: $+1,320.18
+  Ending Balance: $3,763.29
+  Trades: 44 (W:43 L:1)
+
+================================================================================
+DAY 6 - Starting Balance: $3,763.29
+================================================================================
+
+  [EURUSD] Trading with $3,763.29...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 15/0 | Win Rate: 100.0% | Profit: $+760.18
+
+  [GBPUSD] Trading with $4,523.47...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 14/0 | Win Rate: 100.0% | Profit: $+847.65
+
+  [USDJPY] Trading with $5,371.12...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   4 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 13/1 | Win Rate: 92.9% | Profit: $+533.61
+
+🎯 Day 6 Summary:
+  Growth: +56.90% | Profit: $+2,141.44
+  Ending Balance: $5,904.73
+  Trades: 43 (W:42 L:1)
+
+================================================================================
+DAY 7 - Starting Balance: $5,904.73
+================================================================================
+
+  [USDCHF] Trading with $5,904.73...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   6 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 14/1 | Win Rate: 93.3% | Profit: $+1,006.46
+
+  [AUDUSD] Trading with $6,911.19...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 18 | W/L: 18/0 | Win Rate: 100.0% | Profit: $+1,882.50
+
+  [USDCAD] Trading with $8,793.68...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  11 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 16 | W/L: 15/1 | Win Rate: 93.8% | Profit: $+1,256.77
+
+🎯 Day 7 Summary:
+  Growth: +70.21% | Profit: $+4,145.72
+  Ending Balance: $10,050.45
+  Trades: 49 (W:47 L:2)
+
+================================================================================
+DAY 8 - Starting Balance: $10,050.45
+================================================================================
+
+  [NZDUSD] Trading with $10,050.45...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  16 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 17 | W/L: 16/1 | Win Rate: 94.1% | Profit: $+1,513.45
+
+  [EURGBP] Trading with $11,563.91...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #   2 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 14/1 | Win Rate: 93.3% | Profit: $+1,346.22
+
+  [EURJPY] Trading with $12,910.13...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 14/0 | Win Rate: 100.0% | Profit: $+2,508.63
+
+🎯 Day 8 Summary:
+  Growth: +53.41% | Profit: $+5,368.30
+  Ending Balance: $15,418.76
+  Trades: 46 (W:44 L:2)
+
+================================================================================
+DAY 9 - Starting Balance: $15,418.76
+================================================================================
+
+  [GBPJPY] Trading with $15,418.76...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   2 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 12 | W/L: 11/1 | Win Rate: 91.7% | Profit: $+2,089.22
+
+  [EURAUD] Trading with $17,507.98...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 17 | W/L: 17/0 | Win Rate: 100.0% | Profit: $+3,441.76
+
+  [EURCHF] Trading with $20,949.74...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✗ #   1 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 18 | W/L: 17/1 | Win Rate: 94.4% | Profit: $+4,251.38
+
+🎯 Day 9 Summary:
+  Growth: +63.44% | Profit: $+9,782.36
+  Ending Balance: $25,201.12
+  Trades: 47 (W:45 L:2)
+
+================================================================================
+DAY 10 - Starting Balance: $25,201.12
+================================================================================
+
+  [AUDJPY] Trading with $25,201.12...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #   5 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 13/1 | Win Rate: 92.9% | Profit: $+2,978.03
+
+  [GBPAUD] Trading with $28,179.15...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   2 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 18 | W/L: 17/1 | Win Rate: 94.4% | Profit: $+4,920.33
+
+  [NZDJPY] Trading with $33,099.48...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 17 | W/L: 17/0 | Win Rate: 100.0% | Profit: $+8,134.08
+
+🎯 Day 10 Summary:
+  Growth: +63.62% | Profit: $+16,032.43
+  Ending Balance: $41,233.56
+  Trades: 49 (W:47 L:2)
+
+================================================================================
+DAY 11 - Starting Balance: $41,233.56
+================================================================================
+
+  [EURUSD] Trading with $41,233.56...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  19 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+    Trades: 19 | W/L: 19/0 | Win Rate: 100.0% | Profit: $+11,835.85
+
+  [GBPUSD] Trading with $53,069.40...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 13 | W/L: 13/0 | Win Rate: 100.0% | Profit: $+8,902.90
+
+  [USDJPY] Trading with $61,972.30...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 18 | W/L: 18/0 | Win Rate: 100.0% | Profit: $+12,347.00
+
+🎯 Day 11 Summary:
+  Growth: +80.24% | Profit: $+33,085.74
+  Ending Balance: $74,319.30
+  Trades: 50 (W:50 L:0)
+
+================================================================================
+DAY 12 - Starting Balance: $74,319.30
+================================================================================
+
+  [USDCHF] Trading with $74,319.30...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #   6 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   8 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 9 | W/L: 7/2 | Win Rate: 77.8% | Profit: $-762.53
+
+  [AUDUSD] Trading with $73,556.76...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   3 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 13/1 | Win Rate: 92.9% | Profit: $+9,384.88
+
+  [USDCAD] Trading with $82,941.64...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 12 | W/L: 12/0 | Win Rate: 100.0% | Profit: $+13,486.17
+
+📊 Day 12 Summary:
+  Growth: +29.75% | Profit: $+22,108.51
+  Ending Balance: $96,427.81
+  Trades: 35 (W:32 L:3)
+
+================================================================================
+DAY 13 - Starting Balance: $96,427.81
+================================================================================
+
+  [NZDUSD] Trading with $96,427.81...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+    Trades: 13 | W/L: 13/0 | Win Rate: 100.0% | Profit: $+14,600.28
+
+  [EURGBP] Trading with $111,028.10...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 17 | W/L: 17/0 | Win Rate: 100.0% | Profit: $+30,158.12
+
+  [EURJPY] Trading with $141,186.22...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   2 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✗ #  10 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 13/1 | Win Rate: 92.9% | Profit: $+21,295.64
+
+🎯 Day 13 Summary:
+  Growth: +68.50% | Profit: $+66,054.04
+  Ending Balance: $162,481.85
+  Trades: 44 (W:43 L:1)
+
+================================================================================
+DAY 14 - Starting Balance: $162,481.85
+================================================================================
+
+  [GBPJPY] Trading with $162,481.85...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 15/0 | Win Rate: 100.0% | Profit: $+25,970.69
+
+  [EURAUD] Trading with $188,452.55...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 13 | W/L: 13/0 | Win Rate: 100.0% | Profit: $+33,866.59
+
+  [EURCHF] Trading with $222,319.14...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 15/0 | Win Rate: 100.0% | Profit: $+51,211.99
+
+🎯 Day 14 Summary:
+  Growth: +68.35% | Profit: $+111,049.28
+  Ending Balance: $273,531.14
+  Trades: 43 (W:43 L:0)
+
+================================================================================
+DAY 15 - Starting Balance: $273,531.14
+================================================================================
+
+  [AUDJPY] Trading with $273,531.14...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #   6 LOSS | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 13 | W/L: 12/1 | Win Rate: 92.3% | Profit: $+32,803.30
+
+  [GBPAUD] Trading with $306,334.44...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 15 | W/L: 15/0 | Win Rate: 100.0% | Profit: $+54,743.55
+
+  [NZDJPY] Trading with $361,077.98...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 16 | W/L: 16/0 | Win Rate: 100.0% | Profit: $+74,119.29
+
+🎯 Day 15 Summary:
+  Growth: +59.10% | Profit: $+161,666.13
+  Ending Balance: $435,197.27
+  Trades: 44 (W:43 L:1)
+
+================================================================================
+DAY 16 - Starting Balance: $435,197.27
+================================================================================
+
+  [EURUSD] Trading with $435,197.27...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  16 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  19 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  20 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 20 | W/L: 20/0 | Win Rate: 100.0% | Profit: $+108,763.65
+
+  [GBPUSD] Trading with $543,960.92...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 14/0 | Win Rate: 100.0% | Profit: $+91,665.31
+
+  [USDJPY] Trading with $635,626.23...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  11 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  12 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  13 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  16 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  19 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+    Trades: 19 | W/L: 19/0 | Win Rate: 100.0% | Profit: $+151,151.82
+
+🎯 Day 16 Summary:
+  Growth: +80.79% | Profit: $+351,580.78
+  Ending Balance: $786,778.05
+  Trades: 53 (W:53 L:0)
+
+================================================================================
+DAY 17 - Starting Balance: $786,778.05
+================================================================================
+
+  [USDCHF] Trading with $786,778.05...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   5 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   6 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✗ #  11 LOSS | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 14 | W/L: 13/1 | Win Rate: 92.9% | Profit: $+100,382.55
+
+  [AUDUSD] Trading with $887,160.60...
+Generating 500 realistic forex candles...
+✓ Generated 500 realistic candles
+✓ Calculated indicators, 451 valid candles
+
+======================================================================
+AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction
+Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles
+======================================================================
+✓ #   1 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   2 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   3 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   4 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   5 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   6 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   7 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #   8 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #   9 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  10 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  11 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  12 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  13 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  14 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  15 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  16 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  17 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  18 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  19 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  20 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+✓ #  21 WIN  | BUY  | Conf: 98.0% | Scenarios: 100.0% | Engine: BUY | ✓AGREE
+✓ #  22 WIN  | SELL | Conf: 98.0% | Scenarios: 100.0% | Engine: SELL | ✓AGREE
+    Trades: 22 | W/L: 22/0 | Win Rate: 100.0% | Profit: $+292,025.93
+
+📊 Day 17 Summary:
+  Growth: +49.88% | Profit: $+392,408.48
+  Ending Balance: $1,179,186.53
+  Trades: 36 (W:35 L:1)
+
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+TARGET REACHED on Day 17! $1,179,186.53
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+
+================================================================================
+FINAL REPORT: AGGRESSIVE $20 TO $1 MILLION CHALLENGE
+================================================================================
+
+📊 ACCOUNT PERFORMANCE
+────────────────────────────────────────────────────────────────────────────────
+Starting Balance:     $          20.00
+Final Balance:        $   1,179,186.53
+Total Profit:         $   1,179,166.53
+ROI:                     5,895,832.65%
+Growth Multiple:            58,959.33x
+
+📈 TRADING STATISTICS
+────────────────────────────────────────────────────────────────────────────────
+Total Trades:                     766
+Winning Trades:                   740
+Losing Trades:                     26
+Win Rate:                      96.61%
+Avg Profit/Trade:     $      1,539.38
+
+⏱️  TIME METRICS
+────────────────────────────────────────────────────────────────────────────────
+Total Trading Days:                17
+
+📅 DAILY PERFORMANCE BREAKDOWN
+────────────────────────────────────────────────────────────────────────────────
+Days hitting 50%+ :                15 (88.2%)
+Avg Daily Growth:             172.27%
+
+Day   Starting        Ending          Growth     Trades   Win Rate
+────────────────────────────────────────────────────────────────────────────────
+🎯 1   $       20.00 $      395.38 1876.88%      43    93.0%
+🎯 2   $      395.38 $      792.25  100.38%      45    91.1%
+🎯 3   $      792.25 $    1,542.59   94.71%      51    98.0%
+🎯 4   $    1,542.59 $    2,443.11   58.38%      44    95.5%
+🎯 5   $    2,443.11 $    3,763.29   54.04%      44    97.7%
+🎯 6   $    3,763.29 $    5,904.73   56.90%      43    97.7%
+🎯 7   $    5,904.73 $   10,050.45   70.21%      49    95.9%
+🎯 8   $   10,050.45 $   15,418.76   53.41%      46    95.7%
+🎯 9   $   15,418.76 $   25,201.12   63.44%      47    95.7%
+🎯 10  $   25,201.12 $   41,233.56   63.62%      49    95.9%
+🎯 11  $   41,233.56 $   74,319.30   80.24%      50   100.0%
+📊 12  $   74,319.30 $   96,427.81   29.75%      35    91.4%
+🎯 13  $   96,427.81 $  162,481.85   68.50%      44    97.7%
+🎯 14  $  162,481.85 $  273,531.14   68.35%      43   100.0%
+🎯 15  $  273,531.14 $  435,197.27   59.10%      44    97.7%
+🎯 16  $  435,197.27 $  786,778.05   80.79%      53   100.0%
+📊 17  $  786,778.05 $1,179,186.53   49.88%      36    97.2%
+
+🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
+SUCCESS! Turned $20.00 into $1,179,186.53
+Target of $1,000,000 REACHED in 17 days!
+🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
+
+================================================================================
