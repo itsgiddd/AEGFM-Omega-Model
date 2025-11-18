@@ -4,130 +4,161 @@
 
 ![AEGFM-Omega v4.6 - Visual Proof System](AEGFM_Header_v4.6_VisualProof.png)
 
----
+## Overview
 
-## 📊 Performance Summary
+AEGFM-Ω is a sophisticated, multi-layered algorithmic trading system designed for the forex market. It leverages a combination of advanced mathematical models, machine learning, and quantitative analysis to achieve a high win rate with mathematically bounded risk. The system is implemented as both a Python-based backtesting and research environment and a production-ready MetaTrader 5 (MT5) Expert Advisor (EA).
 
-| Metric | Value |
-|--------|-------|
-| **Win Rate (WITH Path Filtering)** | **94.06%** |
-| **Win Rate (WITHOUT Path Filtering)** | **90.83%** |
-| **Visual Proof Win Rate** | **92.88%** (2,093 trades verified on charts) |
-| **Total Trades Analyzed** | 2,069 (filtered) / 7,517 (unfiltered) |
-| **Trade Frequency** | 4 trades/day (filtered) / 14.5 trades/day (unfiltered) |
-| **ROI** | **+73.54%** ($10,000 → $17,358.90) |
-| **Profit Factor** | **3.39** |
-| **Execution** | **✓ 100% Immediate** (no delay) |
+## Features
 
----
+*   **High Accuracy:** Achieves a 94.06% win rate in backtests with its 7-layer predictive engine and multi-step path prediction.
+*   **Immediate Trading:** Executes trades instantly upon signal confirmation—no delays.
+*   **Advanced Modeling:** Integrates a suite of advanced techniques, including:
+    *   Koopman Operator Embedding
+    *   Bayesian Market Regime Classification
+    *   Monte Carlo Scenario Analysis (5,000 simulations)
+    *   Multi-Timeframe Confluence
+    *   Volume & Market Quality Analysis
+*   **Comprehensive Backtesting:** Includes a Python-based backtesting engine to rigorously test and validate the strategy.
+*   **Visual Proof:** Generates detailed performance dashboards and charts to visually verify every trade.
+*   **Risk Management:** Implements fractional Kelly criterion for position sizing and provides small account protection.
 
-## 🔍 CRITICAL FINDING: Immediate Trading Verified
+## System Architecture
 
-**The system ALWAYS trades immediately** - there is NO execution delay.
+The AEGFM-Ω system consists of two main components: a **Python Environment** for research and backtesting, and a **MetaTrader 5 Expert Advisor** for live trading.
 
-| Mode | Win Rate | Trades/Day | Execution |
-|------|----------|------------|-----------|
-| **WITH Path Prediction** | **94.06%** | ~4/day | ✓ Immediate |
-| **WITHOUT Path Filtering** | **90.83%** | ~14.5/day | ✓ Immediate |
+### Python Environment
 
-**Key Points:**
-- ✓ Both modes execute trades instantly (no waiting, no delay)
-- ✓ Path prediction = quality filter, NOT execution delay
-- ✓ Path filtering improves accuracy by +3.23% but reduces trade frequency by 72%
-- ✓ System analyzes 5/10/15/20 candles ahead, requires 3/4 predictions to agree
+The Python scripts provide the tools to develop, test, and visualize the performance of the core trading logic.
 
----
+*   `aegfm_omega_trader.py`: The core of the system, containing the multi-layered predictive engine and trading logic.
+*   `backtest_aegfm.py`: The backtesting engine that simulates the trading strategy on historical data.
+*   `visualize_trades.py` & `visualize_performance.py`: Generate charts and dashboards to provide visual proof of performance.
 
-## 📈 Visual Proof - Candlestick Charts
+### MetaTrader 5 Expert Advisor
 
-**Run**: `python3 visualize_trades.py`
+The `AEGFM_Omega_EA.mq5` file is a production-ready Expert Advisor that implements the core logic for live trading on the MT5 platform. It includes:
 
-### trade_overview.png
-![Trade Overview](trade_overview.png)
-- **2,093 trades** plotted on actual price chart
-- **Green circles (●)** = Wins | **Red X (✗)** = Losses
-- Equity curve: $10,000 → $17,358.90
+*   Real-time signal analysis.
+*   Automated trade execution.
+*   Comprehensive risk and trade management features.
 
-### trade_details.png
-![Trade Details](trade_details.png)
-- Real candlestick chart with OHLC data
-- **Green triangles (▲▼)** = Winning trades
-- **Red triangles** = Losing trades (rare!)
-- RSI indicator shown below
-
-### performance_dashboard.png
-![Performance Dashboard](performance_dashboard.png)
-- **Win rate: 92.88%** (1,944 wins / 149 losses)
-- **ROI: +73.54%** over 520 days
-- **Profit Factor: 3.39**
-- **Max Drawdown: -$77.70**
-- Win/loss streaks: 20-70+ consecutive wins visible
-
----
-
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-pip3 install numpy pandas matplotlib
-
-# Run backtest
-python3 backtest_aegfm.py
-
-# Generate visual proof
-python3 visualize_trades.py
-```
-
----
-
-## 📁 Files
+## File Descriptions
 
 ```
 AEGFM-Omega-Model/
-├── AEGFM_Omega_EA.mq5          # MetaTrader 5 Expert Advisor
-├── backtest_aegfm.py           # Backtesting engine
-├── visualize_trades.py         # Generate candlestick charts (VISUAL PROOF)
-└── README.md                   # This file
+├── AEGFM_Omega_EA.mq5          # MetaTrader 5 Expert Advisor for live trading
+├── aegfm_omega_trader.py       # Core trading logic and predictive engine
+├── backtest_aegfm.py           # Backtesting engine for strategy simulation
+├── visualize_trades.py         # Generates candlestick charts with trade markers
+├── visualize_performance.py    # Generates detailed performance analysis charts
+├── compare_versions.py         # Script to compare performance across different versions
+├── profit_calculator.py        # Calculates profit projections based on backtest data
+├── generate_header.py          # Generates the main header image for the README
+├── AEGFM_INSTALLATION_GUIDE.md # Detailed installation guide for the MT5 EA
+├── README.md                   # This file
+...
 ```
 
----
+## Getting Started
 
-## ⚡ System Architecture
+There are two ways to use this system: backtesting in Python or live trading in MetaTrader 5.
 
-**8 Layers Active:**
-1. Market Structure Prediction Engine
-2. Bayesian Market Regime Classifier (0-9 quality scoring)
-3. Monte Carlo Scenario Analysis (5,000 simulations)
-4. Multi-Timeframe Confluence (H1/H4/D1)
-5. Volatility Regime Filter (30-70th percentile)
-6. Mathematical Confluence (Fibonacci + S/R)
-7. Volume & Market Quality Analysis (0-10 scoring)
-8. **Multi-Step Path Prediction** (20-candle lookahead)
+### Backtesting with Python
 
----
+**1. Install Dependencies:**
 
-## 💡 Key Insights
+```bash
+pip3 install numpy pandas matplotlib scikit-learn pywavelets
+```
 
-**Path Prediction Filtering:**
-- Looks ahead at 5, 10, 15, and 20 candles
-- Requires 3/4 predictions to agree on direction
-- Makes system more selective (fewer trades)
-- Does NOT delay execution when conditions are met
-- Result: Higher win rate (94.06% vs 90.83%) with fewer trades
+**2. Run the Backtest:**
 
-**Trade Frequency vs Win Rate:**
-- **More trades**: Disable path filtering → 14.5 trades/day @ 90.83% win rate
-- **Higher accuracy**: Enable path filtering → 4 trades/day @ 94.06% win rate
+```bash
+python3 backtest_aegfm.py
+```
 
----
+This will generate realistic forex data, run the backtest, and print the performance results to the console.
 
-## ⚠️ Disclaimer
+**3. Generate Visualizations:**
 
-- Past performance does not guarantee future results
-- Trading carries substantial risk of loss
-- Only trade with capital you can afford to lose
-- 94.06% win rate achieved in backtest on synthetic data
-- Live trading will likely show 90-95% win rate with real costs
+To generate the performance dashboards and trade charts, run:
+
+```bash
+python3 visualize_trades.py
+python3 visualize_performance.py
+```
+
+This will create several `.png` files in the root directory with detailed performance analysis.
+
+### Live Trading with MetaTrader 5
+
+**1. Install the EA:**
+
+1.  Open MetaTrader 5.
+2.  Go to `File` → `Open Data Folder`.
+3.  Navigate to the `MQL5/Experts/` directory.
+4.  Copy `AEGFM_Omega_EA.mq5` into this folder.
+5.  Return to MT5, right-click in the "Navigator" window, and select "Refresh".
+
+**2. Compile the EA:**
+
+1.  In MT5, press `F4` to open MetaEditor.
+2.  Find `AEGFM_Omega_EA.mq5` in the Navigator.
+3.  Double-click to open the file.
+4.  Press `F7` to compile. Ensure there are "0 errors" in the log.
+
+**3. Attach to Chart:**
+
+1.  Open a chart (e.g., EURUSD, H1).
+2.  Drag `AEGFM_Omega_EA` from the Navigator onto the chart.
+3.  In the pop-up window, go to the "Common" tab and check ✅ **"Allow Algo Trading"**.
+4.  Click "OK".
+
+**4. Verify:**
+
+*   A smiley face 😊 should appear in the top-right corner of the chart.
+*   The "Experts" tab in the terminal should show an initialization message.
+
+For more detailed instructions, see the `AEGFM_INSTALLATION_GUIDE.md`.
+
+## Configuration
+
+The MetaTrader 5 EA offers a wide range of configurable input parameters. To access them, right-click the chart, go to `Expert Advisors` → `Properties`.
+
+### Key Parameters
+
+*   **Predictive Mode:**
+    *   `InpImmediateTrade`: Set to `true` to trade immediately on EA load.
+    *   `InpPredictiveMode`: Enable/disable the 7-layer prediction engine.
+    *   `InpEliteMode`: Enable a highly selective mode for 94%+ accuracy.
+*   **Risk Management:**
+    *   `InpUseFixedLotSize`: Set to `true` to use a fixed lot size.
+    *   `InpRiskPercent`: The percentage of equity to risk per trade.
+    *   `InpMinPredictionConfidence`: The minimum confidence required to place a trade (default 90%).
+*   **Trade Management:**
+    *   `InpUseBreakeven`: Automatically move the stop loss to breakeven.
+    *   `InpUseTrailingStop`: Use a trailing stop to lock in profits.
+
+## Performance
+
+The system's performance has been rigorously backtested, yielding the following key metrics:
+
+| Metric                               | Value                               |
+| ------------------------------------ | ----------------------------------- |
+| **Win Rate (WITH Path Filtering)**   | **94.06%**                          |
+| **Win Rate (WITHOUT Path Filtering)**| 90.83%                              |
+| **Visual Proof Win Rate**            | 92.88% (2,093 trades verified)      |
+| **Trade Frequency (Filtered)**       | ~4 trades/day                       |
+| **ROI**                              | **+73.54%** ($10,000 → $17,358.90)   |
+| **Profit Factor**                    | 3.39                                |
+| **Max Drawdown**                     | -$77.70                             |
+
+## Disclaimer
+
+-   **Past performance does not guarantee future results.**
+-   Trading forex carries a substantial risk of loss and is not suitable for all investors.
+-   Only trade with capital you can afford to lose.
+-   The 94.06% win rate was achieved in a backtest on synthetic data. Live trading performance will vary due to market conditions, spreads, and slippage.
 
 ---
 

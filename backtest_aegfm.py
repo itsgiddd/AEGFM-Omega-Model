@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
-AEGFM-Ω Backtesting Script - Tests EA logic with realistic forex data
+AEGFM-Ω Backtesting Script.
+
+This script tests the AEGFM-Ω trading logic using realistic forex data. It
+includes functionality for generating synthetic data, calculating technical
+indicators, analyzing market signals, and simulating trades. The backtester is
+designed to evaluate the performance of the trading strategy and provide
+detailed statistics on its profitability, win rate, and other key metrics.
 """
 
 import numpy as np
@@ -8,7 +14,15 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class AEGFMBacktester:
+    """A class for backtesting the AEGFM-Ω trading strategy."""
+
     def __init__(self, num_candles=2000, daily_growth_target=50.0):
+        """Initializes the AEGFMBacktester.
+
+        Args:
+            num_candles: The number of candles to generate for the backtest.
+            daily_growth_target: The target for daily growth in percentage.
+        """
         self.num_candles = num_candles
         self.data = None
         self.trades = []
@@ -16,10 +30,10 @@ class AEGFMBacktester:
         self.daily_stats = []  # Track daily performance
 
     def generate_realistic_data(self):
-        """Generate realistic forex price movements"""
+        """Generates realistic forex price movements."""
         print(f"Generating {self.num_candles} realistic forex candles...")
 
-        # Start at realistic EURUSD price
+        # Start at a realistic EURUSD price
         base_price = 1.0850
 
         # Generate realistic OHLC data with trends and volatility
@@ -56,7 +70,7 @@ class AEGFMBacktester:
         print(f"✓ Generated {len(self.data)} realistic candles")
 
     def calculate_indicators(self):
-        """Calculate all 14 indicators"""
+        """Calculates all 14 technical indicators."""
         df = self.data.copy()
 
         # MA(50)
@@ -114,7 +128,15 @@ class AEGFMBacktester:
         print(f"✓ Calculated indicators, {len(self.data)} valid candles")
 
     def calculate_momentum(self, idx, bars):
-        """Calculate momentum (1st derivative of price)"""
+        """Calculates the momentum (1st derivative of price).
+
+        Args:
+            idx: The current index in the data.
+            bars: The number of bars to look back.
+
+        Returns:
+            The momentum value.
+        """
         if idx + bars >= len(self.data):
             return 0
 
@@ -124,7 +146,15 @@ class AEGFMBacktester:
         return current_price - past_price
 
     def calculate_velocity(self, idx, bars):
-        """Calculate velocity (weighted directional speed)"""
+        """Calculates the velocity (weighted directional speed).
+
+        Args:
+            idx: The current index in the data.
+            bars: The number of bars to look back.
+
+        Returns:
+            The velocity value.
+        """
         if idx + bars >= len(self.data):
             return 0
 
@@ -147,7 +177,15 @@ class AEGFMBacktester:
         return total_weighted_change / total_weight
 
     def calculate_acceleration(self, idx, bars):
-        """Calculate acceleration (2nd derivative)"""
+        """Calculates the acceleration (2nd derivative of price).
+
+        Args:
+            idx: The current index in the data.
+            bars: The number of bars to look back.
+
+        Returns:
+            The acceleration value.
+        """
         if idx + bars >= len(self.data):
             return 0
 
@@ -162,7 +200,15 @@ class AEGFMBacktester:
         return recent_momentum - older_momentum
 
     def analyze_pattern_sequence(self, idx, bars):
-        """Analyze pattern consistency"""
+        """Analyzes the consistency of a pattern.
+
+        Args:
+            idx: The current index in the data.
+            bars: The number of bars to look back.
+
+        Returns:
+            The pattern consistency score.
+        """
         if idx + bars >= len(self.data):
             return 0.5
 
@@ -185,14 +231,32 @@ class AEGFMBacktester:
         return max(up_moves, down_moves) / total_moves
 
     def is_market_trending(self, adx):
-        """Detect if market is trending or ranging"""
+        """Detects if the market is trending or ranging.
+
+        Args:
+            adx: The ADX indicator value.
+
+        Returns:
+            True if the market is trending, False otherwise.
+        """
         return adx >= 20
 
     def predict_next_move(self, idx, momentum, velocity, acceleration, pattern_score):
-        """Predict direction based on market structure - ALWAYS ACTIVE (no neutral)
+        """Predicts the direction of the next move based on market structure.
 
-        Layer 1 MUST always provide direction. Uncertainty is handled by confidence multipliers,
-        not by refusing to predict. All 7 layers work together!
+        This is Layer 1 of the trading system and must always provide a direction.
+        Uncertainty is handled by confidence multipliers, not by refusing to
+        predict. All 7 layers work together.
+
+        Args:
+            idx: The current index in the data.
+            momentum: The momentum value.
+            velocity: The velocity value.
+            acceleration: The acceleration value.
+            pattern_score: The pattern consistency score.
+
+        Returns:
+            1 for a buy signal, -1 for a sell signal.
         """
         row = self.data.iloc[idx]
         adx = row['ADX']
@@ -282,7 +346,21 @@ class AEGFMBacktester:
                 return -1 if momentum > 0 else 1
 
     def run_scenario_analysis(self, momentum, velocity, acceleration, pattern_score, atr, quality_score=0, num_scenarios=5000):
-        """Run Monte Carlo scenario analysis - ULTRA-ENHANCED with quality-aware scoring for 99% accuracy"""
+        """Runs a Monte Carlo scenario analysis with quality-aware scoring.
+
+        Args:
+            momentum: The momentum value.
+            velocity: The velocity value.
+            acceleration: The acceleration value.
+            pattern_score: The pattern consistency score.
+            atr: The Average True Range.
+            quality_score: The quality score of the market regime.
+            num_scenarios: The number of scenarios to simulate.
+
+        Returns:
+            A tuple containing the scenario prediction, scenario consensus,
+            number of bullish scenarios, and number of bearish scenarios.
+        """
         bullish_scenarios = 0
         bearish_scenarios = 0
 
@@ -354,10 +432,22 @@ class AEGFMBacktester:
         return scenario_prediction, scenario_consensus, bullish_scenarios, bearish_scenarios
 
     def classify_market_regime(self, idx, momentum, velocity, acceleration, atr):
-        """INNOVATION: Bayesian Market Regime Classification for 99% accuracy
+        """Classifies the current market state and assigns a quality score.
 
-        Classifies the current market state and assigns a quality score.
-        Higher quality score = more reliable reversal setup = higher expected accuracy.
+        This is an innovative Bayesian Market Regime Classification for 99%
+        accuracy. Higher quality score = more reliable reversal setup = higher
+        expected accuracy.
+
+        Args:
+            idx: The current index in the data.
+            momentum: The momentum value.
+            velocity: The velocity value.
+            acceleration: The acceleration value.
+            atr: The Average True Range.
+
+        Returns:
+            A dictionary containing the quality score and other regime
+            information.
         """
         df = self.data
         row = df.iloc[idx]
@@ -408,7 +498,7 @@ class AEGFMBacktester:
         }
 
     def analyze_volume_quality(self, idx, lookback=10):
-        """LAYER 7: Volume & Market Quality Analysis
+        """Analyzes volume and market quality (LAYER 7).
 
         Analyzes:
         - Volume patterns (increasing/decreasing on moves)
@@ -416,10 +506,13 @@ class AEGFMBacktester:
         - Momentum consistency (persistent vs erratic)
         - Candle body quality (strong bodies vs weak/indecision)
 
-        Returns quality_score (0-10 points):
-        - 8-10 = Clean, institutional-quality setups
-        - 5-7 = Moderate quality
-        - 0-4 = Choppy, retail-driven noise
+        Args:
+            idx: The current index in the data.
+            lookback: The number of bars to look back.
+
+        Returns:
+            A dictionary containing the quality score (0-10 points) and other
+            quality metrics.
         """
         df = self.data
 
@@ -498,7 +591,15 @@ class AEGFMBacktester:
         }
 
     def analyze_signals(self, idx, bars=20):
-        """Analyze using 7-LAYER SYSTEM - Prediction Engine + Scenario Analysis + Bayesian Regime + Volume Quality"""
+        """Analyzes market signals using the 7-layer system.
+
+        Args:
+            idx: The current index in the data.
+            bars: The number of bars to look back.
+
+        Returns:
+            A dictionary containing the analysis results.
+        """
         df = self.data
         row = df.iloc[idx]
 
@@ -596,7 +697,14 @@ class AEGFMBacktester:
         }
 
     def calculate_probability(self, signals):
-        """Calculate prediction confidence - exact EA logic"""
+        """Calculates the prediction confidence based on the exact EA logic.
+
+        Args:
+            signals: A dictionary of market signals.
+
+        Returns:
+            The prediction confidence.
+        """
         confidence = 0.50  # Base 50%
 
         momentum_strength = signals['momentum_strength']
@@ -655,9 +763,17 @@ class AEGFMBacktester:
         return confidence
 
     def predict_multi_step_path(self, idx, signals):
-        """
-        Inspired by arXiv:2510.00184 - predict intermediate price movements
-        Similar to predicting running sums in multiplication
+        """Predicts intermediate price movements.
+
+        Inspired by arXiv:2510.00184, this method is similar to predicting
+        running sums in multiplication.
+
+        Args:
+            idx: The current index in the data.
+            signals: A dictionary of market signals.
+
+        Returns:
+            A dictionary containing the path prediction information.
         """
         df = self.data
         current_price = df.iloc[idx]['Close']
@@ -700,7 +816,19 @@ class AEGFMBacktester:
         }
 
     def should_trade(self, signals, probability):
-        """Check if trade should be taken - 95%+ win rate using multi-step prediction"""
+        """Checks if a trade should be taken.
+
+        This method uses a multi-step prediction approach to achieve a 95%+ win
+        rate.
+
+        Args:
+            signals: A dictionary of market signals.
+            probability: The probability of a successful trade.
+
+        Returns:
+            A tuple containing a boolean indicating whether to trade and a
+            string with the reason.
+        """
         # Must have a clear prediction (scenarios always provide one)
         if signals['predicted_direction'] == 0:
             return False, "No clear prediction"
@@ -750,7 +878,16 @@ class AEGFMBacktester:
         return True, f"95%+ MODE: Conf {adjusted_confidence:.1%}, Path {path_info['agreement_count']}/4, Q{signals['quality_score']}/9"
 
     def simulate_trade(self, idx, signals):
-        """Simulate trade outcome based on prediction - looking 20 candles ahead per paper"""
+        """Simulates the outcome of a trade.
+
+        Args:
+            idx: The current index in the data.
+            signals: A dictionary of market signals.
+
+        Returns:
+            A tuple containing the result of the trade ('WIN', 'LOSS', or
+            'OPEN') and the exit time.
+        """
         df = self.data
         row = df.iloc[idx]
 
@@ -784,7 +921,14 @@ class AEGFMBacktester:
         return 'OPEN', None
 
     def run_backtest(self):
-        """Run backtest with 95%+ win rate - Multi-Step Path Prediction (arXiv:2510.00184)"""
+        """Runs the backtest with a 95%+ win rate target.
+
+        This method uses a multi-step path prediction based on arXiv:2510.00184,
+        with auxiliary predictions over 20 candles.
+
+        Returns:
+            A tuple containing the number of wins, losses, and open trades.
+        """
         print("\n" + "="*70)
         print("AEGFM-Ω BACKTEST - 95%+ Target with Multi-Step Path Prediction")
         print("Based on arXiv:2510.00184 - Auxiliary predictions over 20 candles")
@@ -954,7 +1098,13 @@ class AEGFMBacktester:
         return wins, losses, open_trades
 
     def print_results(self, wins, losses, open_trades):
-        """Print results"""
+        """Prints the backtest results.
+
+        Args:
+            wins: The number of winning trades.
+            losses: The number of losing trades.
+            open_trades: The number of open trades.
+        """
         total = wins + losses + open_trades
         closed_trades = wins + losses
 
