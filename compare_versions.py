@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-AEGFM-Ω Version Comparison Script
-Compares v4.1 (6-Layer Immediate), v4.2 (Elite Mode), and v4.3 (7-Layer Immediate)
+AEGFM-Ω Version Comparison Script.
+
+Compares v4.1 (6-Layer Immediate), v4.2 (Elite Mode), and v4.3 (7-Layer
+Immediate) of the AEGFM-Ω trading system. This script generates a comprehensive
+visualization that compares the performance of different versions of the AEGFM-Ω
+trading system. It loads backtest data for each version and creates a dashboard
+with various charts and tables to highlight the differences in accuracy, trade
+volume, and profitability.
 """
 
 import numpy as np

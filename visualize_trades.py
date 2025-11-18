@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-AEGFM-Omega Trading System Visualization
-Generates candlestick charts with actual trade entries/exits and win/loss markers
+AEGFM-Omega Trading System Visualization.
+
+Generates candlestick charts with actual trade entries/exits and win/loss
+markers to provide visual proof of the trading system's performance.
 """
 
 import pandas as pd
@@ -16,7 +18,7 @@ import sys
 from backtest_aegfm import AEGFMBacktester
 
 def create_trade_visualization():
-    """Create comprehensive visualization of trades on candlestick charts"""
+    """Creates a comprehensive visualization of trades on candlestick charts."""
 
     print("Loading data and running backtest...")
     backtest = AEGFMBacktester(num_candles=50000)
@@ -46,7 +48,14 @@ def create_trade_visualization():
     print("  - performance_dashboard.png (comprehensive stats)")
 
 def create_overview_chart(df, trades, wins, losses):
-    """Create overview chart showing all trades"""
+    """Creates an overview chart showing all trades.
+
+    Args:
+        df: A pandas DataFrame with the backtest data.
+        trades: A list of trades from the backtest.
+        wins: The number of winning trades.
+        losses: The number of losing trades.
+    """
     print("\nCreating overview chart...")
 
     fig, axes = plt.subplots(3, 1, figsize=(20, 14), gridspec_kw={'height_ratios': [3, 1, 1]})
@@ -136,7 +145,14 @@ def create_overview_chart(df, trades, wins, losses):
     plt.close()
 
 def create_detailed_sample_chart(df, trades, wins, losses):
-    """Create detailed chart showing sample period with candlesticks"""
+    """Creates a detailed chart showing a sample period with candlesticks.
+
+    Args:
+        df: A pandas DataFrame with the backtest data.
+        trades: A list of trades from the backtest.
+        wins: The number of winning trades.
+        losses: The number of losing trades.
+    """
     print("\nCreating detailed sample chart...")
 
     # Select a sample period (middle 500 candles)
@@ -213,7 +229,14 @@ def create_detailed_sample_chart(df, trades, wins, losses):
     plt.close()
 
 def create_performance_dashboard(df, trades, wins, losses):
-    """Create comprehensive performance dashboard"""
+    """Creates a comprehensive performance dashboard.
+
+    Args:
+        df: A pandas DataFrame with the backtest data.
+        trades: A list of trades from the backtest.
+        wins: The number of winning trades.
+        losses: The number of losing trades.
+    """
     print("\nCreating performance dashboard...")
 
     fig = plt.figure(figsize=(20, 12))

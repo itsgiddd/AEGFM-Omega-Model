@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
-Generate README Header Image for AEGFM-Omega v4.6
-Shows comprehensive performance metrics with visual proof
+Generate README Header Image for AEGFM-Omega v4.6.
+
+Shows comprehensive performance metrics with visual proof. This script generates a
+header image for the README file of the AEGFM-Omega v4.6 trading system.
+The image provides a visual summary of the system's performance, including
+win rate comparisons, trade frequency, and key metrics.
 """
 
 import matplotlib.pyplot as plt

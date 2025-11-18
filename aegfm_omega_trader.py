@@ -1,18 +1,23 @@
-"""
-AEGFM-Ω: Advanced Adaptive Entropic Geometric Fractal Model - Omega
-A complete trading system integrating:
-- Koopman operator embedding
-- Signature/rough-path controlled differential operators
-- Stochastic PDE price field modeling
-- Variational Bayesian inference with Wasserstein DRO
-- Adversarial minimax hedging
-- Multi-resolution fractal manifold analysis
-- Certified conformal prediction
-- Pattern recognition (H&S, flags, triangles, wedges, etc.)
-- CVaR/DRO portfolio optimization
-- Kelly sizing and SPRT confirmation
+"""AEGFM-Ω: Advanced Adaptive Entropic Geometric Fractal Model - Omega.
 
-Target: 90% win rate on accepted trades with mathematically bounded risk
+This script implements a complete trading system integrating various advanced
+mathematical and machine learning techniques. The system is designed to identify
+trading opportunities, manage risk, and execute trades based on a multi-layered
+analysis of market data.
+
+The core components of the system include:
+- Koopman operator embedding for linearizing nonlinear price dynamics.
+- Signature transform (Rough Path Theory) for capturing path-dependent features.
+- Entropic and fractal analysis for characterizing market complexity.
+- Chart pattern detection for identifying common trading setups.
+- A probabilistic engine for estimating the success of trading signals.
+- Sequential Probability Ratio Test (SPRT) for entry confirmation.
+- Fractional Kelly criterion for optimal position sizing.
+- Conditional Value at Risk (CVaR) optimization for portfolio management.
+
+The script is designed to be used as a standalone trading system or as a library
+of trading components. It includes functionality for generating synthetic data,
+backtesting the trading strategy, and generating live trading signals.
 """
 
 import numpy as np
@@ -36,7 +41,52 @@ warnings.filterwarnings('ignore')
 
 @dataclass
 class TradingConfig:
-    """Main configuration for the trading system"""
+    """Main configuration for the trading system.
+
+    Attributes:
+        risk_per_trade: The maximum percentage of equity to risk per trade.
+        max_loss_per_trade: The maximum percentage of equity to lose in a single
+            trade.
+        daily_cvar_limit: The maximum daily Conditional Value at Risk (CVaR).
+        max_drawdown_cooldown: The drawdown percentage that triggers a cooldown
+            period.
+        max_drawdown_halt: The drawdown percentage that halts the trading
+            strategy.
+        min_probability: The minimum probability required to accept a trade.
+        conformal_tau: The target for the conformal lower bound.
+        max_epistemic_uncertainty: The maximum allowed model disagreement.
+        kelly_fraction: The fraction of the Kelly criterion to use for position
+            sizing.
+        stop_atr_multiplier: The multiplier for the Average True Range (ATR) to
+            set the stop loss.
+        target_atr_multiplier: The multiplier for the ATR to set the take profit.
+        atr_period: The period for calculating the ATR.
+        sprt_alpha: The Type I error for the Sequential Probability Ratio Test
+            (SPRT).
+        sprt_beta: The Type II error for the SPRT.
+        koopman_observables_dim: The dimension of the observable space for the
+            Koopman operator.
+        koopman_regularization: The regularization parameter for the Koopman
+            operator.
+        signature_order: The order of the signature transform.
+        signature_window: The window size for the signature transform.
+        wavelet_type: The type of wavelet to use for fractal analysis.
+        wavelet_levels: The number of levels for the wavelet decomposition.
+        wasserstein_epsilon: The epsilon value for the Wasserstein distance in
+            distributionally robust optimization (DRO).
+        cvar_alpha: The alpha value for the Conditional Value at Risk (CVaR).
+        pattern_tau_lev: The tolerance for level matching in pattern detection,
+            as a fraction of ATR.
+        pattern_tau_neck: The tolerance for the neckline in pattern detection,
+            as a fraction of ATR.
+        pattern_tau_slope: The slope threshold for pattern detection.
+        pattern_tau_conv: The convergence threshold for wedges in pattern
+            detection.
+        pattern_tau_parallel: The parallel threshold for flags in pattern
+            detection.
+        timeframe: The timeframe to use for trading.
+        lookback_bars: The number of bars to look back for analysis.
+    """
     # Risk parameters
     risk_per_trade: float = 0.04  # 4% max risk per trade
     max_loss_per_trade: float = 0.0025  # 0.25% equity cap
@@ -78,7 +128,7 @@ class TradingConfig:
     cvar_alpha: float = 0.95
 
     # Pattern detection tolerances
-    pattern_tau_lev: float = 0.02  # Level tolerance (as fraction of ATR)
+    pattern_tau_lev: float = 0.02  # Level tolerance (as a fraction of ATR)
     pattern_tau_neck: float = 0.03  # Neckline tolerance
     pattern_tau_slope: float = 0.1  # Slope threshold
     pattern_tau_conv: float = 0.05  # Convergence threshold for wedges
@@ -90,7 +140,7 @@ class TradingConfig:
 
 
 class PatternType(Enum):
-    """Enumeration of recognized chart patterns"""
+    """Enumeration of recognized chart patterns."""
     DOUBLE_BOTTOM = "double_bottom"
     DOUBLE_TOP = "double_top"
     HEAD_SHOULDERS = "head_shoulders"
@@ -111,7 +161,19 @@ class PatternType(Enum):
 
 @dataclass
 class Pattern:
-    """Detected chart pattern"""
+    """Detected chart pattern.
+
+    Attributes:
+        pattern_type: The type of the detected pattern.
+        start_idx: The starting index of the pattern.
+        end_idx: The ending index of the pattern.
+        entry_price: The suggested entry price for the trade.
+        stop_loss: The suggested stop loss for the trade.
+        take_profit: The suggested take profit for the trade.
+        quality_score: A score from 0 to 1 indicating the quality of the
+            pattern fit.
+        confidence: The probability of a successful breakout.
+    """
     pattern_type: PatternType
     start_idx: int
     end_idx: int
@@ -124,7 +186,22 @@ class Pattern:
 
 @dataclass
 class TradeSignal:
-    """Complete trade signal with all required information"""
+    """Complete trade signal with all required information.
+
+    Attributes:
+        direction: The direction of the trade ('long' or 'short').
+        entry_price: The entry price for the trade.
+        stop_loss: The stop loss for the trade.
+        take_profit: The take profit for the trade.
+        position_size: The size of the position in lots.
+        probability: The calibrated success probability of the trade.
+        conformal_lower_bound: The finite-sample guarantee for the trade.
+        epistemic_uncertainty: The model uncertainty for the trade.
+        patterns: A list of detected patterns.
+        risk_reward_ratio: The risk to reward ratio of the trade.
+        timestamp: The timestamp of the trade signal.
+        metadata: A dictionary of additional metadata.
+    """
     direction: str  # 'long' or 'short'
     entry_price: float
     stop_loss: float
@@ -144,21 +221,33 @@ class TradeSignal:
 # ============================================================================
 
 class KoopmanOperator:
-    """
-    Koopman operator for linearizing nonlinear price dynamics.
+    """Koopman operator for linearizing nonlinear price dynamics.
+
     Approximates the nonlinear flow in a high-dimensional observable space.
     """
 
     def __init__(self, obs_dim: int = 50, reg: float = 0.01):
+        """Initializes the KoopmanOperator.
+
+        Args:
+            obs_dim: The dimension of the observable space.
+            reg: The regularization parameter.
+        """
         self.obs_dim = obs_dim
         self.reg = reg
         self.K = None  # Koopman matrix
         self.scaler = StandardScaler()
 
     def observables(self, prices: np.ndarray) -> np.ndarray:
-        """
-        Compute observable functions of price path.
+        """Computes observable functions of the price path.
+
         Uses polynomial features, delayed embeddings, and technical indicators.
+
+        Args:
+            prices: A numpy array of prices.
+
+        Returns:
+            A numpy array of observables.
         """
         n = len(prices)
         obs = []
@@ -200,9 +289,15 @@ class KoopmanOperator:
         return obs_matrix
 
     def fit(self, price_history: np.ndarray):
-        """
-        Learn Koopman operator K from historical data.
+        """Learns the Koopman operator K from historical data.
+
         Solves: min ||Φ(P_{t+1}) - K Φ(P_t)||^2 + reg ||K||_F^2
+
+        Args:
+            price_history: A numpy array of historical prices.
+
+        Returns:
+            The fitted KoopmanOperator object.
         """
         # Compute observables
         obs_t = self.observables(price_history[:-1])
@@ -225,8 +320,14 @@ class KoopmanOperator:
         return self
 
     def predict(self, current_prices: np.ndarray, steps: int = 1) -> np.ndarray:
-        """
-        Predict future price using Koopman evolution.
+        """Predicts future prices using the Koopman evolution.
+
+        Args:
+            current_prices: A numpy array of current prices.
+            steps: The number of steps to predict into the future.
+
+        Returns:
+            A numpy array of predicted prices.
         """
         if self.K is None:
             raise ValueError("Koopman operator not fitted. Call fit() first.")
@@ -248,18 +349,29 @@ class KoopmanOperator:
 # ============================================================================
 
 class SignatureTransform:
-    """
-    Truncated signature transform for capturing path-dependent features.
+    """Truncated signature transform for capturing path-dependent features.
+
     Computes iterated integrals up to order m.
     """
 
     def __init__(self, order: int = 3):
+        """Initializes the SignatureTransform.
+
+        Args:
+            order: The order of the signature transform.
+        """
         self.order = order
 
     def compute_signature(self, path: np.ndarray) -> np.ndarray:
-        """
-        Compute truncated signature up to given order.
-        For simplicity, we use increment-based approximation.
+        """Computes the truncated signature up to the given order.
+
+        For simplicity, we use an increment-based approximation.
+
+        Args:
+            path: A numpy array representing the path.
+
+        Returns:
+            A numpy array representing the truncated signature.
         """
         n = len(path)
 
@@ -282,8 +394,14 @@ class SignatureTransform:
         return signature
 
     def fit_predict(self, paths: List[np.ndarray], outcomes: np.ndarray) -> LogisticRegression:
-        """
-        Train logistic model on signature features.
+        """Trains a logistic model on signature features.
+
+        Args:
+            paths: A list of numpy arrays representing the paths.
+            outcomes: A numpy array of outcomes.
+
+        Returns:
+            A trained LogisticRegression model.
         """
         X = np.array([self.compute_signature(p) for p in paths])
         model = LogisticRegression(random_state=42)
@@ -296,18 +414,29 @@ class SignatureTransform:
 # ============================================================================
 
 class EntropicFractalAnalyzer:
-    """
-    Computes Shannon entropy and fractal dimension of price paths.
-    """
+    """Computes Shannon entropy and fractal dimension of price paths."""
 
     def __init__(self, wavelet: str = 'db4', levels: int = 5):
+        """Initializes the EntropicFractalAnalyzer.
+
+        Args:
+            wavelet: The type of wavelet to use.
+            levels: The number of decomposition levels.
+        """
         self.wavelet = wavelet
         self.levels = levels
 
     def shannon_entropy(self, prices: np.ndarray, bins: int = 10) -> float:
-        """
-        Compute Shannon entropy of price distribution.
+        """Computes the Shannon entropy of the price distribution.
+
         H(X) = -Σ p(x) log p(x)
+
+        Args:
+            prices: A numpy array of prices.
+            bins: The number of bins to use for the histogram.
+
+        Returns:
+            The Shannon entropy.
         """
         returns = np.diff(prices) / prices[:-1]
         hist, _ = np.histogram(returns, bins=bins, density=True)
@@ -316,9 +445,15 @@ class EntropicFractalAnalyzer:
         return entropy
 
     def fractal_dimension(self, prices: np.ndarray) -> float:
-        """
-        Estimate fractal dimension using multi-scale variance of wavelet coefficients.
+        """Estimates the fractal dimension using multi-scale variance of wavelet coefficients.
+
         FD ≈ 1 + lim_{j→∞} log(Var(W_j)) / log(2^{-j})
+
+        Args:
+            prices: A numpy array of prices.
+
+        Returns:
+            The estimated fractal dimension.
         """
         # Pad to power of 2
         n = len(prices)
@@ -346,8 +481,13 @@ class EntropicFractalAnalyzer:
         return np.clip(fd, 1.0, 2.0)
 
     def analyze(self, prices: np.ndarray) -> Dict[str, float]:
-        """
-        Compute both entropy and fractal dimension.
+        """Computes both entropy and fractal dimension.
+
+        Args:
+            prices: A numpy array of prices.
+
+        Returns:
+            A dictionary containing the entropy and fractal dimension.
         """
         return {
             'entropy': self.shannon_entropy(prices),
@@ -360,18 +500,31 @@ class EntropicFractalAnalyzer:
 # ============================================================================
 
 class PatternDetector:
-    """
-    Detects chart patterns using convex optimization (LP) and geometric constraints.
+    """Detects chart patterns using convex optimization (LP) and geometric constraints.
+
     Patterns: Double tops/bottoms, H&S, flags, pennants, triangles, wedges, etc.
     """
 
     def __init__(self, config: TradingConfig):
+        """Initializes the PatternDetector.
+
+        Args:
+            config: A TradingConfig object.
+        """
         self.config = config
 
     def find_swing_points(self, highs: np.ndarray, lows: np.ndarray,
                           lookback: int = 5) -> Tuple[List[int], List[int]]:
-        """
-        Identify swing highs and swing lows using local extrema.
+        """Identifies swing highs and swing lows using local extrema.
+
+        Args:
+            highs: A numpy array of high prices.
+            lows: A numpy array of low prices.
+            lookback: The number of bars to look back and forward.
+
+        Returns:
+            A tuple containing a list of swing high indices and a list of swing
+            low indices.
         """
         swing_highs = []
         swing_lows = []
@@ -389,11 +542,20 @@ class PatternDetector:
 
     def detect_double_bottom(self, lows: np.ndarray, highs: np.ndarray,
                             swing_lows: List[int], atr: float) -> Optional[Pattern]:
-        """
-        Detect double bottom pattern.
+        """Detects a double bottom pattern.
+
         Constraints:
         - Two lows at similar levels
         - Intervening high (neckline)
+
+        Args:
+            lows: A numpy array of low prices.
+            highs: A numpy array of high prices.
+            swing_lows: A list of swing low indices.
+            atr: The Average True Range.
+
+        Returns:
+            A Pattern object if a double bottom is detected, else None.
         """
         if len(swing_lows) < 2:
             return None
@@ -436,12 +598,22 @@ class PatternDetector:
 
     def detect_head_shoulders(self, highs: np.ndarray, lows: np.ndarray,
                              swing_highs: List[int], atr: float) -> Optional[Pattern]:
-        """
-        Detect head & shoulders pattern.
+        """Detects a head & shoulders pattern.
+
         Constraints:
         - Three highs: left shoulder, head (highest), right shoulder
         - Shoulders at similar levels
         - Clear neckline
+
+        Args:
+            highs: A numpy array of high prices.
+            lows: A numpy array of low prices.
+            swing_highs: A list of swing high indices.
+            atr: The Average True Range.
+
+        Returns:
+            A Pattern object if a head & shoulders pattern is detected, else
+            None.
         """
         if len(swing_highs) < 3:
             return None
@@ -486,8 +658,16 @@ class PatternDetector:
 
     def detect_triangle(self, highs: np.ndarray, lows: np.ndarray,
                        window: int = 30, atr: float = 1.0) -> Optional[Pattern]:
-        """
-        Detect symmetrical triangle using LAD (Least Absolute Deviation) fits.
+        """Detects a symmetrical triangle using Least Absolute Deviation (LAD) fits.
+
+        Args:
+            highs: A numpy array of high prices.
+            lows: A numpy array of low prices.
+            window: The window size for fitting the trendlines.
+            atr: The Average True Range.
+
+        Returns:
+            A Pattern object if a symmetrical triangle is detected, else None.
         """
         if len(highs) < window:
             return None
@@ -543,8 +723,13 @@ class PatternDetector:
         )
 
     def detect_all_patterns(self, df: pd.DataFrame) -> List[Pattern]:
-        """
-        Run all pattern detection algorithms.
+        """Runs all pattern detection algorithms.
+
+        Args:
+            df: A pandas DataFrame with OHLC data.
+
+        Returns:
+            A list of detected Pattern objects.
         """
         patterns = []
 
@@ -576,7 +761,14 @@ class PatternDetector:
         return patterns
 
     def _calculate_atr(self, df: pd.DataFrame) -> float:
-        """Calculate Average True Range"""
+        """Calculates the Average True Range (ATR).
+
+        Args:
+            df: A pandas DataFrame with OHLC data.
+
+        Returns:
+            The ATR value.
+        """
         high = df['high'].values
         low = df['low'].values
         close = df['close'].values
@@ -594,12 +786,17 @@ class PatternDetector:
 # ============================================================================
 
 class ProbabilityEngine:
-    """
-    Ensemble model for calibrated probability estimation.
+    """Ensemble model for calibrated probability estimation.
+
     Combines multiple signals and applies conformal prediction.
     """
 
     def __init__(self, config: TradingConfig):
+        """Initializes the ProbabilityEngine.
+
+        Args:
+            config: A TradingConfig object.
+        """
         self.config = config
         self.model = GradientBoostingClassifier(n_estimators=100, random_state=42)
         self.calibrator = IsotonicRegression(out_of_bounds='clip')
@@ -608,8 +805,16 @@ class ProbabilityEngine:
 
     def extract_features(self, df: pd.DataFrame, patterns: List[Pattern],
                         entropy: float, fractal_dim: float) -> np.ndarray:
-        """
-        Extract feature vector from price data, patterns, and geometry.
+        """Extracts a feature vector from price data, patterns, and geometry.
+
+        Args:
+            df: A pandas DataFrame with OHLC data.
+            patterns: A list of detected Pattern objects.
+            entropy: The Shannon entropy of the price data.
+            fractal_dim: The fractal dimension of the price data.
+
+        Returns:
+            A numpy array representing the feature vector.
         """
         features = []
 
@@ -641,8 +846,13 @@ class ProbabilityEngine:
 
     def fit(self, X_train: np.ndarray, y_train: np.ndarray,
             X_cal: np.ndarray, y_cal: np.ndarray):
-        """
-        Train model and calibrate probabilities.
+        """Trains the model and calibrates probabilities.
+
+        Args:
+            X_train: The training features.
+            y_train: The training labels.
+            X_cal: The calibration features.
+            y_cal: The calibration labels.
         """
         # Scale features
         X_train_scaled = self.scaler.fit_transform(X_train)
@@ -662,9 +872,14 @@ class ProbabilityEngine:
         self.conformal_scores = np.abs(y_cal - prob_cal_calibrated)
 
     def predict_probability(self, features: np.ndarray) -> Tuple[float, float]:
-        """
-        Predict calibrated probability with conformal lower bound.
-        Returns: (calibrated_prob, conformal_lower_bound)
+        """Predicts the calibrated probability with a conformal lower bound.
+
+        Args:
+            features: A numpy array representing the feature vector.
+
+        Returns:
+            A tuple containing the calibrated probability and the conformal
+            lower bound.
         """
         features_scaled = self.scaler.transform(features.reshape(1, -1))
         prob_raw = self.model.predict_proba(features_scaled)[0, 1]
@@ -685,12 +900,19 @@ class ProbabilityEngine:
 # ============================================================================
 
 class SPRTConfirmation:
-    """
-    Sequential Probability Ratio Test for entry confirmation.
+    """Sequential Probability Ratio Test for entry confirmation.
+
     Tests H1 (positive drift) vs H0 (no drift) on micro-returns.
     """
 
     def __init__(self, alpha: float = 0.05, beta: float = 0.05, mu_up: float = 0.0001):
+        """Initializes the SPRTConfirmation.
+
+        Args:
+            alpha: The Type I error rate.
+            beta: The Type II error rate.
+            mu_up: The upward drift to test for.
+        """
         self.alpha = alpha
         self.beta = beta
         self.mu_up = mu_up
@@ -698,9 +920,14 @@ class SPRTConfirmation:
         self.B = np.log(beta / (1 - alpha))
 
     def test(self, micro_returns: np.ndarray, sigma: float) -> str:
-        """
-        Run SPRT on micro-returns.
-        Returns: 'long', 'short', or 'wait'
+        """Runs the SPRT on micro-returns.
+
+        Args:
+            micro_returns: A numpy array of micro-returns.
+            sigma: The standard deviation of the micro-returns.
+
+        Returns:
+            'long', 'short', or 'wait'.
         """
         if len(micro_returns) == 0:
             return 'wait'
@@ -721,28 +948,30 @@ class SPRTConfirmation:
 # ============================================================================
 
 class KellyPositionSizer:
-    """
-    Fractional Kelly position sizing with caps.
-    """
+    """Fractional Kelly position sizing with caps."""
 
     def __init__(self, config: TradingConfig):
+        """Initializes the KellyPositionSizer.
+
+        Args:
+            config: A TradingConfig object.
+        """
         self.config = config
 
     def calculate_size(self, probability: float, reward_risk_ratio: float,
                        equity: float, stop_distance_pips: float,
                        pip_value: float = 10.0) -> float:
-        """
-        Calculate position size using fractional Kelly.
+        """Calculates the position size using the fractional Kelly criterion.
 
         Args:
-            probability: Success probability
-            reward_risk_ratio: R:R ratio (e.g., 2.0 for 2:1)
-            equity: Account equity
-            stop_distance_pips: Distance to stop in pips
-            pip_value: Value per pip per lot (default $10 for standard lot)
+            probability: The success probability of the trade.
+            reward_risk_ratio: The reward to risk ratio of the trade.
+            equity: The current account equity.
+            stop_distance_pips: The distance to the stop loss in pips.
+            pip_value: The value of a pip per lot.
 
         Returns:
-            Position size in lots
+            The position size in lots.
         """
         R = reward_risk_ratio
         p = probability
@@ -773,25 +1002,30 @@ class KellyPositionSizer:
 # ============================================================================
 
 class CVaROptimizer:
-    """
-    Portfolio optimization using CVaR (Conditional Value at Risk).
+    """Portfolio optimization using CVaR (Conditional Value at Risk).
+
     Implements distributionally robust optimization (DRO).
     """
 
     def __init__(self, config: TradingConfig):
+        """Initializes the CVaROptimizer.
+
+        Args:
+            config: A TradingConfig object.
+        """
         self.config = config
 
     def optimize_weights(self, expected_returns: np.ndarray,
                         scenarios: np.ndarray) -> np.ndarray:
-        """
-        Solve CVaR optimization using linear programming.
+        """Solves the CVaR optimization problem using linear programming.
 
         Args:
-            expected_returns: Expected return for each instrument
-            scenarios: Matrix of return scenarios (N x M)
+            expected_returns: A numpy array of expected returns for each
+                instrument.
+            scenarios: A matrix of return scenarios (N x M).
 
         Returns:
-            Optimal portfolio weights
+            A numpy array of optimal portfolio weights.
         """
         try:
             import cvxpy as cp
@@ -842,11 +1076,14 @@ class CVaROptimizer:
 # ============================================================================
 
 class AEGFMOmegaTrader:
-    """
-    Main trading system integrating all components.
-    """
+    """Main trading system integrating all components."""
 
     def __init__(self, config: TradingConfig):
+        """Initializes the AEGFMOmegaTrader.
+
+        Args:
+            config: A TradingConfig object.
+        """
         self.config = config
 
         # Initialize components
@@ -871,12 +1108,12 @@ class AEGFMOmegaTrader:
         self.is_fitted = False
 
     def fit(self, historical_data: pd.DataFrame, outcomes: np.ndarray = None):
-        """
-        Fit all models on historical data.
+        """Fits all models on historical data.
 
         Args:
-            historical_data: DataFrame with OHLCV data
-            outcomes: Binary outcomes (1=success, 0=failure) for training
+            historical_data: A pandas DataFrame with OHLCV data.
+            outcomes: A numpy array of binary outcomes (1=success, 0=failure)
+                for training.
         """
         print("Fitting AEGFM-Ω system...")
 
@@ -918,15 +1155,14 @@ class AEGFMOmegaTrader:
 
     def generate_signal(self, current_data: pd.DataFrame,
                        equity: float = 10000.0) -> Optional[TradeSignal]:
-        """
-        Generate trading signal from current market data.
+        """Generates a trading signal from the current market data.
 
         Args:
-            current_data: DataFrame with recent OHLCV data
-            equity: Current account equity
+            current_data: A pandas DataFrame with recent OHLCV data.
+            equity: The current account equity.
 
         Returns:
-            TradeSignal if conditions met, else None
+            A TradeSignal object if the conditions are met, else None.
         """
         if not self.is_fitted:
             raise ValueError("System not fitted. Call fit() first.")
@@ -1005,8 +1241,14 @@ class AEGFMOmegaTrader:
         return signal
 
     def should_exit(self, signal: TradeSignal, current_price: float) -> bool:
-        """
-        Determine if an open position should be exited.
+        """Determines if an open position should be exited.
+
+        Args:
+            signal: A TradeSignal object.
+            current_price: The current price.
+
+        Returns:
+            True if the position should be exited, False otherwise.
         """
         if signal.direction == 'long':
             if current_price >= signal.take_profit:
@@ -1027,8 +1269,13 @@ class AEGFMOmegaTrader:
 # ============================================================================
 
 def generate_synthetic_data(n_bars: int = 1000) -> pd.DataFrame:
-    """
-    Generate synthetic OHLCV data for testing.
+    """Generates synthetic OHLCV data for testing.
+
+    Args:
+        n_bars: The number of bars to generate.
+
+    Returns:
+        A pandas DataFrame with synthetic OHLCV data.
     """
     np.random.seed(42)
 
@@ -1068,8 +1315,15 @@ def generate_synthetic_data(n_bars: int = 1000) -> pd.DataFrame:
 
 def simple_backtest(trader: AEGFMOmegaTrader, data: pd.DataFrame,
                    initial_equity: float = 10000.0) -> Dict:
-    """
-    Simple backtest of the trading system.
+    """Performs a simple backtest of the trading system.
+
+    Args:
+        trader: An AEGFMOmegaTrader object.
+        data: A pandas DataFrame with OHLCV data.
+        initial_equity: The initial equity for the backtest.
+
+    Returns:
+        A dictionary of backtest statistics.
     """
     print("\n" + "="*60)
     print("RUNNING BACKTEST")

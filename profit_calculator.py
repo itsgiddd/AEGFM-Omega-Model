@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
-AEGFM-Ω Profit Calculator
-Calculate realistic profits based on backtest performance
+AEGFM-Ω Profit Calculator.
+
+This script calculates realistic profits based on backtest performance. It
+includes functions for calculating expectancy, simple profit without compounding,
+and compound profit with compounding. The script also provides visualizations to
+illustrate the profit projections over time and for different account sizes.
 """
 
 import numpy as np
@@ -17,7 +21,11 @@ TRADES_PER_DAY = 4  # Based on 2,069 trades over 520 days (more selective)
 RISK_PERCENT = 0.02  # 2% risk per trade
 
 def calculate_expectancy():
-    """Calculate expected profit per trade in R (risk units)"""
+    """Calculates the expected profit per trade in R (risk units).
+
+    Returns:
+        The expectancy value.
+    """
     win_amount = RISK_REWARD  # Win 0.375R
     loss_amount = -1.0  # Lose 1R
 
@@ -25,7 +33,15 @@ def calculate_expectancy():
     return expectancy
 
 def calculate_simple_profit(starting_capital, num_trades):
-    """Calculate profit without compounding (fixed position size)"""
+    """Calculates the profit without compounding (fixed position size).
+
+    Args:
+        starting_capital: The initial capital.
+        num_trades: The number of trades to simulate.
+
+    Returns:
+        A dictionary with the simulation results.
+    """
     risk_per_trade = starting_capital * RISK_PERCENT
 
     # Calculate wins and losses
@@ -51,7 +67,16 @@ def calculate_simple_profit(starting_capital, num_trades):
     }
 
 def calculate_compound_profit(starting_capital, num_trades, max_risk_per_trade=1000):
-    """Calculate profit WITH compounding (position size grows with account)"""
+    """Calculates the profit with compounding (position size grows with the account).
+
+    Args:
+        starting_capital: The initial capital.
+        num_trades: The number of trades to simulate.
+        max_risk_per_trade: The maximum risk per trade in dollars.
+
+    Returns:
+        A tuple containing the final balance and a list of the balance history.
+    """
     balance = starting_capital
     balance_history = [balance]
 
@@ -80,7 +105,16 @@ def calculate_compound_profit(starting_capital, num_trades, max_risk_per_trade=1
     return balance, balance_history
 
 def simulate_multiple_runs(starting_capital, num_trades, runs=100):
-    """Simulate multiple runs to get realistic range of outcomes"""
+    """Simulates multiple runs to get a realistic range of outcomes.
+
+    Args:
+        starting_capital: The initial capital.
+        num_trades: The number of trades to simulate.
+        runs: The number of simulation runs.
+
+    Returns:
+        A dictionary with the simulation statistics.
+    """
     final_balances = []
 
     for _ in range(runs):
