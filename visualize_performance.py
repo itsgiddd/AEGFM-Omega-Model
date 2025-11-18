@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-AEGFM-Ω Performance Visualization
-Generates detailed charts showing prediction accuracy and system performance
+AEGFM-Ω Performance Visualization.
+
+Generates detailed charts showing prediction accuracy and system performance.
+This script is designed to provide a comprehensive visual analysis of the
+AEGFM-Ω trading system's performance under realistic forex conditions. It
+creates a dashboard with multiple charts to visualize win/loss timelines,
+cumulative win rates, confidence distributions, and other key metrics.
 """
 
 import numpy as np
@@ -17,7 +22,17 @@ import seaborn as sns
 from backtest_aegfm import AEGFMBacktester
 
 def create_visualizations(backtester, wins, losses, open_trades):
-    """Create comprehensive performance visualizations with REAL FOREX CONDITIONS"""
+    """Creates comprehensive performance visualizations.
+
+    Args:
+        backtester: An instance of the AEGFMBacktester class.
+        wins: The number of winning trades.
+        losses: The number of losing trades.
+        open_trades: The number of open trades.
+
+    Returns:
+        The filename of the saved visualization.
+    """
 
     print("\n" + "="*70)
     print("GENERATING PERFORMANCE VISUALIZATIONS - REAL FOREX CONDITIONS")
