@@ -36,7 +36,7 @@ input int InpMinConfluenceScore = 3;            // The minimum confluence score 
 
 input group "=== Risk Management ==="
 input bool InpUseFixedLotSize = false;          // If true, a fixed lot size is used; otherwise, it's auto-calculated.
-input double InpFixedLotSize = 0.01;            // The fixed lot size to use if InpUseFixedLotSize is true.
+input double InpFixedLotSize = 0.1;            // The fixed lot size to use if InpUseFixedLotSize is true.
 input double InpRiskPercent = 4.0;              // The percentage of equity to risk per trade (if auto-calculating).
 input double InpMaxLossPercent = 0.25;          // The maximum percentage of equity to lose in a single trade.
 input double InpKellyFraction = 0.4;            // The fraction of the Kelly criterion to use for position sizing.
