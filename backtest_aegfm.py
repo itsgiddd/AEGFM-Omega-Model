@@ -16,13 +16,14 @@ from datetime import datetime, timedelta
 class AEGFMBacktester:
     """A class for backtesting the AEGFM-Ω trading strategy."""
 
-    def __init__(self, num_candles=2000, daily_growth_target=50.0, use_intermediate_tp=False):
+    def __init__(self, num_candles=2000, daily_growth_target=50.0, use_intermediate_tp=False, starting_balance=10000.0):
         """Initializes the AEGFMBacktester.
 
         Args:
             num_candles: The number of candles to generate for the backtest.
             daily_growth_target: The target for daily growth in percentage.
             use_intermediate_tp: Enable intermediate TP for drawdown reduction.
+            starting_balance: Starting account balance in dollars.
         """
         self.num_candles = num_candles
         self.data = None
@@ -30,6 +31,7 @@ class AEGFMBacktester:
         self.daily_growth_target = daily_growth_target
         self.daily_stats = []  # Track daily performance
         self.use_intermediate_tp = use_intermediate_tp
+        self.starting_balance = starting_balance
 
         # Intermediate TP configuration
         self.counter_move_atr = 0.75  # Counter-move detection threshold
@@ -1030,7 +1032,7 @@ class AEGFMBacktester:
         total_scanned = 0
 
         # Daily growth tracking
-        starting_balance = 10000.0  # Starting balance in dollars
+        starting_balance = self.starting_balance  # Use instance starting balance
         current_balance = starting_balance
         daily_balance = starting_balance
         current_day = None
@@ -1095,11 +1097,13 @@ class AEGFMBacktester:
             risk_percent = 0.002  # 0.2% risk (realistic for retail traders)
             risk_amount = current_balance * risk_percent
 
-            # Realistic lot size calculation (standard lot = $10/pip)
-            # With $10,000 balance, 0.2% risk = $20 risk
-            # SL of 20 pips (2.0 ATR × 10 pips) = $200 with standard lot
-            # So realistic lot = $20/$200 = 0.10 lots (1 mini lot)
-            realistic_lot_size = 0.10  # Mini lot for $10k account
+            # DYNAMIC lot size calculation that scales with account balance
+            # Base: 0.10 lots for $10,000 account
+            # This enables proper compounding as account grows
+            realistic_lot_size = (current_balance / 10000.0) * 0.10
+            # Minimum lot size for very small accounts
+            if realistic_lot_size < 0.01:
+                realistic_lot_size = 0.01
 
             if result == 'WIN':
                 # Not all wins hit full TP - simulate realistic exits
@@ -1116,7 +1120,8 @@ class AEGFMBacktester:
                     trade_profit_dollars = 1.0 * realistic_lot_size * 10
 
                 # Subtract commission (charged on EVERY trade)
-                commission = 0.70  # $0.70 per mini lot round-trip
+                # Commission scales with lot size ($0.70 per 0.10 lot = $7 per standard lot)
+                commission = realistic_lot_size * 7.0
                 trade_profit_dollars -= commission
 
             elif result == 'LOSS':
@@ -1124,7 +1129,8 @@ class AEGFMBacktester:
                 trade_profit_dollars = -20.0 * realistic_lot_size * 10
 
                 # Add commission (makes losses worse)
-                commission = 0.70
+                # Commission scales with lot size
+                commission = realistic_lot_size * 7.0
                 trade_profit_dollars -= commission
             else:
                 trade_profit_dollars = 0
