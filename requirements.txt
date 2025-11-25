@@ -1,0 +1,7 @@
+qiskit
+qiskit-ibm-runtime
+oandapyV20
+pandas
+numpy
+python-dotenv
+scipy
