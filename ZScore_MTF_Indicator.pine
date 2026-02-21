@@ -1,0 +1,287 @@
+//@version=5
+indicator("Z-Score Multi-Timeframe with TP/SL", shorttitle="ZScore MTF", overlay=false)
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Z-SCORE MULTI-TIMEFRAME INDICATOR
+// Calculates Z-Score across M15, H1, H4, D1 timeframes
+// Shows immediate BUY/SELL signals with Take Profit and Stop Loss levels
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ────────────────────────────────────────────────────────────────────────────────
+// INPUT PARAMETERS
+// ────────────────────────────────────────────────────────────────────────────────
+
+// Z-Score Settings
+zscorePeriod = input.int(20, "Z-Score Period", minval=5, maxval=200, group="Z-Score Settings")
+zscoreThreshold = input.float(2.0, "Z-Score Threshold (±Std Dev)", minval=1.0, maxval=4.0, step=0.1, group="Z-Score Settings")
+
+// Multi-Timeframe Weights
+useWeighted = input.bool(true, "Use Weighted Z-Score", group="Multi-Timeframe")
+weight_m15 = input.float(1.0, "M15 Weight", minval=0.1, maxval=10.0, step=0.1, group="Multi-Timeframe")
+weight_h1 = input.float(2.0, "H1 Weight", minval=0.1, maxval=10.0, step=0.1, group="Multi-Timeframe")
+weight_h4 = input.float(3.0, "H4 Weight", minval=0.1, maxval=10.0, step=0.1, group="Multi-Timeframe")
+weight_d1 = input.float(4.0, "D1 Weight", minval=0.1, maxval=10.0, step=0.1, group="Multi-Timeframe")
+
+// Hybrid Strategy
+useHybrid = input.bool(true, "Use Hybrid Strategy (Mean Rev + Breakout)", group="Strategy")
+adxTrendThreshold = input.float(25.0, "ADX Trending Threshold", minval=15.0, maxval=40.0, step=1.0, group="Strategy")
+adxRangingMax = input.float(20.0, "ADX Ranging Max", minval=10.0, maxval=30.0, step=1.0, group="Strategy")
+
+// TP/SL Settings
+atrPeriod = input.int(14, "ATR Period", minval=5, maxval=50, group="TP/SL Settings")
+stopATRMultiplier = input.float(2.0, "Stop Loss (ATR Multiplier)", minval=0.5, maxval=5.0, step=0.1, group="TP/SL Settings")
+targetATRMultiplier = input.float(0.75, "Take Profit (ATR Multiplier)", minval=0.1, maxval=3.0, step=0.05, group="TP/SL Settings")
+
+// Display Settings
+showLabels = input.bool(true, "Show Signal Labels", group="Display")
+showTable = input.bool(true, "Show Info Table", group="Display")
+
+// ────────────────────────────────────────────────────────────────────────────────
+// FUNCTION: Calculate Z-Score for a given timeframe
+// ────────────────────────────────────────────────────────────────────────────────
+
+calcZScore(tf, period) =>
+    // Get close prices for the specified timeframe
+    closeTF = request.security(syminfo.tickerid, tf, close)
+
+    // Calculate mean (Simple Moving Average)
+    meanPrice = ta.sma(closeTF, period)
+
+    // Calculate standard deviation
+    variance = 0.0
+    for i = 0 to period - 1
+        variance := variance + math.pow(closeTF[i] - meanPrice, 2)
+    stdDev = math.sqrt(variance / period)
+
+    // Calculate Z-Score
+    zScore = stdDev > 0 ? (closeTF - meanPrice) / stdDev : 0.0
+
+    [zScore, meanPrice, stdDev]
+
+// ────────────────────────────────────────────────────────────────────────────────
+// CALCULATE Z-SCORES FOR ALL TIMEFRAMES
+// ────────────────────────────────────────────────────────────────────────────────
+
+[zscore_m15, mean_m15, std_m15] = calcZScore("15", zscorePeriod)
+[zscore_h1, mean_h1, std_h1] = calcZScore("60", zscorePeriod)
+[zscore_h4, mean_h4, std_h4] = calcZScore("240", zscorePeriod)
+[zscore_d1, mean_d1, std_d1] = calcZScore("D", zscorePeriod)
+
+// Calculate weighted Z-Score
+totalWeight = weight_m15 + weight_h1 + weight_h4 + weight_d1
+weightedZScore = useWeighted ?
+     (zscore_m15 * weight_m15 + zscore_h1 * weight_h1 + zscore_h4 * weight_h4 + zscore_d1 * weight_d1) / totalWeight :
+     zscore_m15
+
+// ────────────────────────────────────────────────────────────────────────────────
+// MARKET REGIME DETECTION (ADX)
+// ────────────────────────────────────────────────────────────────────────────────
+
+[diPlus, diMinus, adx] = ta.dmi(14, atrPeriod)
+isTrending = adx > adxTrendThreshold
+isRanging = adx < adxRangingMax
+
+// ────────────────────────────────────────────────────────────────────────────────
+// SIGNAL GENERATION (Hybrid Strategy)
+// ────────────────────────────────────────────────────────────────────────────────
+
+signal = 0
+
+if useHybrid
+    if isTrending
+        // BREAKOUT MODE: Trade WITH the Z-Score direction
+        if weightedZScore > zscoreThreshold
+            signal := 1  // BUY (strong momentum up)
+        else if weightedZScore < -zscoreThreshold
+            signal := -1  // SELL (strong momentum down)
+    else
+        // MEAN REVERSION MODE: Trade AGAINST the Z-Score direction
+        if weightedZScore > zscoreThreshold
+            signal := -1  // SELL (overbought)
+        else if weightedZScore < -zscoreThreshold
+            signal := 1  // BUY (oversold)
+else
+    // Pure mean reversion
+    if weightedZScore > zscoreThreshold
+        signal := -1
+    else if weightedZScore < -zscoreThreshold
+        signal := 1
+
+// ────────────────────────────────────────────────────────────────────────────────
+// CALCULATE TP/SL LEVELS
+// ────────────────────────────────────────────────────────────────────────────────
+
+atr = ta.atr(atrPeriod)
+currentPrice = close
+
+stopDistance = stopATRMultiplier * atr
+targetDistance = targetATRMultiplier * atr
+
+var float entryPrice = na
+var float stopLoss = na
+var float takeProfit = na
+var int currentSignal = 0
+
+// Update TP/SL when new signal appears
+if signal != 0 and signal != currentSignal[1]
+    entryPrice := currentPrice
+    if signal == 1  // BUY
+        stopLoss := entryPrice - stopDistance
+        takeProfit := entryPrice + targetDistance
+    else  // SELL
+        stopLoss := entryPrice + stopDistance
+        takeProfit := entryPrice - targetDistance
+    currentSignal := signal
+
+// ────────────────────────────────────────────────────────────────────────────────
+// CONFIDENCE CALCULATION
+// ────────────────────────────────────────────────────────────────────────────────
+
+absZScore = math.abs(weightedZScore)
+confidence = absZScore >= 3.0 ? 95 :
+             absZScore >= 2.5 ? 90 :
+             absZScore >= 2.0 ? 85 : 50
+
+// Agreement bonus
+agreeCount = 0
+agreeCount := (zscore_m15 > 0 and weightedZScore > 0 or zscore_m15 < 0 and weightedZScore < 0) ? agreeCount + 1 : agreeCount
+agreeCount := (zscore_h1 > 0 and weightedZScore > 0 or zscore_h1 < 0 and weightedZScore < 0) ? agreeCount + 1 : agreeCount
+agreeCount := (zscore_h4 > 0 and weightedZScore > 0 or zscore_h4 < 0 and weightedZScore < 0) ? agreeCount + 1 : agreeCount
+agreeCount := (zscore_d1 > 0 and weightedZScore > 0 or zscore_d1 < 0 and weightedZScore < 0) ? agreeCount + 1 : agreeCount
+
+confidenceMultiplier = agreeCount >= 4 ? 1.15 : agreeCount >= 3 ? 1.10 : 1.0
+finalConfidence = math.min(98, confidence * confidenceMultiplier)
+
+// ────────────────────────────────────────────────────────────────────────────────
+// PLOTTING
+// ────────────────────────────────────────────────────────────────────────────────
+
+// Plot Z-Scores
+plot(weightedZScore, "Weighted Z-Score", color=color.new(color.blue, 0), linewidth=2)
+plot(zscore_m15, "M15 Z-Score", color=color.new(color.orange, 50), linewidth=1)
+plot(zscore_h1, "H1 Z-Score", color=color.new(color.green, 50), linewidth=1)
+plot(zscore_h4, "H4 Z-Score", color=color.new(color.purple, 50), linewidth=1)
+plot(zscore_d1, "D1 Z-Score", color=color.new(color.red, 50), linewidth=1)
+
+// Plot threshold lines
+hline(zscoreThreshold, "Upper Threshold", color=color.new(color.red, 50), linestyle=hline.style_dashed)
+hline(-zscoreThreshold, "Lower Threshold", color=color.new(color.green, 50), linestyle=hline.style_dashed)
+hline(0, "Zero Line", color=color.new(color.gray, 50))
+
+// Background coloring for signals
+bgcolor(signal == 1 ? color.new(color.green, 90) : signal == -1 ? color.new(color.red, 90) : na)
+
+// ────────────────────────────────────────────────────────────────────────────────
+// LABELS FOR SIGNALS
+// ────────────────────────────────────────────────────────────────────────────────
+
+if showLabels and signal != 0 and signal != signal[1]
+    labelText = signal == 1 ?
+         "🔵 BUY\n" +
+         "Entry: " + str.tostring(entryPrice, format.mintick) + "\n" +
+         "SL: " + str.tostring(stopLoss, format.mintick) + "\n" +
+         "TP: " + str.tostring(takeProfit, format.mintick) + "\n" +
+         "Conf: " + str.tostring(finalConfidence, "#.0") + "%" :
+         "🔴 SELL\n" +
+         "Entry: " + str.tostring(entryPrice, format.mintick) + "\n" +
+         "SL: " + str.tostring(stopLoss, format.mintick) + "\n" +
+         "TP: " + str.tostring(takeProfit, format.mintick) + "\n" +
+         "Conf: " + str.tostring(finalConfidence, "#.0") + "%"
+
+    labelColor = signal == 1 ? color.new(color.green, 20) : color.new(color.red, 20)
+    labelStyle = signal == 1 ? label.style_label_up : label.style_label_down
+    labelY = signal == 1 ? -zscoreThreshold - 0.5 : zscoreThreshold + 0.5
+
+    label.new(bar_index, labelY, labelText,
+         color=labelColor,
+         textcolor=color.white,
+         style=labelStyle,
+         size=size.normal)
+
+// ────────────────────────────────────────────────────────────────────────────────
+// INFO TABLE
+// ────────────────────────────────────────────────────────────────────────────────
+
+if showTable
+    var table infoTable = table.new(position.top_right, 2, 12,
+         border_width=1,
+         border_color=color.gray,
+         frame_width=1,
+         frame_color=color.gray)
+
+    // Header
+    table.cell(infoTable, 0, 0, "Z-Score MTF",
+         text_color=color.white,
+         bgcolor=color.new(color.blue, 30),
+         text_size=size.normal)
+    table.merge_cells(infoTable, 0, 0, 1, 0)
+
+    // Individual Z-Scores
+    table.cell(infoTable, 0, 1, "M15 Z-Score:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 1, str.tostring(zscore_m15, "#.##"),
+         text_color=zscore_m15 > zscoreThreshold ? color.red : zscore_m15 < -zscoreThreshold ? color.green : color.white,
+         text_size=size.small)
+
+    table.cell(infoTable, 0, 2, "H1 Z-Score:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 2, str.tostring(zscore_h1, "#.##"),
+         text_color=zscore_h1 > zscoreThreshold ? color.red : zscore_h1 < -zscoreThreshold ? color.green : color.white,
+         text_size=size.small)
+
+    table.cell(infoTable, 0, 3, "H4 Z-Score:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 3, str.tostring(zscore_h4, "#.##"),
+         text_color=zscore_h4 > zscoreThreshold ? color.red : zscore_h4 < -zscoreThreshold ? color.green : color.white,
+         text_size=size.small)
+
+    table.cell(infoTable, 0, 4, "D1 Z-Score:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 4, str.tostring(zscore_d1, "#.##"),
+         text_color=zscore_d1 > zscoreThreshold ? color.red : zscore_d1 < -zscoreThreshold ? color.green : color.white,
+         text_size=size.small)
+
+    // Weighted Z-Score
+    table.cell(infoTable, 0, 5, "Weighted:", text_color=color.yellow, text_size=size.normal)
+    table.cell(infoTable, 1, 5, str.tostring(weightedZScore, "#.##"),
+         text_color=weightedZScore > zscoreThreshold ? color.red : weightedZScore < -zscoreThreshold ? color.green : color.white,
+         text_size=size.normal)
+
+    // Market Regime
+    regimeText = isTrending ? "TRENDING" : isRanging ? "RANGING" : "NEUTRAL"
+    regimeColor = isTrending ? color.orange : isRanging ? color.aqua : color.gray
+    table.cell(infoTable, 0, 6, "Regime:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 6, regimeText, text_color=regimeColor, text_size=size.small)
+
+    // ADX
+    table.cell(infoTable, 0, 7, "ADX:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 7, str.tostring(adx, "#.#"), text_color=color.white, text_size=size.small)
+
+    // Signal
+    signalText = signal == 1 ? "BUY 🔵" : signal == -1 ? "SELL 🔴" : "NEUTRAL"
+    signalColor = signal == 1 ? color.green : signal == -1 ? color.red : color.gray
+    table.cell(infoTable, 0, 8, "Signal:", text_color=color.gray, text_size=size.normal)
+    table.cell(infoTable, 1, 8, signalText, text_color=signalColor, text_size=size.normal)
+
+    // Confidence
+    table.cell(infoTable, 0, 9, "Confidence:", text_color=color.gray, text_size=size.small)
+    table.cell(infoTable, 1, 9, str.tostring(finalConfidence, "#") + "%", text_color=color.white, text_size=size.small)
+
+    // TP/SL if signal exists
+    if not na(entryPrice)
+        table.cell(infoTable, 0, 10, "Entry:", text_color=color.gray, text_size=size.small)
+        table.cell(infoTable, 1, 10, str.tostring(entryPrice, format.mintick), text_color=color.white, text_size=size.small)
+
+        table.cell(infoTable, 0, 11, "SL / TP:", text_color=color.gray, text_size=size.small)
+        table.cell(infoTable, 1, 11, str.tostring(stopLoss, format.mintick) + " / " + str.tostring(takeProfit, format.mintick),
+             text_color=color.white, text_size=size.small)
+
+// ────────────────────────────────────────────────────────────────────────────────
+// ALERTS
+// ────────────────────────────────────────────────────────────────────────────────
+
+alertcondition(signal == 1 and signal != signal[1], "BUY Signal",
+     "Z-Score BUY Signal\nEntry: {{close}}\nSL: {{plot_0}}\nTP: {{plot_1}}\nConfidence: " + str.tostring(finalConfidence) + "%")
+
+alertcondition(signal == -1 and signal != signal[1], "SELL Signal",
+     "Z-Score SELL Signal\nEntry: {{close}}\nSL: {{plot_0}}\nTP: {{plot_1}}\nConfidence: " + str.tostring(finalConfidence) + "%")
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// END OF INDICATOR
+// ═══════════════════════════════════════════════════════════════════════════════
